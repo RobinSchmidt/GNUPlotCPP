@@ -1,0 +1,129 @@
+
+-organize the manual
+-use a well defined scaling rule for all plots - for example, an 800 pixel wide plot shall
+ be included with \includegraphics[width=0.80\textwidth]{Plots/Aliasing.pdf}
+ ...or maybe use no scaling at all - leve it to automatic?
+Types of Plots
+-Function Plots
+-Function Families (use x^a, a=0.25,0.5,1,2,4)
+-Parametric Curves 
+ -2D: Lissajous figures, (1,1), (1,2), (2,3
+ -3D: Helix
+-Parametric Surfaces: Torus, Sphere, Möbius Strip, Klein Bottle
+-Bivariate Functions: bivariate Gaussian
+ -with contour lines 
+-Heatmaps
+ -radial sinc
+Examples: 
+-multiplot: 4x4 matrix of lissajous figures (1,1), (1,2), ...
+-butterworth s-plane plot
+-histogram: white noise, sum of 2,3,4,... white noises (pdf converges to gaussian)
+ -maybe filtered noises (HP, LP, BP, differenr resonances)
+ -sinusoids
+-function family: chebychev polynomials
+
+ 
+-implement specialized types of plots in terms of convenience functiosn outside the class (maybe
+ protected by a namespace GNUPlotCPP)
+
+-maybe support binary dataformats (might be more economical), perhaps have a state member binary that
+ can be set via setBinaryDataMode
+
+-is it possible to store a matrix of complex values? seems so:
+ http://stackoverflow.com/questions/15851842/gnuplot-and-complex-exponentials
+ or manual, page 26
+ z = {a,b} = a + i*b
+
+-check, what these x2tics, y2tics options do - if they are not for fine grids, get rid of them
+ in the setGrid function (i think, it's possible to use mxtics for major tics)
+
+-use "set linetype cycle 5" for cycling the linetypes and colors (cyclelength = 5, in this case)
+-see the gnuplot-freq-commands file for how to set up line-style, color, pointtype, etc. in a 
+ "set style" command - so we don't have to pass it in the plot-command -> simplification of the
+ plot command, more consistent handling of styling options
+
+-provide function 
+ void setGraphColorRGBA(unsigned int index, double r, double g, double b, double a = 1.0);
+-provide a function setGraphColorHLSA analogous to setGraphColorRGBA
+-support multiplots
+-provide static member functions that change the paths. Client code can call these befor using the 
+ GNUPlotter. like in main(): GNUPlotter::setGNUPlotPath(...), GNUPlotter::setTempPath
+-support setting up the axes to have an 1:1 aspect ratio (such that circles won't be distorted into 
+ ellipses, etc.)
+-let the user optionally pass a PlotConfigurator (or something) object to the constructor which 
+ adds the default commands. various subclasses can be created to have different sets of default
+ settings for different types of plots
+
+
+-let the user specify tics/grids for x- and y-axis
+-let the user set annotations
+-switch on off axis tic (or do we have that already?)
+-support binary matrix file format for 3D data 
+-use set style line ... setup lines instead of specifying the style "inline" for each dataset
+->cleaner commandfile ...but can this then also be used for vector plots? maybe the way, we do it now
+is more flexible?
+-allow to use different terminals wxt, windows, LaTeX, pslatex, etc. and produce output files (.png, 
+.svg,. .pdf, .eps, LaTeX, ...)
+-subclasses for specialized plots:
+ -SignalPlotter (poleZeroPlot, bodeDiagram, zPlanePlot, sPlanePlot, spectrogram, phasogram, 
+  scalogram, poleZeroTrajectory (pole/zero of start and end, lines in between "root locus?") ...)
+ -StatisticsPlotter (scatterPlot, densityPlot, ...)
+ -DynamicsPlotter (directionField, isoklines, ...)
+-support font setting (to use Times instead of Arial for example)
+-support setting of margins (for 3D plots, they tend to be too large)
+ set bmargin, lmargin, rmargin, tmargin
+-support scatter and cloud-plots (set data via an array/vector of vectors where the inner vector 
+ may be either 2D or 3D)
+-support missing data - these are represented in the datafile by a "?" for the respective y-value, in
+ the passed arrays, we may represent them by NaNs and make sure that our string conversion function
+ produces a "?" whenever it encounters a NaN
+-maybe support function objects (aka functors) - objects that implement a "()" operator
+-todo: remove std:: scope specifier everywhere
+-make a subclass DSPPlotter which makes it easy and convenient to draw DSP related plots (Bode-plots, 
+ Pole/Zero plots, s- or z-domain surfaces, discrete time samples with interpolation (linear, spline, 
+ sinc) include some of the simpler algorithms from RSLib there but not too much - make a subclass of 
+ DSPPlotter RSPlotter that relies on RSLib and allows for more advanced DSP-plotting stuff (that 
+ should not be includedin the published GNUPlotCPP package, maybe move the RSLib repository to 
+ sourceforge)
+-create a doxygen documentation
+-make a function: setRainbowColors. For 2 graphs use Hue1 = start, Hue2 = start + 1./2; for 3 graphs: 
+ Hue1 = start, Hue2 = start + 1./3, Hue3 = start + 2./3, etc. - the user may choose startHue, luminance 
+ and saturation (and the number of hues)
+ 
+-for dealing with images (might be relevant for spectrograms), see:
+ http://gnuplot.sourceforge.net/demo/image.html
+ or use binary datafiles:
+ http://gnuplot.sourceforge.net/docs_4.2/node101.html
+ here are spectrogram examples:
+ http://www.gnuplotting.org/tag/matrix/
+
+Create Demos for:
+-parametric curves in 2D and 3D (Lissajous figures, screw/helix line (maybe make a double helix) )
+ -maybe, provide optional parameters that can scale and offset the function argument - so instead of
+  calling x = sin(t), y = cos(t), the function would call x = sin(ax*t+bx), y = cos(ay*t+by), etc.
+  this gives more flexibility, defaul values are ax=ay=az=1, by=by=bz=0
+
+
+
+here's a good tutorial
+http://lowrank.net/gnuplot/index-e.html
+
+demo for various line styles:
+http://gnuplot.sourceforge.net/demo_4.6/dashcolor.html
+
+for polar grids
+http://stackoverflow.com/questions/6772135/how-to-get-a-radialpolar-plot-using-gnu-plot
+
+for 3D plot, manual, pages 65,115,184
+http://lowrank.net/gnuplot/datafile-e.html
+
+here are some code examples
+http://gnuplot.sourceforge.net/demo/lines_arrows.html
+
+//// test: set a polar grid (kind of works ):
+//commands += "set angles degrees\n";
+//commands += "set grid polar 60\n";
+////commands += "set grid lt 1\n"; // set grid ls 10
+// set logscale x, etc.
+//commands += "set arrow from 1,1 to 0.5,0.5 \n"; // works
+//commands += "set label \"Label 1\" at 2,1 \n";  // works
