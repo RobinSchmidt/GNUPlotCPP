@@ -14,7 +14,7 @@ int main(int argc, char** argv)
   demoFunctionPlot();
   demoAliasing();
   demoFrequencyResponse();
-  //demoPoleZeroPlotS();
+  demoPoleZeroPlotS();
   demoPoleZeroPlotZ();
   demoPlottingStyles();
   demoTrigFunctions();

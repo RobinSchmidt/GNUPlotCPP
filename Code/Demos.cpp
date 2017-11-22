@@ -302,7 +302,7 @@ bool almostEqual(complex<double> x, complex<double> y, double thresh)
 // their multiplicities at their positions
 void drawMultiplicities(const vector<complex<double>>& z, double thresh, GNUPlotter *p)
 {
-  int N = z.size();               // number of values
+  size_t N = z.size();               // number of values
   vector<complex<double>> zd(N);  // collected distinct values
   vector<int> m(N);               // m[i] = multiplicity of value zd[i]
   vector<bool> done(N);           // vector of flags, if z[i] was already absorbed into zd
