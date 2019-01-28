@@ -784,6 +784,12 @@ void demoHenneberg()
   // http://mathworld.wolfram.com/HennebergsMinimalSurface.html
   // the data generation code has the same structure as in demoTorus, so we don't need comments 
   // here
+  // todo: maybe the common stuff can be factored out to a function that takes 3 bivariate
+  // std::function objects as (reference) parameters for the two functions x(u,v), y(u,v), z(u,v)
+  // and Nu, Nv, uMin, uMax, vMin, vMax for the grid generation such that only have to call
+  // plt.addParametricSurface(...) with lambda functions - but before implementing that, we should 
+  // drag over the latest  changes to GNUPlotter.h/cpp from the RS-MET codebase
+  // then we may also have addParametricCurve2D, addParametricCurve3D
 
   // user parameters:
   static const int Nu = 41;
