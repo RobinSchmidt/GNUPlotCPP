@@ -789,7 +789,10 @@ void demoHenneberg()
   // and Nu, Nv, uMin, uMax, vMin, vMax for the grid generation such that only have to call
   // plt.addParametricSurface(...) with lambda functions - but before implementing that, we should 
   // drag over the latest  changes to GNUPlotter.h/cpp from the RS-MET codebase
-  // then we may also have addParametricCurve2D, addParametricCurve3D
+  // then we may also have addParametricCurve2D, addParametricCurve3D and add some more fun
+  // surfaces like Moebius strip, the trefoil knot ...but for that, we need some way to thicken
+  // a 3D curve into a solid object - maybe we need to estimate the tangent, normal and binormal
+  // vector - maybe write an addThickCurve3D function that generates an appropriate mesh
 
   // user parameters:
   static const int Nu = 41;
@@ -819,7 +822,6 @@ void demoHenneberg()
   p.addCommand("set view 75,145");
   p.addCommand("set lmargin 0");
   p.addCommand("set tmargin 0");
-  p.addCommand("set ztics 0.5");
   p.plot3D();   
 }
 
