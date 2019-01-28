@@ -777,6 +777,47 @@ void demoTorus()
 //https://www.packtpub.com/books/content/3d-plot-using-gnuplot
 
 
+void demoHenneberg()
+{
+  // a Henneberg surface - see:
+  // https://en.wikipedia.org/wiki/Henneberg_surface
+  // http://mathworld.wolfram.com/HennebergsMinimalSurface.html
+  // the data generation code has the same structure as in demoTorus, so we don't need comments 
+  // here
+
+  // user parameters:
+  static const int Nu = 41;
+  static const int Nv = 41;
+
+  // generate data:
+  double uu[Nu], vv[Nv];
+  GNUPlotter::rangeLinear(uu, Nu, 0.0, 2*M_PI);
+  GNUPlotter::rangeLinear(vv, Nv, 0.0, 2*M_PI);
+  vector<vector<vector<double>>> d;
+  d.resize(Nu);
+  for(int i = 0; i < Nu; i++) {
+    d[i].resize(Nv);
+    for(int j = 0; j < Nv; j++) {
+      double u = uu[i];
+      double v = vv[j];
+      d[i][j].resize(3);
+      d[i][j][0] = 2*cos(v)*sinh(u) - (2./3)*cos(3*v)*sinh(3*u);
+      d[i][j][1] = 2*sin(v)*sinh(u) + (2./3)*sin(3*v)*sinh(3*u);
+      d[i][j][2] = 2*cos(2*v)*cosh(2*u); }}
+
+  // plot:
+  GNUPlotter p;
+  p.addData(d);
+  p.setPixelSize(800, 600);
+  p.addCommand("set hidden3d");
+  p.addCommand("set view 75,145");
+  p.addCommand("set lmargin 0");
+  p.addCommand("set tmargin 0");
+  p.addCommand("set ztics 0.5");
+  p.plot3D();   
+}
+
+
 void demoGaussianBivariate()
 {
   // Demonstrates, how to plot a scalar function of 2 variables z = f(x,y) where the function value

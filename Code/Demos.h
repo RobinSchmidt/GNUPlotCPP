@@ -37,6 +37,7 @@ void demoHelix();
 void demoPhasor(); 
 
 void demoTorus();
+void demoHenneberg();
 void demoGaussianBivariate();
 void demoPow();
 void demoSincRadial();

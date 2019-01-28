@@ -3,7 +3,6 @@
 
 int main(int argc, char** argv)
 {
-
   //testMatrixWrite();
   //testLowLevelCalls();
 
@@ -25,6 +24,7 @@ int main(int argc, char** argv)
   demoHelix();
   //demoPhasor();
   demoTorus();
+  demoHenneberg();
   demoGaussianBivariate();
   //demoPow(); // boring - remove
   demoSincRadial();
