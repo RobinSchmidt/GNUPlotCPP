@@ -1,5 +1,7 @@
 #include "Tests.h"
 
+using namespace std;
+
 void testDataSetup()
 {
   // 2 columns, 6 rows separated into 3 blocks of lengths 2,1,3. 

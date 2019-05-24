@@ -2,6 +2,8 @@
 //#include <complex> // may be removed, if it will be included in GNUPlotter.h someday
 #define M_PI 3.14159265358979323846
 
+using namespace std;
+
 // define some functions for plotting (move to a file ExampleFunctions.h/cpp):
 
 double identity(double x)
@@ -211,7 +213,7 @@ void demoFrequencyResponse()
   double mag[M][N], phs[M][N];     // magnitudes and phases
   double *pMag[M], *pPhs[M];       // pointers to 1D arrays
 
-  // fill frquency axis with equally spaced values on logarithmic scale:
+  // fill frequency axis with equally spaced values on logarithmic scale:
   GNUPlotter::rangeLogarithmic(w, N, wMin, wMax);
 
   // assign pointer arrays:
@@ -223,7 +225,7 @@ void demoFrequencyResponse()
   }
 
   // compute frequency response data:
-  complex<double> s;               // value on s-plane where w evaluate H
+  complex<double> s;               // value on s-plane where we evaluate H
   complex<double> H;               // complex frequency response H(s)
   vector<complex<double>> poles;   // Butterworth filter poles
   vector<complex<double>> zeros;   // filter zeros (empty vector)

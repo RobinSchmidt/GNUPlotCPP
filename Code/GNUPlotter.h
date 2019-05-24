@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 #include <complex>
-using namespace std;
 
 /**
 
@@ -35,6 +34,7 @@ class GNUPlotter
 
 public:
 
+  //-----------------------------------------------------------------------------------------------
   /** \name Construction/Destruction */
 
   /** Constructor.*/
@@ -43,8 +43,23 @@ public:
   /** Destructor. */
   virtual ~GNUPlotter();
 
+  /** Initializes our data- and commandfiles. Called from constructor, but you may also call it 
+  manually, if you want to re-initialize everything. */
+  void initialize();
 
+  //-----------------------------------------------------------------------------------------------
   /** \name Plotting */
+
+  /** Convenience function to allow plotting without having client code instantiate a plotter 
+  object, set it up, etc. */
+  template <class T>
+  inline static void plot(int N, T *x, T *y1, T *y2 = nullptr, T *y3 = nullptr, T *y4 = nullptr,
+    T *y5 = nullptr, T *y6 = nullptr, T *y7 = nullptr, T *y8 = nullptr, T *y9 = nullptr)
+  {
+    GNUPlotter plt;
+    plt.addDataArrays(N, x, y1, y2, y3, y4, y5, y6, y7, y8, y9);
+    plt.plot();
+  }
 
   /** After the data has been set up and possibly a couple of formatting functions have been
   called, calling this function will actually invoke GNUPlot for plotting the data according to the
@@ -103,18 +118,18 @@ public:
   // provide more functions for specialized plots
   // plotFunctionFamily, plotVectorField, plotHistogram, bodePlot, scatterPlot, plotComplexMapping
 
-
+  //-----------------------------------------------------------------------------------------------
   /** \name Style Setup */
 
   /** Adds the given command to the batchfile. */
-  void addCommand(string command);
+  void addCommand(std::string command);
 
   /** Adds the default commands to the command file. This function controls the default appearance
   of plots in cases, when the user doesn't add their own commands. */
   void addDefaultCommands();
 
   /** Sets the labels for the x-, y- and z-axis. */
-  void setAxisLabels(string x, string y, string z = "");
+  void setAxisLabels(std::string x, std::string y, std::string z = "");
 
   /** Sets legends for the graphs. You can at most set legends for 10 graphs with this function. If
   you need more than that, call it once with the 1st 10 legends and then add more using subsequent 
@@ -123,7 +138,7 @@ public:
     CSR l5 = "", CSR l6 = "", CSR l7 = "", CSR l8 = "", CSR l9 = "");
 
   /** This function can be used, if more than 10 legends are needed. */
-  void setLegends(CVR<string> legends);
+  void setLegends(CVR<std::string> legends);
 
   /** Sets the colors to be used for the datasets. Each color must be a zero terminated c-string of
   the form RRGGBB or AARRGGBB where RR is a hexadecimal value for the red component, GG for green, 
@@ -133,7 +148,7 @@ public:
     CSR c5 = "", CSR c6 = "", CSR c7 = "", CSR c8 = "", CSR c9 = "");
 
   /** This function can be used, if more than 10 graph colors are needed. */
-  void setGraphColors(CVR<string> colors);
+  void setGraphColors(CVR<std::string> colors);
 
   /** Sets the color for the graph with given index (using the "set linetype" command). Indices 
   start at 1. */
@@ -162,7 +177,7 @@ public:
     CSR s5 = "", CSR s6 = "", CSR s7 = "", CSR s8 = "", CSR s9 = "");
 
   /** This function can be used, if more than 10 graph styles are needed. */
-  void setGraphStyles(CVR<string> styles);
+  void setGraphStyles(CVR<std::string> styles);
 
   /** Sets up the grid. */
   void setGrid(bool x = true, bool y = true, bool x2 = false, bool y2 = false, bool z = false);
@@ -170,7 +185,7 @@ public:
   /** Sets (or unsets) the axis or axes given in "axes" to be logarithmically scaled using the 
   given base. The "axes" can be any combination of x, x2, y, y2, z, cb, and r. If an empty string is 
   passed, all axes will be affected except r. */
-  void setLogScale(string axes, double base = 10.0, bool shouldBeLogarithmic = true);
+  void setLogScale(std::string axes, double base = 10.0, bool shouldBeLogarithmic = true);
   // \todo find out why the base is important (does this determine the tics?). If not, it seems
   // unnecessary and might be removed - or at least, placed at the end of the argument list.
 
@@ -192,7 +207,7 @@ public:
   documentation in the GNUPlot manual). */
   void addAnnotation(double x, double y, CSR text, CSR options = "");
 
-
+  //-----------------------------------------------------------------------------------------------
   /** \name Data setup */
 
   /** Sets the number of decimal digits after the dot with which the data will be written into the 
@@ -207,7 +222,21 @@ public:
   a 2nd parameter and the innermost index runs from 0...2 (over the dimensions of the 3D vector).
   */
   template <class T>
-  void addData(const vector<vector<vector<T>>>& d);
+  void addDataBlockLineColumn(const std::vector<std::vector<std::vector<T>>>& d);
+
+  // for legacy - remove soon
+  template <class T>
+  void addData(const std::vector<std::vector<std::vector<T>>>& d)
+  { addDataBlockLineColumn(d); }
+
+  /** Similar to addDataBlockLineColumn but here the middle index runs over the columns and the 
+  last index over the lines. In each block, all vectors for the same middle index must have the 
+  same length. For example size(d[0][0]) == size(d[0][1]) == ... size[0][n] and also
+  size(d[1][0]) == size(d[1][1]) == ... size(d[1][n]) etc. where n = size(d)-1. It can be used to
+  add a function family with an arbitrary number of functions (or sets of such function 
+  families). */
+  template <class T>
+  void addDataBlockColumnLine(const std::vector<std::vector<std::vector<T>>>& d);
 
   /** Adds a segmented dataset to our datafile. It's similar to 
   addData(int numRows, int numColumns, T **data) just that instead of passing a number of rows,
@@ -228,7 +257,7 @@ public:
   /** Adds a dataset from a vector of complex numbers. The real parts will be the 1st column, the
   imaginary parts the 2nd column in the datafile. */
   template <class T>
-  void addDataComplex(const vector<complex<T>>& d);
+  void addDataComplex(const std::vector<std::complex<T>>& d);
 
   /** Adds M+1 arrays of length N. The length-N x-array is the first column followed by M columns
   of y-arrays (all of length N) - so the y-matrix must be of the type: y[M][N]. */
@@ -321,13 +350,13 @@ public:
   flexibility and generality in the use of this plotter class. */
   void addGraph(CSR descriptor);
 
-
+  //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
 
   /** Returns the path of the datafile. */
-  string getDataPath();
+  std::string getDataPath();
 
-
+  //-----------------------------------------------------------------------------------------------
   /** \name Misc */
 
   /** Fills the array x of length N with equally spaced values from min...max. Useful for creating 
@@ -342,6 +371,31 @@ public:
 
   /** Executes GNUPlot with the appropriate commandline parameter to read the command file. */
   void invokeGNUPlot();
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Handling variable argument lists */
+
+  template<class T> 
+  static T nullValue(T);
+
+  static std::string nullValue(std::string);
+
+  template<class T>
+  static std::vector<T> collectLeadingNonNullArguments(T a0, T a1, T a2, T a3, T a4, T a5, T a6, 
+    T a7, T a8, T a9);
+
+  template<class T>
+  static void append(std::vector<T>& v, const std::vector<T>& appendix);
+
+  template<class T>
+  static std::vector<std::vector<T>> wrapIntoVectors(int N, T *a0, T *a1, T *a2, T *a3, T *a4, 
+    T *a5, T *a6, T *a7, T *a8, T *a9);
+
+  static void addToStringVector(std::vector<std::string>& v, CSR s0, CSR s1, CSR s2, CSR s3, CSR s4, 
+    CSR s5, CSR s6, CSR s7, CSR s8, CSR s9);
+
+  static void setStringVector(std::vector<std::string>& v, CSR s0, CSR s1, CSR s2, CSR s3, CSR s4, 
+    CSR s5, CSR s6, CSR s7, CSR s8, CSR s9);
 
 
 protected:
@@ -394,45 +448,22 @@ protected:
   std::string sd(int x);           // conversion of integers for data file
 
 
-  // functions for the handling of variable argument lists
-
-  template<class T> 
-  T nullValue(T);
-
-  string nullValue(string);
-
-  template<class T>
-  vector<T> collectLeadingNonNullArguments(T a0, T a1, T a2, T a3, T a4, T a5, T a6, T a7, T a8, 
-    T a9);
-
-  template<class T>
-  void append(vector<T>& v, const vector<T>& appendix);
-
-  template<class T>
-  vector<vector<T>> wrapIntoVectors(int N, T *a0, T *a1, T *a2, T *a3, T *a4, T *a5, T *a6, T *a7, 
-    T *a8, T *a9);
-
-  void addToStringVector(vector<string>& v, CSR s0, CSR s1, CSR s2, CSR s3, CSR s4, CSR s5, CSR s6,
-    CSR s7, CSR s8, CSR s9);
-
-  void setStringVector(vector<string>& v, CSR s0, CSR s1, CSR s2, CSR s3, CSR s4, CSR s5, CSR s6, 
-    CSR s7, CSR s8, CSR s9);
 
 
   /** \name Data */
 
   // location for gnuplot and the directory for the temporary files:  
-  string gnuplotPath;  // path, where gnuPlot is installed
-  string dataPath;
-  string commandPath;
+  std::string gnuplotPath;  // path, where gnuPlot is installed
+  std::string dataPath;
+  std::string commandPath;
   // make static
 
   // string arrays for styles and titles:
-  vector<string> graphStyles;
-  vector<string> graphTitles;
+  std::vector<std::string> graphStyles;
+  std::vector<std::string> graphTitles;
 
 
-  vector<string> graphDescriptors;
+  std::vector<std::string> graphDescriptors;
     // an array of strings to be used in the plot command, like:
     // index 0 using 1:2 with lines lc rgb "#000000" title "sin(x)"
     // index 0 using 1:3 with lines lc rgb "#000000" title "cos(x)"
@@ -452,7 +483,7 @@ protected:
   // for keeping track how much datasets we write and how many blocks and columns each dataset has:
   struct DataInfo
   {
-    DataInfo(size_t numBlocks, size_t numColumns, string type = "")
+    DataInfo(size_t numBlocks, size_t numColumns, std::string type = "")
     {
       this->numBlocks  = numBlocks;
       this->numColumns = numColumns;
@@ -460,9 +491,9 @@ protected:
     }
     size_t numBlocks;
     size_t numColumns;
-    string type;
+    std::string type;
   };
-  vector<DataInfo> dataInfo; 
+  std::vector<DataInfo> dataInfo; 
 
 
 };

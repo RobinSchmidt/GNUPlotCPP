@@ -1,9 +1,8 @@
 #include "GNUPlotter.h"
-//#include <stdarg.h>  // needed?
 #include <fstream>
 #include <iostream>
 #include <algorithm>
-
+using namespace std;
 
 GNUPlotter::GNUPlotter()
 {
@@ -11,7 +10,7 @@ GNUPlotter::GNUPlotter()
 
   graphStyles.resize(1);
   graphStyles[0] = std::string("lines");    // standard lines, width 1 - maybe change to 1.5 or 2
-                                          
+
   // installation path of the GNUPlot executable:
   gnuplotPath = "C:/Program Files/gnuplot/bin/gnuplot.exe";
   //gnuplotPath = "C:/Program Files/gnuplot/bin/wgnuplot.exe";
@@ -20,10 +19,7 @@ GNUPlotter::GNUPlotter()
   dataPath    = "E:/Temp/gnuplotData.dat";
   commandPath = "E:/Temp/gnuplotCommands.txt";   // this path may not contain whitepaces
 
-  // initialize data- and commandfile:
-  initFile(dataPath);
-  initFile(commandPath);
-  addDefaultCommands();
+  initialize();                                  // initializes data- and commandfile
 }
 
 GNUPlotter::~GNUPlotter()
@@ -31,7 +27,27 @@ GNUPlotter::~GNUPlotter()
   delete[] formatString;
 }
 
+void GNUPlotter::initialize()
+{
+  initFile(dataPath);
+  initFile(commandPath);
+  addDefaultCommands();
+}
+
 // plotting:
+
+/*
+template <class T>
+static void GNUPlotter::plot(int N, T *x, T *y1, T *y2, T *y3, T *y4, T *y5, T *y6, T *y7, T *y8,
+  T *y9)
+{
+  GNUPlotter plt;
+  plt.addDataArrays(N, x, y1, y2, y3, y4, y5, y6, y7, y8, y9);
+  plt.plot();
+}
+template void GNUPlotter::plot(int N, double *y1, double *y2, double *y3, double *y4,
+  double *y5, double *y6, double *y7, double *y8, double *y9);
+*/
 
 void GNUPlotter::plot()
 {
@@ -54,7 +70,7 @@ void GNUPlotter::plotFunctionTables(int N, T *x, T *y1, T *y2, T *y3, T *y4, T *
 }
 
 template <class T>
-void GNUPlotter::plotArrays(int N, T *y1, T *y2, T *y3, T *y4, T *y5, T *y6, T *y7, T *y8, 
+void GNUPlotter::plotArrays(int N, T *y1, T *y2, T *y3, T *y4, T *y5, T *y6, T *y7, T *y8,
   T *y9)
 {
   T *x = new T[N];
@@ -63,15 +79,15 @@ void GNUPlotter::plotArrays(int N, T *y1, T *y2, T *y3, T *y4, T *y5, T *y6, T *
   delete[] x;
 }
 // explicit instantiations for double, float and int:
-template void GNUPlotter::plotArrays(int N, double *y1, double *y2, double *y3, double *y4, 
+template void GNUPlotter::plotArrays(int N, double *y1, double *y2, double *y3, double *y4,
   double *y5, double *y6, double *y7, double *y8, double *y9);
-template void GNUPlotter::plotArrays(int N, float *y1, float *y2, float *y3, float *y4, float *y5, 
+template void GNUPlotter::plotArrays(int N, float *y1, float *y2, float *y3, float *y4, float *y5,
   float *y6, float *y7, float *y8, float *y9);
-template void GNUPlotter::plotArrays(int N, int *y1, int *y2, int *y3, int *y4, int *y5, 
+template void GNUPlotter::plotArrays(int N, int *y1, int *y2, int *y3, int *y4, int *y5,
   int *y6, int *y7, int *y8, int *y9);
 
 template <class T>
-void GNUPlotter::plotFunctions(int N, T *x, T (*f0)(T), T (*f1)(T), T (*f2)(T), T (*f3)(T), 
+void GNUPlotter::plotFunctions(int N, T *x, T (*f0)(T), T (*f1)(T), T (*f2)(T), T (*f3)(T),
   T (*f4)(T), T (*f5)(T), T (*f6)(T), T (*f7)(T), T (*f8)(T), T (*f9)(T))
 {
   addDataFunctions(N, x, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9);
@@ -129,7 +145,7 @@ void GNUPlotter::plotBivariateFunction(int Nx, int Ny, T *x, T *y, T (*f)(T, T))
 }
 
 template <class T>
-void GNUPlotter::plotBivariateFunction(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax, 
+void GNUPlotter::plotBivariateFunction(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax,
   T (*f)(T, T))
 {
   addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
@@ -143,11 +159,11 @@ void GNUPlotter::plotBivariateFunction(int Nx, T xMin, T xMax, int Ny, T yMin, T
   //delete[] x;
   //delete[] y;
 }
-template void GNUPlotter::plotBivariateFunction(int Nx, double xMin, double xMax, int Ny, 
+template void GNUPlotter::plotBivariateFunction(int Nx, double xMin, double xMax, int Ny,
   double yMin, double yMax, double (*f)(double, double));
-template void GNUPlotter::plotBivariateFunction(int Nx, float xMin, float xMax, int Ny, float yMin, 
+template void GNUPlotter::plotBivariateFunction(int Nx, float xMin, float xMax, int Ny, float yMin,
   float yMax, float (*f)(float, float));
-template void GNUPlotter::plotBivariateFunction(int Nx, int xMin, int xMax, int Ny, int yMin, 
+template void GNUPlotter::plotBivariateFunction(int Nx, int xMin, int xMax, int Ny, int yMin,
   int yMax, int (*f)(int, int));
 
 // style setup:
@@ -183,7 +199,7 @@ void GNUPlotter::setAxisLabels(std::string x, std::string y, std::string z)
   if( !z.empty() ) addCommand("set zlabel \"" + z + "\"\n");
 }
 
-void GNUPlotter::setLegends(CSR l0, CSR l1, CSR l2, CSR l3, CSR l4, CSR l5, CSR l6, CSR l7, 
+void GNUPlotter::setLegends(CSR l0, CSR l1, CSR l2, CSR l3, CSR l4, CSR l5, CSR l6, CSR l7,
   CSR l8, CSR l9)
 {
   addCommand("set key opaque box"); // graphs shouldn't obscure legends
@@ -195,7 +211,7 @@ void GNUPlotter::setLegends(CVR<string> legends)
   graphTitles = legends;
 }
 
-void GNUPlotter::setGraphColors(CSR c0, CSR c1, CSR c2, CSR c3, CSR c4, CSR c5, CSR c6, CSR c7, 
+void GNUPlotter::setGraphColors(CSR c0, CSR c1, CSR c2, CSR c3, CSR c4, CSR c5, CSR c6, CSR c7,
   CSR c8, CSR c9)
 {
   vector<string> v;
@@ -219,7 +235,7 @@ void GNUPlotter::setDashType(unsigned int index, CSR type)
   addCommand("set lt " + s(index) + " dt " + type); // lt: linetype, dt: dashtype
 }
 
-void GNUPlotter::setGraphStyles(CSR s0, CSR s1, CSR s2, CSR s3, CSR s4, CSR s5, CSR s6, CSR s7, 
+void GNUPlotter::setGraphStyles(CSR s0, CSR s1, CSR s2, CSR s3, CSR s4, CSR s5, CSR s6, CSR s7,
   CSR s8, CSR s9)
 {
   setStringVector(graphStyles, s0, s1, s2, s3, s4, s5, s6, s7, s8, s9);
@@ -250,7 +266,7 @@ void GNUPlotter::setLogScale(string axes, double base, bool shouldBeLogarithmic)
   addCommand(s);
 }
 
-void GNUPlotter::setRange(double xMin, double xMax, double yMin, double yMax, double zMin, 
+void GNUPlotter::setRange(double xMin, double xMax, double yMin, double yMax, double zMin,
   double zMax)
 {
   if( xMin < xMax ) addCommand("set xrange[" + s(xMin) + ":" + s(xMax) + "]\n");
@@ -283,14 +299,12 @@ void GNUPlotter::setDataPrecision(unsigned int n)
 }
 
 template <class T>
-void GNUPlotter::addData(const vector<vector<vector<T>>>& d)
+void GNUPlotter::addDataBlockLineColumn(const vector<vector<vector<T>>>& d)
 {
   ofstream out(dataPath, ofstream::app);
-  for(int i = 0; i < d.size(); i++)            // loop over blocks
-  {
-    for(int j = 0; j < d[i].size(); j++)       // loop over rows in current block
-    {
-      for(int k = 0; k < d[i][j].size(); k++)  // loop over columns in current row
+  for(size_t i = 0; i < d.size(); i++) {           // loop over blocks
+    for(size_t j = 0; j < d[i].size(); j++) {      // loop over rows in current block
+      for(size_t k = 0; k < d[i][j].size(); k++)   // loop over columns in current row
         out << sd(d[i][j][k]) + " ";
       out << "\n";
     }
@@ -301,9 +315,29 @@ void GNUPlotter::addData(const vector<vector<vector<T>>>& d)
   dataInfo.push_back(DataInfo(d.size(), d[0].size())); // keep track of written data
 }
 // explicit instantiations for double, float and int:
-template void GNUPlotter::addData(const vector<vector<vector<double>>>& d);
-template void GNUPlotter::addData(const vector<vector<vector<float>>>& d);
-template void GNUPlotter::addData(const vector<vector<vector<int>>>& d);
+template void GNUPlotter::addDataBlockLineColumn(const vector<vector<vector<double>>>& d);
+template void GNUPlotter::addDataBlockLineColumn(const vector<vector<vector<float>>>& d);
+template void GNUPlotter::addDataBlockLineColumn(const vector<vector<vector<int>>>& d);
+
+template <class T>
+void GNUPlotter::addDataBlockColumnLine(const std::vector<std::vector<std::vector<T>>>& d)
+{
+  ofstream out(dataPath, ofstream::app);
+  for(size_t i = 0; i < d.size(); i++) {           // loop over blocks
+    for(size_t j = 0; j < d[i][0].size(); j++) {   // loop over columns
+      for(size_t k = 0; k < d[i].size(); k++)      // loop over lines
+        out << sd(d[i][k][j]) + " ";
+      out << "\n";
+    }
+    out << "\n";
+  }
+  out << "\n";
+  out.close();
+  dataInfo.push_back(DataInfo(d.size(), d[0][0].size()));
+}
+template void GNUPlotter::addDataBlockColumnLine(const vector<vector<vector<double>>>& d);
+template void GNUPlotter::addDataBlockColumnLine(const vector<vector<vector<float>>>& d);
+template void GNUPlotter::addDataBlockColumnLine(const vector<vector<vector<int>>>& d);
 
 template <class T>
 void GNUPlotter::addData(int numBlocks, int *blockLengths, int numColumns, T **data)
@@ -336,7 +370,7 @@ template <class T>
 void GNUPlotter::addDataComplex(const vector<complex<T>>& d)
 {
   ofstream out(dataPath, ofstream::app);
-  for(int i = 0; i < d.size(); i++)
+  for(size_t i = 0; i < d.size(); i++)
   {
     out << sd(d[i].real()) + " " + sd(d[i].imag()) + " ";
     out << "\n";
@@ -362,7 +396,7 @@ void GNUPlotter::addDataArrays(int N, T *x, int M, T **y)
   }
   out << "\n\n";
   out.close();
-  dataInfo.push_back(DataInfo(1, M+1)); 
+  dataInfo.push_back(DataInfo(1, M+1));
 }
 template void GNUPlotter::addDataArrays(int N, int *x, int M, int **y);
 template void GNUPlotter::addDataArrays(int N, float *x, int M, float **y);
@@ -374,13 +408,13 @@ void GNUPlotter::addDataArrays(int N, T *c0, T *c1, T *c2, T *c3, T *c4, T *c5, 
 {
   vector<T*> v = collectLeadingNonNullArguments(c0, c1, c2, c3, c4, c5, c6, c7, c8, c9);
   T* a[10];
-  for(int i = 0; i < v.size(); i++)
+  for(size_t i = 0; i < v.size(); i++)
     a[i] = v[i];
   addData(N, (int) v.size(), a);
 }
 
 template <class T>
-void GNUPlotter::addDataFunctions(int N, T *x, T (*f0)(T), T (*f1)(T), T (*f2)(T), T (*f3)(T), 
+void GNUPlotter::addDataFunctions(int N, T *x, T (*f0)(T), T (*f1)(T), T (*f2)(T), T (*f3)(T),
   T (*f4)(T), T (*f5)(T), T (*f6)(T), T (*f7)(T), T (*f8)(T), T (*f9)(T))
 {
   int i, j;
@@ -411,7 +445,7 @@ void GNUPlotter::addDataFunctions(int N, T *x, T (*f0)(T), T (*f1)(T), T (*f2)(T
 }
 
 template <class T>
-void GNUPlotter::addDataFunctions(int N, T xMin, T xMax, T (*f0)(T), T (*f1)(T), T (*f2)(T), 
+void GNUPlotter::addDataFunctions(int N, T xMin, T xMax, T (*f0)(T), T (*f1)(T), T (*f2)(T),
   T (*f3)(T), T (*f4)(T), T (*f5)(T), T (*f6)(T), T (*f7)(T), T (*f8)(T), T (*f9)(T))
 {
   T *x = new T[N];
@@ -419,17 +453,17 @@ void GNUPlotter::addDataFunctions(int N, T xMin, T xMax, T (*f0)(T), T (*f1)(T),
   addDataFunctions(N, x, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9);
   delete[] x;
 }
-template void GNUPlotter::addDataFunctions(int N, double xMin, double xMax, 
-  double (*f0)(double), double (*f1)(double), double (*f2)(double), double (*f3)(double), 
-  double (*f4)(double), double (*f5)(double), double (*f6)(double), double (*f7)(double), 
+template void GNUPlotter::addDataFunctions(int N, double xMin, double xMax,
+  double (*f0)(double), double (*f1)(double), double (*f2)(double), double (*f3)(double),
+  double (*f4)(double), double (*f5)(double), double (*f6)(double), double (*f7)(double),
   double (*f8)(double), double (*f9)(double));
-template void GNUPlotter::addDataFunctions(int N, float xMin, float xMax, 
-  float (*f0)(float), float (*f1)(float), float (*f2)(float), float (*f3)(float), 
-  float (*f4)(float), float (*f5)(float), float (*f6)(float), float (*f7)(float), 
+template void GNUPlotter::addDataFunctions(int N, float xMin, float xMax,
+  float (*f0)(float), float (*f1)(float), float (*f2)(float), float (*f3)(float),
+  float (*f4)(float), float (*f5)(float), float (*f6)(float), float (*f7)(float),
   float (*f8)(float), float (*f9)(float));
-template void GNUPlotter::addDataFunctions(int N, int xMin, int xMax, 
-  int (*f0)(int), int (*f1)(int), int (*f2)(int), int (*f3)(int), 
-  int (*f4)(int), int (*f5)(int), int (*f6)(int), int (*f7)(int), 
+template void GNUPlotter::addDataFunctions(int N, int xMin, int xMax,
+  int (*f0)(int), int (*f1)(int), int (*f2)(int), int (*f3)(int),
+  int (*f4)(int), int (*f5)(int), int (*f6)(int), int (*f7)(int),
   int (*f8)(int), int (*f9)(int));
 
 template <class T>
@@ -490,7 +524,7 @@ void GNUPlotter::addDataBivariateFunction(int Nx, int Ny, T *x, T *y, T (*f)(T, 
 }
 
 template <class T>
-void GNUPlotter::addDataBivariateFunction(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax, 
+void GNUPlotter::addDataBivariateFunction(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax,
   T (*f)(T, T))
 {
   T *x = new T[Nx];
@@ -517,7 +551,7 @@ string GNUPlotter::getDataPath()
 // misc:
 
 template <class T>
-static void GNUPlotter::rangeLinear(T *x, int N, T min, T max)
+void GNUPlotter::rangeLinear(T *x, int N, T min, T max)
 {
   double factor = (max-min) / (double)(N-1);
   for(int i = 0; i < N; i++)
@@ -525,7 +559,7 @@ static void GNUPlotter::rangeLinear(T *x, int N, T min, T max)
 }
 
 template <class T>
-static void GNUPlotter::rangeLogarithmic(T *x, int N, T min, T max)
+void GNUPlotter::rangeLogarithmic(T *x, int N, T min, T max)
 {
   double a = log(max/min) / T(N-1);
   for(int i = 0; i < N; i++)
@@ -537,13 +571,13 @@ template void GNUPlotter::rangeLogarithmic(double *x, int N, double min, double 
 void GNUPlotter::invokeGNUPlot()
 {
   // create the callstring and invoke GNUPlot:
-  //string callString = "\"" + gnuplotPath + "\" " + commandPath + " -"; 
+  //string callString = "\"" + gnuplotPath + "\" " + commandPath + " -";
   //string callString = "\"" + gnuplotPath + "\" " + commandPath;
-  string callString = "\"" + gnuplotPath + "\" " + commandPath + " -persist"; 
+  string callString = "\"" + gnuplotPath + "\" " + commandPath + " -persist";
 
   // wrapping gnuplotPath into quotes is required to handle installation paths with whitespaces,
-  // but it doesn't seem to be possible to handle a commandPath with whitespaces (i tried 
-  // wrapping it into quotes too and wrapping the whole callString into quotes - none of that 
+  // but it doesn't seem to be possible to handle a commandPath with whitespaces (i tried
+  // wrapping it into quotes too and wrapping the whole callString into quotes - none of that
   // works)
   // the minus at the end prevents gnuplot from immediately closing
 
@@ -565,7 +599,7 @@ char* GNUPlotter::toZeroTerminatedString(const std::string &s)
 {
   size_t N = s.size();
   char *zs = new char[N+1];
-  for(int i = 0; i < N; i++)
+  for(size_t i = 0; i < N; i++)
     zs[i] = s[i];
   zs[N] = '\0';
   return zs;
@@ -603,20 +637,33 @@ std::string GNUPlotter::getGraphLegend(unsigned int i)
 
 std::string GNUPlotter::s(unsigned int x)
 {
-  return std::to_string((_Longlong)x);
+  //return std::to_string((_Longlong)x); // does not compile with gcc on linux
+  return std::to_string((long long)x);
 }
 
 std::string GNUPlotter::s(double x)
 {
   char cString[32];
+
+#ifdef _MSC_VER
   sprintf_s(cString, 32, "%-.16g", x);
+#else
+  snprintf(cString, 32, "%-.16g", x);
+#endif
+
   return std::string(cString);
 }
 
 std::string GNUPlotter::sd(double x)
 {
   char cString[32];
+
+#ifdef _MSC_VER
   sprintf_s(cString, 32, formatString, x);
+#else
+  snprintf(cString, 32, formatString, x);
+#endif
+
   return std::string(cString);
 }
 
@@ -638,7 +685,7 @@ void GNUPlotter::addPlotCommand(bool splot)
     pc = "plot \\\n";   // 2D plots
   if(graphDescriptors.empty())
     generateGraphDescriptors(splot);
-  for(i = 0; i < graphDescriptors.size()-1; i++)
+  for(i = 0; i < (int)graphDescriptors.size()-1; i++)
     pc += "'" + dataPath + "' " + graphDescriptors[i] + ",\\\n";
   pc += "'" + dataPath + "' " + graphDescriptors[i];
   addCommand(pc);
@@ -647,8 +694,7 @@ void GNUPlotter::addPlotCommand(bool splot)
 void GNUPlotter::generateGraphDescriptors(bool splot)
 {
   unsigned int i, j, k;
-  if(splot == false)
-  {
+  if(splot == false) {
     k = 0;
     for(i = 0; i < dataInfo.size(); i++)
     {
@@ -659,6 +705,13 @@ void GNUPlotter::generateGraphDescriptors(bool splot)
       }
       else
       {
+        if(dataInfo[i].numColumns == 1)  // this is new -> test...
+        {
+          //addGraph("i " + s(i) + " u 1:1" + getStyleString(k));
+          addGraph("i " + s(i) + getStyleString(k));
+          k++;
+        }
+        // entered only, if condition above is false:
         for(j = 0; j < (unsigned int)dataInfo[i].numColumns-1; j++)
         {
           addGraph("i " + s(i) + " u 1:" + s(j+2) + getStyleString(k));
@@ -679,9 +732,47 @@ void GNUPlotter::generateGraphDescriptors(bool splot)
   }
 }
 
+// // old:
+//void GNUPlotter::generateGraphDescriptors(bool splot)
+//{
+//  unsigned int i, j, k;
+//  if(splot == false) {
+//    k = 0;
+//    for(i = 0; i < dataInfo.size(); i++)
+//    {
+//      if(dataInfo[i].type == "matrix")
+//      {
+//        addGraph("i " + s(i) + " nonuniform matrix" + getStyleString(k));
+//        k++;
+//      }
+//      else
+//      {
+//        for(j = 0; j < (unsigned int)dataInfo[i].numColumns-1; j++)
+//        {
+//          addGraph("i " + s(i) + " u 1:" + s(j+2) + getStyleString(k));
+//          k++;
+//        }
+//      }
+//    }
+//  }
+//  else
+//  {
+//    for(i = 0; i < dataInfo.size(); i++)
+//    {
+//      if(dataInfo[i].type == "matrix")
+//        addGraph("i " + s(i) + " nonuniform matrix" + getStyleString(i));
+//      else
+//        addGraph("i " + s(i) + getStyleString(i));
+//    }
+//  }
+//}
+
+
+
+
 // argument handling
 
-template<class T> 
+template<class T>
 T GNUPlotter::nullValue(T)
 {
   return T(0);
@@ -715,12 +806,12 @@ template<class T>
 void GNUPlotter::append(vector<T>& v, const vector<T>& appendix)
 {
   v.reserve(v.size() + appendix.size());
-  for(int i = 0; i < appendix.size(); i++)
+  for(size_t i = 0; i < appendix.size(); i++)
     v.push_back(appendix[i]);
 }
 
 template<class T>
-vector<vector<T>> GNUPlotter::wrapIntoVectors(int N, T *a0, T *a1, T *a2, T *a3, T *a4, T *a5, 
+vector<vector<T>> GNUPlotter::wrapIntoVectors(int N, T *a0, T *a1, T *a2, T *a3, T *a4, T *a5,
   T *a6, T *a7, T *a8, T *a9)
 {
   vector<T*> pointers = collectLeadingNonNullArguments(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
@@ -735,13 +826,13 @@ vector<vector<T>> GNUPlotter::wrapIntoVectors(int N, T *a0, T *a1, T *a2, T *a3,
   return v;
 }
 
-void GNUPlotter::addToStringVector(vector<string>& v, CSR s0, CSR s1, CSR s2, CSR s3, CSR s4, 
+void GNUPlotter::addToStringVector(vector<string>& v, CSR s0, CSR s1, CSR s2, CSR s3, CSR s4,
   CSR s5, CSR s6, CSR s7, CSR s8, CSR s9)
 {
   append(v, collectLeadingNonNullArguments(s0, s1, s2, s3, s4, s5, s6, s7, s8, s9));
 }
 
-void GNUPlotter::setStringVector(vector<string>& v, CSR s0, CSR s1, CSR s2, CSR s3, CSR s4, CSR s5, 
+void GNUPlotter::setStringVector(vector<string>& v, CSR s0, CSR s1, CSR s2, CSR s3, CSR s4, CSR s5,
   CSR s6, CSR s7, CSR s8, CSR s9)
 {
   v.clear();
