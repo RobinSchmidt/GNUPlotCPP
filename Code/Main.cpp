@@ -45,7 +45,8 @@ int main(int argc, char** argv)
   //testDataSetup2();
 
   // Experiments:
-  surfaceExperiment();
+  //surfaceExperiment();
+  complexExperiment();
 
   //getchar();
   return(EXIT_SUCCESS);

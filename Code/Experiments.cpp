@@ -2,13 +2,14 @@
 #include <functional>
 using namespace std;
 
-// Convenience function - eventually move to class GNUPlotter - maybe factor out a function
-// addDataParametricSurface
+//-------------------------------------------------------------------------------------------------
+// convenience functions for certain types of plots (eventually move to class GNUPlotter):
+
 template<class T>
 void plotParametricSurface(
-  const std::function<T(T, T)>& fx,
-  const std::function<T(T, T)>& fy,
-  const std::function<T(T, T)>& fz,
+  const function<T(T, T)>& fx, 
+  const function<T(T, T)>& fy,
+  const function<T(T, T)>& fz,
   int Nu, T uMin, T uMax,
   int Nv, T vMin, T vMax)
 {
@@ -39,7 +40,25 @@ void plotParametricSurface(
   //p.addCommand("set ztics 0.5");                 // density of z-axis tics
   p.plot3D();                                    // invoke GNUPlot
 }
-// maybe have also functions: addDataParametricCurve2D, addDataParametricCurve3D, 
+// maybe factor out a function addDataParametricSurface and have maybe have also functions: 
+// addDataParametricCurve2D, addDataParametricCurve3D, 
+
+template<class T>
+void plotComplexSurface(const function<complex<T>(complex<T>)>& f,
+  int Nr, T rMin, T rMax, int Ni, T iMin, T iMax)
+{
+  std::function<T(T, T)> fx, fy, fz;
+  fx = [=] (T re, T im) { return real(f(complex<T>(re, im))); };
+  fy = [=] (T re, T im) { return imag(f(complex<T>(re, im))); };
+  fz = [=] (T re, T im) { return 0; };  // preliminary
+
+  plotParametricSurface(fx, fy, fz, Nr, rMin, rMax, Ni, iMin, iMax);
+}
+// maybe try showing abs and arg instead of re and im, also try to use abs and arg as inputs
+// ...there seem to be a lot of combinations that may be tried
+
+//-------------------------------------------------------------------------------------------------
+// actual experiments:
 
 void surfaceExperiment()
 {
@@ -56,9 +75,27 @@ void surfaceExperiment()
   fx = [] (double u, double v) { return u*v; };
   fy = [] (double u, double v) { return u+v; };
   fz = [] (double u, double v) { return u-v; };
+  // maybe use a more interesting surface (torus, sphere, whatever)
 
   // plot the surface:
   plotParametricSurface(fx, fy, fz, Nu, uMin, uMax, Nv, vMin, vMax);
+}
+
+void complexExperiment()
+{
+  // Set up range and umber of sampling points for real and imaginary part:
+  double rMin = -2; double rMax = +2; int Nr = 21;
+  double iMin = -2; double iMax = +2; int Ni = 21;
+
+  // Define the complex function w = f(z) = z^2 as example complex function:
+  function<complex<double>(complex<double>)> f;
+  f = [] (complex<double> z) { return z*z; };
+
+  // plot the surface corresponding to the function:
+  plotComplexSurface(f, Nr, rMin, rMax, Ni, iMin, iMax);
+
+  // todo: try other ways to visualize a complex function - for example by showing, how grid-lines
+  // are mapped (real, imag, radial, angular)
 }
 
 /*
