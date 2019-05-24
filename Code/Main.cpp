@@ -1,8 +1,11 @@
 #include "Demos.h"
 #include "Tests.h"
+#include "Experiments.h"
 
 int main(int argc, char** argv)
 {
+  /*
+
   //testMatrixWrite();
   //testLowLevelCalls();
 
@@ -30,7 +33,9 @@ int main(int argc, char** argv)
   demoSincRadial();
   demoSincRadialHeatMap();
 
-  // If you want to see, how they were done, jump into the implementaions of these functions - 
+  */
+
+  // If you want to see, how they were done, jump into the implementations of these functions - 
   // there you will find commented code that should make it clear how the plotter class is supposed
   // to be used , so you can take these as examples and reference for using it for creating your 
   // own plots:
@@ -38,6 +43,9 @@ int main(int argc, char** argv)
   // these are just some tests for debugging:
   //testDataSetup();
   //testDataSetup2();
+
+  // Experiments:
+  surfaceExperiment();
 
   //getchar();
   return(EXIT_SUCCESS);

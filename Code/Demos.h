@@ -4,27 +4,19 @@
 #include "GNUPlotter.h"
 
 
-
-
-
 void demoArrayPlot();
 void demoFunctionTablePlot();
 void demoFunctionPlot();
 
 // void demoFunctionFamily();
 
-
 void demoAliasing();
 void demoFrequencyResponse();
-
 
 void demoPoleZeroPlotS();
 void demoPoleZeroPlotZ();
 
-
 void demoTransferMagnitude();   // not yet finished
-
-
 
 void demoPlottingStyles();
 void demoTrigFunctions();
@@ -42,8 +34,6 @@ void demoGaussianBivariate();
 void demoPow();
 void demoSincRadial();
 void demoSincRadialHeatMap();
-
-
 
 // make demos that show various linestyles, pointtypes, etc - provide a legend that shows the
 // corrsponding GNUPlot command

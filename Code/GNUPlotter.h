@@ -48,7 +48,7 @@ public:
   void initialize();
 
   //-----------------------------------------------------------------------------------------------
-  /** \name Plotting */
+  /** \name Convenience functions */
 
   /** Convenience function to allow plotting without having client code instantiate a plotter 
   object, set it up, etc. */
@@ -60,6 +60,9 @@ public:
     plt.addDataArrays(N, x, y1, y2, y3, y4, y5, y6, y7, y8, y9);
     plt.plot();
   }
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Plotting */
 
   /** After the data has been set up and possibly a couple of formatting functions have been
   called, calling this function will actually invoke GNUPlot for plotting the data according to the

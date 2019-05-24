@@ -765,8 +765,9 @@ void demoTorus()
   //p.addCommand("set view equal xyz");  // otherwise, it stretches along z
 
   // ToDo: find out, why it is shown so small
-  // ToDo: maybe plot 2 linked tori with different line colors (that needs a more general formula 
-  // for the torus where we can specify center and orientation)
+  // ToDo: maybe plot 2 linked tori with different line colors  - that needs a more general formula 
+  // for the torus where we can specify center and orientation - maybe have function 
+  // createTorusData and a function affineTransform3D
 }
 
 // see here for a paramtric torus:
