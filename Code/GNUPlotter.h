@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <complex>
+#include <functional>   // for passing functions
+#include <algorithm>    // for min
 
 /** This class allows for plotting data and functions directly from C++ code by invoking GNUPlot.
 You can pass in the data to be plotted and set up a couple of things that control how the data will
@@ -61,6 +63,14 @@ public:
     plt.addDataArrays(N, x, y1, y2, y3, y4, y5, y6, y7, y8, y9);
     plt.plot();
   }
+
+  /** Plots a 2-dimensional vector field defined by the two bivariate functions fx,fy which shall
+  compute the components of the output vector. They should both take two arguments which are the 
+  x,y-coordinates of the input vector. The vector field is drawn such that all vectors have the
+  same length and their actual magnitudes are indicated by color. */
+  template<class T>
+  static void plotVectorField2D(const std::function<T(T, T)>& fx, const std::function<T(T, T)>& fy,
+    int Nx, T xMin, T xMax, int Ny, T yMin, T yMax);
 
 
   //-----------------------------------------------------------------------------------------------
@@ -338,6 +348,19 @@ public:
   void addDataBivariateFunction(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax, T (*f)(T, T));
     // \todo: add 2 optional boolean parameters to let x- and/or y array be exponentially scaled 
     // instead of linear bool xLog = false, bool yLog = false
+
+
+  /** Adds data for 2-dimensional vector fields. Such data is passed to GNUPlot in 4 or 5 columns: 
+  x, y, dx, dy, c where the optional 5th column c is used to color the vectors. The dx,dy values 
+  represent the vector to be drawn at x,y as defined by the vector-field like 
+  (dx,dy) = (fx(x,y, fy(x,y)). Here, we use the 5-column format and normalize the lengths of the 
+  dx,dy vectors and pass the length seperately in the 5th column which can be used for coloring, 
+  such that in the plot, all drawn vectors will have the same length (and indicate only direction) 
+  and the color will indicate the magnitudes. */
+  template<class T>
+  void addDataVectorField2D(const std::function<T(T, T)>& fx, const std::function<T(T, T)>& fy,
+    int Nx, T xMin, T xMax, int Ny, T yMin, T yMax);
+
 
 
   /** Adds a graph to the plot. You must pass a string that describes how the data (from the 

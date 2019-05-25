@@ -1,6 +1,6 @@
 #include "GNUPlotter.h"
-#include <functional>
-#include <algorithm>    // for min
+//#include <functional>
+//#include <algorithm>    // for min
 using namespace std;
 
 //-------------------------------------------------------------------------------------------------
@@ -79,46 +79,19 @@ void plotVectorField2D(
   int Nx, T xMin, T xMax,
   int Ny, T yMin, T yMax)
 {
-  // Data for vector fields is passed in 4 or 5 columns: x, y, dx, dy, c where the optional 5th 
-  // column c is used to color the vectors. The dx,dy values represent the vector to be drawn at 
-  // x,y as defined by the vector-field like (dx,dy) = (fx(x,y, fy(x,y) ...but here we normalize 
-  // the lengths of the dx,dy vectors and instead pass the length in the 5th column for coloring,
-  // such that in the plot, all drawn vectors will have the same length (and indicate only 
-  // direction) and the color will indicate the magnitudes.
+  GNUPlotter::plotVectorField2D(fx, fy, Nx, xMin, xMax, Ny, yMin, yMax);
+  // function now actually obsolete - we have all the code in class GNUPlotter now
 
-  // create data:
-  int Nv = Nx*Ny;                                // number of vectors to draw
-  vector<T> x(Nv), y(Nv), dx(Nv), dy(Nv), c(Nv); // arrays to hold our data
-  T xStep = (xMax-xMin) / T(Nx-1);               // step size for x
-  T yStep = (yMax-yMin) / T(Ny-1);               // step size for y
-  T arrowLength = min(xStep, yStep);             // length of arrows to draw
-  T s;                                           // length scaler
-  for(size_t i = 0; i < Nx; i++) {               // loop over x-samples
-    for(size_t j = 0; j < Ny; j++) {             // loop over y-samples
-      size_t k = i*Ny + j;                       // current index in data arrays
-      x[k]   = xMin + i * xStep;                 // x coordinate (for tail of vector)
-      y[k]   = yMin + j * yStep;                 // y corrdinate (for tail of vector)
-      dx[k]  = fx(x[k], y[k]);                   // vector's x component
-      dy[k]  = fy(x[k], y[k]);                   // vector's y component
-      c[k]   = hypot(dx[k], dy[k]);              // store length in c for use as color
-      if(c[k] != T(0)) s = arrowLength / c[k];   // length normalizing scaler...
-      else             s = T(0);                 // ...catch div-by-0
-      dx[k] *= s;                                // we normalize the length...
-      dy[k] *= s;                                // ...of the vector
-    }
-  }
+  //p.addDataArrays(Nv, &x[0], &y[0], &dx[0], &dy[0], &c[0]);
 
-  // plot:
-  GNUPlotter p;
-  p.addDataArrays(Nv, &x[0], &y[0], &dx[0], &dy[0], &c[0]);
   //p.addGraph("index 0 using 1:2:3:4:5 with vectors head size 0.2,10,30 filled lc palette notitle");
-  p.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
+  //p.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
   //p.addCommand("set palette gray negative");
-  p.addCommand("set palette rgbformulae 30,31,32 negative");
+  //p.addCommand("set palette rgbformulae 30,31,32 negative");
 
   //p.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette gray notitle");
 
-  p.plot();
+  //p.plot();
   // -maybe give the user the option to scale the arrow-lengths
 }
 // info for drawing vector fields:
@@ -126,8 +99,9 @@ void plotVectorField2D(
 // http://www.gnuplotting.org/vector-field-from-data-file/
 // for styling the arrows, see here:
 // http://www.gnuplot.info/demo/arrowstyle.html
-// -maybe make it possible to drsw curves (i.e. integration paths) on top of the vector fields
+// -maybe make it possible to draw curves (i.e. integration paths) on top of the vector fields
 // -how about equipotential lines?
+// -can we similarly draw a vector field in 3D?
 
 //-------------------------------------------------------------------------------------------------
 // actual experiments:

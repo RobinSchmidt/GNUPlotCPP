@@ -34,7 +34,36 @@ void GNUPlotter::initialize()
   addDefaultCommands();
 }
 
+// convenience functions:
+
+template<class T>
+void GNUPlotter::plotVectorField2D(const function<T(T, T)>& fx, const function<T(T, T)>& fy,
+  int Nx, T xMin, T xMax, int Ny, T yMin, T yMax)
+{
+  GNUPlotter p;
+  p.addDataVectorField2D(fx, fy, Nx, xMin, xMax, Ny, yMin, yMax);
+  p.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
+  //p.addCommand("set palette gray negative");
+  p.addCommand("set palette rgbformulae 30,31,32 negative");
+  p.plot();
+}
+// explicit instantiations for double, float and int:
+template void GNUPlotter::plotVectorField2D(
+  const function<int(int, int)>& fx, 
+  const function<int(int, int)>& fy,
+  int Nx, int xMin, int xMax, int Ny, int yMin, int yMax);
+template void GNUPlotter::plotVectorField2D(
+  const function<float(float, float)>& fx, 
+  const function<float(float, float)>& fy,
+  int Nx, float xMin, float xMax, int Ny, float yMin, float yMax);
+template void GNUPlotter::plotVectorField2D(
+  const function<double(double, double)>& fx, 
+  const function<double(double, double)>& fy,
+  int Nx, double xMin, double xMax, int Ny, double yMin, double yMax);
+
+
 // plotting:
+
 
 /*
 template <class T>
@@ -535,6 +564,36 @@ void GNUPlotter::addDataBivariateFunction(int Nx, T xMin, T xMax, int Ny, T yMin
   delete[] x;
   delete[] y;
 }
+
+template <class T>
+void GNUPlotter::addDataVectorField2D(const function<T(T, T)>& fx, const function<T(T, T)>& fy,
+  int Nx, T xMin, T xMax, int Ny, T yMin, T yMax)
+{
+  int Nv = Nx*Ny;                                // number of vectors to draw
+  vector<T> x(Nv), y(Nv), dx(Nv), dy(Nv), c(Nv); // arrays to hold our data
+  T xStep = (xMax-xMin) / T(Nx-1);               // step size for x
+  T yStep = (yMax-yMin) / T(Ny-1);               // step size for y
+  T arrowLength = min(xStep, yStep);             // length of arrows to draw
+  T s;                                           // length scaler
+  for(int i = 0; i < Nx; i++) {                  // loop over x-samples
+    for(int j = 0; j < Ny; j++) {                // loop over y-samples
+      int k = i*Ny + j;                          // current index in data arrays
+      x[k]  = xMin + i * xStep;                  // x coordinate (for tail of vector)
+      y[k]  = yMin + j * yStep;                  // y corrdinate (for tail of vector)
+      dx[k] = fx(x[k], y[k]);                    // vector's x component
+      dy[k] = fy(x[k], y[k]);                    // vector's y component
+      c[k]  = (T)hypot(dx[k], dy[k]);            // store length in c for use as color
+      if(c[k] != T(0)) s = arrowLength / c[k];   // compute length scaler...
+      else             s = T(0);                 // ...catch div-by-0
+      dx[k] *= s;                                // adjust the length...
+      dy[k] *= s;                                // ...of the vector
+    }
+  }
+  addDataArrays(Nv, &x[0], &y[0], &dx[0], &dy[0], &c[0]);
+}
+
+
+
 
 void GNUPlotter::addGraph(CSR descriptor)
 {
