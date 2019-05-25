@@ -14,35 +14,9 @@ void plotParametricSurface(
   int Nu, T uMin, T uMax,
   int Nv, T vMin, T vMax)
 {
-  // Create the data vector. The outer index runs over the indices for parameter u, the middle 
-  // index runs over v and the innermost vector index runs from 0...2 giving a 3-vector containing 
-  // x, y, z coordinates for each point:
-  vector<vector<vector<double>>> d;              // doubly nested vector of data
-  d.resize(Nu);                                  // we have Nu blocks of data
-  for(int i = 0; i < Nu; i++) {                  // loop over the data blocks
-    d[i].resize(Nv);                             // each block has Nv lines/datapoints
-    T u = uMin + (uMax-uMin) * T(i) / T(Nu-1);   // value of parameter u
-    for(int j = 0; j < Nv; j++) {                // loop over lines in current block
-      T v = vMin + (vMax-vMin) * T(j) / T(Nv-1); // value of parameter v
-      d[i][j].resize(3);                         // each datapoint has 3 columns/dimensions
-      d[i][j][0] = fx(u,v);                      // x = fx(u,v)
-      d[i][j][1] = fy(u,v);                      // y = fy(u,v)
-      d[i][j][2] = fz(u,v);                      // z = fz(u,v)
-    }
-  }
-  // maybe factor out a function addDataParametricSurface and have maybe have also functions: 
-  // addDataParametricCurve2D, addDataParametricCurve3D, 
-
-  // plot:
-  GNUPlotter p;                                  // create plotter object
-  p.addData(d);                                  // pass the data to the plotter         
-  p.addCommand("set hidden3d");                  // don't draw hidden lines
-  //p.addCommand("set view 20,50");                // set up perspective
-  //p.addCommand("set lmargin 0");                 // margin between plot and left border
-  //p.addCommand("set tmargin 0");                 // margin between plot and top border
-  //p.addCommand("set ztics 0.5");                 // density of z-axis tics
-  p.plot3D();                                    // invoke GNUPlot
+  GNUPlotter::plotSurface(fx, fy, fz, Nu, uMin, uMax, Nv, vMin, vMax);
 }
+// obsolete
 
 
 template<class T>
@@ -71,37 +45,6 @@ void plotComplexSurface(const function<complex<T>(complex<T>)>& f,
 }
 // maybe try showing abs and arg instead of re and im, also try to use abs and arg as inputs
 // ...there seem to be a lot of combinations that may be tried
-
-template<class T>
-void plotVectorField2D(
-  const function<T(T, T)>& fx,
-  const function<T(T, T)>& fy,
-  int Nx, T xMin, T xMax,
-  int Ny, T yMin, T yMax)
-{
-  GNUPlotter::plotVectorField2D(fx, fy, Nx, xMin, xMax, Ny, yMin, yMax);
-  // function now actually obsolete - we have all the code in class GNUPlotter now
-
-  //p.addDataArrays(Nv, &x[0], &y[0], &dx[0], &dy[0], &c[0]);
-
-  //p.addGraph("index 0 using 1:2:3:4:5 with vectors head size 0.2,10,30 filled lc palette notitle");
-  //p.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
-  //p.addCommand("set palette gray negative");
-  //p.addCommand("set palette rgbformulae 30,31,32 negative");
-
-  //p.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette gray notitle");
-
-  //p.plot();
-  // -maybe give the user the option to scale the arrow-lengths
-}
-// info for drawing vector fields:
-// https://stackoverflow.com/questions/5442401/vector-field-using-gnuplot
-// http://www.gnuplotting.org/vector-field-from-data-file/
-// for styling the arrows, see here:
-// http://www.gnuplot.info/demo/arrowstyle.html
-// -maybe make it possible to draw curves (i.e. integration paths) on top of the vector fields
-// -how about equipotential lines?
-// -can we similarly draw a vector field in 3D?
 
 //-------------------------------------------------------------------------------------------------
 // actual experiments:
@@ -158,10 +101,24 @@ void vectorFieldExperiment()
   fx = [] (double x, double y) { return x*x - y*y; }; // x^2 - y^2 = Re{ z^2 }
   fy = [] (double x, double y) { return 2*x*y;     }; // 2xy       = Im{ z^2 }
 
-  // plot the function as vector field:
-  plotVectorField2D(fx, fy, 31, -3., +3., 21, -2., +2.);
-}
+  // todo: draw the vector field of a dipole, move to demos, maybe let the function have a 
+  // parameter that selects, which particular function is drawn (z^2, dipole, quadrupole, etc.)
 
+  // plot the function as vector field:
+  GNUPlotter::plotVectorField2D(fx, fy, 31, -3., +3., 21, -2., +2.);
+
+  //GNUPlotter::plotVectorField2D(fx, fy, Nx, xMin, xMax, Ny, yMin, yMax);
+
+}
+// info for drawing vector fields:
+// https://stackoverflow.com/questions/5442401/vector-field-using-gnuplot
+// http://www.gnuplotting.org/vector-field-from-data-file/
+// for styling the arrows, see here:
+// http://www.gnuplot.info/demo/arrowstyle.html
+// -maybe make it possible to draw curves (i.e. integration paths) on top of the vector fields
+// -how about equipotential lines?
+// -can we similarly draw a vector field in 3D?
+// -maybe give the user the option to scale the arrow-lengths
 
 
 /*

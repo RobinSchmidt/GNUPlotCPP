@@ -36,6 +36,41 @@ void GNUPlotter::initialize()
 
 // convenience functions:
 
+
+template <class T>
+void GNUPlotter::plotSurface(
+  const std::function<T(T, T)>& fx,
+  const std::function<T(T, T)>& fy,
+  const std::function<T(T, T)>& fz,
+  int Nu, T uMin, T uMax, int Nv, T vMin, T vMax)
+{
+  GNUPlotter p;
+  p.addDataSurface(fx, fy, fz, Nu, uMin, uMax, Nv, vMin, vMax);
+  p.addCommand("set hidden3d");                  // don't draw hidden lines
+  //p.addCommand("set view 20,50");                // set up perspective
+  //p.addCommand("set lmargin 0");                 // margin between plot and left border
+  //p.addCommand("set tmargin 0");                 // margin between plot and top border
+  //p.addCommand("set ztics 0.5");                 // density of z-axis tics
+  p.plot3D();                                    // invoke GNUPlot
+}
+// explicit instantiations for int, float and double:
+template void GNUPlotter::plotSurface(
+  const std::function<int(int, int)>& fx,
+  const std::function<int(int, int)>& fy,
+  const std::function<int(int, int)>& fz,
+  int Nu, int uMin, int uMax, int Nv, int vMin, int vMax);
+template void GNUPlotter::plotSurface(
+  const std::function<float(float, float)>& fx,
+  const std::function<float(float, float)>& fy,
+  const std::function<float(float, float)>& fz,
+  int Nu, float uMin, float uMax, int Nv, float vMin, float vMax);
+template void GNUPlotter::plotSurface(
+  const std::function<double(double, double)>& fx,
+  const std::function<double(double, double)>& fy,
+  const std::function<double(double, double)>& fz,
+  int Nu, double uMin, double uMax, int Nv, double vMin, double vMax);
+
+
 template<class T>
 void GNUPlotter::plotVectorField2D(const function<T(T, T)>& fx, const function<T(T, T)>& fy,
   int Nx, T xMin, T xMax, int Ny, T yMin, T yMax)
@@ -47,7 +82,6 @@ void GNUPlotter::plotVectorField2D(const function<T(T, T)>& fx, const function<T
   p.addCommand("set palette rgbformulae 30,31,32 negative");
   p.plot();
 }
-// explicit instantiations for double, float and int:
 template void GNUPlotter::plotVectorField2D(
   const function<int(int, int)>& fx, 
   const function<int(int, int)>& fy,
@@ -535,6 +569,32 @@ void GNUPlotter::addDataMatrix(int Nx, int Ny, T *x, T *y, T **z)
 }
 
 template <class T>
+void GNUPlotter::addDataSurface(
+  const function<T(T, T)>& fx, const function<T(T, T)>& fy, const function<T(T, T)>& fz,
+  int Nu, T uMin, T uMax, int Nv, T vMin, T vMax)
+{
+  // The outer index runs over the indices for parameter u, the middle index runs over v and the 
+  // innermost vector index runs from 0...2 giving a 3-vector containing x, y, z coordinates for 
+  // each point:
+  vector<vector<vector<double>>> d;              // doubly nested vector of data
+  T uStep = (uMax-uMin) / T(Nu-1);               // step size for u
+  T vStep = (vMax-vMin) / T(Nv-1);               // step size for v
+  d.resize(Nu);                                  // we have Nu blocks of data
+  for(int i = 0; i < Nu; i++) {                  // loop over the data blocks
+    d[i].resize(Nv);                             // each block has Nv lines/datapoints
+    T u = uMin + T(i) * uStep;                   // value of parameter u
+    for(int j = 0; j < Nv; j++) {                // loop over lines in current block
+      T v = vMin + T(j) * vStep;                 // value of parameter v
+      d[i][j].resize(3);                         // each datapoint has 3 columns/dimensions
+      d[i][j][0] = fx(u,v);                      // x = fx(u,v)
+      d[i][j][1] = fy(u,v);                      // y = fy(u,v)
+      d[i][j][2] = fz(u,v);                      // z = fz(u,v)
+    }
+  }
+  addData(d);
+}
+
+template <class T>
 void GNUPlotter::addDataBivariateFunction(int Nx, int Ny, T *x, T *y, T (*f)(T, T))
 {
   int i, j;
@@ -578,8 +638,8 @@ void GNUPlotter::addDataVectorField2D(const function<T(T, T)>& fx, const functio
   for(int i = 0; i < Nx; i++) {                  // loop over x-samples
     for(int j = 0; j < Ny; j++) {                // loop over y-samples
       int k = i*Ny + j;                          // current index in data arrays
-      x[k]  = xMin + i * xStep;                  // x coordinate (for tail of vector)
-      y[k]  = yMin + j * yStep;                  // y corrdinate (for tail of vector)
+      x[k]  = xMin + T(i) * xStep;               // x coordinate (for tail of vector)
+      y[k]  = yMin + T(j) * yStep;               // y coordinate (for tail of vector)
       dx[k] = fx(x[k], y[k]);                    // vector's x component
       dy[k] = fy(x[k], y[k]);                    // vector's y component
       c[k]  = (T)hypot(dx[k], dy[k]);            // store length in c for use as color

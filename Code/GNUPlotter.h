@@ -22,7 +22,7 @@ For this to work, the following preliminaries must be met:
  fixed to E:/Temp/) - that's where the temporary data- and command batchfile will be written
 
 ToDo:
--use const pointers to pass data inot the functions
+-use const pointers to pass data into the functions
 -instead of plain C function pointers, allow std::function
 -implement more high-level plotting functions for vector-fields, complex mappings, etc. */
 
@@ -63,6 +63,16 @@ public:
     plt.addDataArrays(N, x, y1, y2, y3, y4, y5, y6, y7, y8, y9);
     plt.plot();
   }
+
+  /** Plots a parametric surface in 3-dimensional space. Such a surface is described by 3 bivariate 
+  scalar-valued functions fx(u,v), fy(u,v), fz(u,v) which respectively compute the 3 coordinates of
+  a point on the surface, parameterized by the two input variables/parameters u and v. */
+  template <class T>
+  static void plotSurface(
+    const std::function<T(T, T)>& fx, 
+    const std::function<T(T, T)>& fy, 
+    const std::function<T(T, T)>& fz,
+    int Nu, T uMin, T uMax, int Nv, T vMin, T vMax);
 
   /** Plots a 2-dimensional vector field defined by the two bivariate functions fx,fy which shall
   compute the components of the output vector. They should both take two arguments which are the 
@@ -340,6 +350,15 @@ public:
   template <class T>
   void addDataMatrix(int Nx, int Ny, T *x, T *y, T **z);
 
+  // todo: addDataCurve2D, addDataCurve3D
+
+  /** Adds a data set representing parametric surface in 3-dimensional space. */
+  template <class T>
+  void addDataSurface(
+    const std::function<T(T, T)>& fx, 
+    const std::function<T(T, T)>& fy, 
+    const std::function<T(T, T)>& fz,
+    int Nu, T uMin, T uMax, int Nv, T vMin, T vMax);
 
   template <class T>
   void addDataBivariateFunction(int Nx, int Ny, T *x, T *y,  T (*f)(T,T));
