@@ -7,7 +7,7 @@ using namespace std;
 
 template<class T>
 void plotParametricSurface(
-  const function<T(T, T)>& fx, 
+  const function<T(T, T)>& fx,
   const function<T(T, T)>& fy,
   const function<T(T, T)>& fz,
   int Nu, T uMin, T uMax,
@@ -29,6 +29,8 @@ void plotParametricSurface(
       d[i][j][2] = fz(u,v);                      // z = fz(u,v)
     }
   }
+  // maybe factor out a function addDataParametricSurface and have maybe have also functions: 
+  // addDataParametricCurve2D, addDataParametricCurve3D, 
 
   // plot:
   GNUPlotter p;                                  // create plotter object
@@ -40,22 +42,48 @@ void plotParametricSurface(
   //p.addCommand("set ztics 0.5");                 // density of z-axis tics
   p.plot3D();                                    // invoke GNUPlot
 }
-// maybe factor out a function addDataParametricSurface and have maybe have also functions: 
-// addDataParametricCurve2D, addDataParametricCurve3D, 
+
 
 template<class T>
 void plotComplexSurface(const function<complex<T>(complex<T>)>& f,
   int Nr, T rMin, T rMax, int Ni, T iMin, T iMax)
 {
   std::function<T(T, T)> fx, fy, fz;
-  fx = [=] (T re, T im) { return real(f(complex<T>(re, im))); };
-  fy = [=] (T re, T im) { return imag(f(complex<T>(re, im))); };
-  fz = [=] (T re, T im) { return 0; };  // preliminary
+  fx = [&] (T re, T im) { return real(f(complex<T>(re, im))); };
+  fy = [&] (T re, T im) { return imag(f(complex<T>(re, im))); };
+
+  // maybe let the user select, what should be used by a parameter:
+  //fz = [&] (T re, T im) { return 0; };  // preliminary
+
+  fz = [&] (T re, T im) { return re; };  // preliminary
+  // for f(z) = z^2, this looks a lot like the Riemannian surface here:
+  // https://www.youtube.com/watch?v=4MmSZrAlqKc&list=PLiaHhY2iBX9g6KIvZ_703G3KJXapKkNaF&index=13
+  // ..but is it really the same thing?
+
+  //fz = [&] (T re, T im) { return abs(f(complex<T>(re, im))); };
+  //fz = [&] (T re, T im) { return abs(complex<T>(re, im)); };
+
+  //fz = [&] (T re, T im) { return im; };  // preliminary
+
 
   plotParametricSurface(fx, fy, fz, Nr, rMin, rMax, Ni, iMin, iMax);
 }
 // maybe try showing abs and arg instead of re and im, also try to use abs and arg as inputs
 // ...there seem to be a lot of combinations that may be tried
+
+template<class T>
+void plotVectorField2D(
+  const function<T(T, T)>& fx,
+  const function<T(T, T)>& fy,
+  int Nx, T xMin, T xMax,
+  int Ny, T yMin, T yMax)
+{
+
+
+}
+// info for drawing vector fields:
+// https://stackoverflow.com/questions/5442401/vector-field-using-gnuplot
+// http://www.gnuplotting.org/vector-field-from-data-file/
 
 //-------------------------------------------------------------------------------------------------
 // actual experiments:
@@ -90,6 +118,10 @@ void complexExperiment()
   // Define the complex function w = f(z) = z^2 as example complex function:
   function<complex<double>(complex<double>)> f;
   f = [] (complex<double> z) { return z*z; };
+  //f = [] (complex<double> z) { return z*z*z; };
+  //f = [] (complex<double> z) { return z*z*z*z; };
+  //f = [] (complex<double> z) { return exp(z); };
+  //f = [] (complex<double> z) { return sin(2.0*z); };
 
   // plot the surface corresponding to the function:
   plotComplexSurface(f, Nr, rMin, rMax, Ni, iMin, iMax);
@@ -98,9 +130,28 @@ void complexExperiment()
   // are mapped (real, imag, radial, angular)
 }
 
+
+void vectorFieldExperiment()
+{
+  // Create two bivariate functions that resemble the complex function 
+  // w = f(z) = z^2 = (x + iy)^2
+  std::function<double(double, double)> fx, fy;
+  fx = [] (double x, double y) { return x*x - y*y; }; // x^2 - y^2 = Re{ z^2 }
+  fy = [] (double u, double v) { return u+v; };       // 2xy       = Im{ z^2 }
+
+  // plot the function as vector field:
+  plotVectorField2D(fx, fy, 21, -2., +2., 21, -2., +2.);
+}
+
+
+
 /*
 Ideas:
 -figure out, how to plot 2D and 3D vector fields
 -try to visualize complex functions as 2D vector fields
+
+
+
+
 
 */

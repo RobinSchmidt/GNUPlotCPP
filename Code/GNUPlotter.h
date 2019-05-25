@@ -5,9 +5,7 @@
 #include <vector>
 #include <complex>
 
-/**
-
-This class allows for plotting data and functions directly from C++ code by invoking GNUPlot.
+/** This class allows for plotting data and functions directly from C++ code by invoking GNUPlot.
 You can pass in the data to be plotted and set up a couple of things that control how the data will
 be presented. From this data and the setup, an object of this class will create a datafile and a 
 batchfile with GNUPlot commands. Then, GNUPlot is invoked from the command line and told to read 
@@ -21,7 +19,10 @@ For this to work, the following preliminaries must be met:
 -the directory defined in the member variables datapath and commandPath must exist (currently 
  fixed to E:/Temp/) - that's where the temporary data- and command batchfile will be written
 
-*/
+ToDo:
+-use const pointers to pass data inot the functions
+-instead of plain C function pointers, allow std::function
+-implement more high-level plotting functions for vector-fields, complex mappings, etc. */
 
 typedef const std::string & CSR;     // type "CSR" is a const reference to a std::string
                                      // maybe rename to CRS
@@ -60,6 +61,7 @@ public:
     plt.addDataArrays(N, x, y1, y2, y3, y4, y5, y6, y7, y8, y9);
     plt.plot();
   }
+
 
   //-----------------------------------------------------------------------------------------------
   /** \name Plotting */
@@ -292,7 +294,7 @@ public:
   example - by a two-dimensional function z = f(x,y). You pass the arrays of x- and y values 
   (which should be of length Nx and Ny respectively) and a matrix of z-values such that 
   z[i][j] = f(x[i], y[j]). 
-  Let N=Nx-1, M=Ny-1. Then the dataformat in the file is given by:
+  Let N=Nx-1, M=Ny-1. Then the data format in the file is given by:
   x[0] y[0] z[0][0]    1st block
   x[0] y[1] z[0][1]
   ...  ...    ...

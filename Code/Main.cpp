@@ -46,7 +46,8 @@ int main(int argc, char** argv)
 
   // Experiments:
   //surfaceExperiment();
-  complexExperiment();
+  //complexExperiment();
+  vectorFieldExperiment();
 
   //getchar();
   return(EXIT_SUCCESS);
