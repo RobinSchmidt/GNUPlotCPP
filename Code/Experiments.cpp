@@ -1,5 +1,6 @@
 #include "GNUPlotter.h"
 #include <functional>
+#include <algorithm>    // for min
 using namespace std;
 
 //-------------------------------------------------------------------------------------------------
@@ -78,6 +79,36 @@ void plotVectorField2D(
   int Nx, T xMin, T xMax,
   int Ny, T yMin, T yMax)
 {
+  // Data for vector fields is in 4 or 5 columns: x, y, dx, dy, c where the optional 5th column is 
+  // used to color the vectors. The dx,dy values is the vector as defined by the vector-field like
+  // (dx,dy) = (fx(x,y, fy(x,y) ...but here we normalize the lengths of the dx,dy vectors and 
+  // instead pass the length in the 5th column for coloring, such that in the plot, all drawn 
+  // vectors will have the same length (and indicate only direction) and the color will indicate 
+  // the magnitudes.
+
+  // create data:
+  int Nv = Nx*Ny;  // number of vectors to draw
+  vector<T> x(Nv), y(Nv), dx(Nv), dy(Nv), c(Nv);
+  T xStep = (xMax-xMin) / T(Nx-1);         // step size for x
+  T yStep = (yMax-yMin) / T(Ny-1);         // step size for y
+  T arrowLength = min(xStep, yStep);       // length of arrows to draw
+  for(size_t i = 0; i < Nx; i++) {
+    for(size_t j = 0; j < Ny; j++) {
+      size_t k = i*Ny + j;                 // current index
+      x[k]   = xMin + i * xStep;
+      y[k]   = yMin + j * yStep;
+      dx[k]  = fx(x[k], y[k]);
+      dy[k]  = fy(x[k], y[k]);
+      c[k]   = hypot(dx[k], dy[k]);       // store length in c for use as color
+
+      T s    = arrowLength / c[k];        // length normalizing scaler 
+      // todo: catch div-by-0 or we may get NaNs in our data
+
+      dx[k] *= s;
+      dy[k] *= s;
+    }
+  }
+
 
 
 }
@@ -140,7 +171,7 @@ void vectorFieldExperiment()
   fy = [] (double u, double v) { return u+v; };       // 2xy       = Im{ z^2 }
 
   // plot the function as vector field:
-  plotVectorField2D(fx, fy, 21, -2., +2., 21, -2., +2.);
+  plotVectorField2D(fx, fy, 31, -3., +3., 21, -2., +2.);
 }
 
 
