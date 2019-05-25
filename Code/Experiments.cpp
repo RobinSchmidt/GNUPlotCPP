@@ -92,19 +92,19 @@ void plotVectorField2D(
   T xStep = (xMax-xMin) / T(Nx-1);               // step size for x
   T yStep = (yMax-yMin) / T(Ny-1);               // step size for y
   T arrowLength = min(xStep, yStep);             // length of arrows to draw
-  T s;
-  for(size_t i = 0; i < Nx; i++) {
-    for(size_t j = 0; j < Ny; j++) {
-      size_t k = i*Ny + j;                       // current index
-      x[k]   = xMin + i * xStep;
-      y[k]   = yMin + j * yStep;
-      dx[k]  = fx(x[k], y[k]);
-      dy[k]  = fy(x[k], y[k]);
+  T s;                                           // length scaler
+  for(size_t i = 0; i < Nx; i++) {               // loop over x-samples
+    for(size_t j = 0; j < Ny; j++) {             // loop over y-samples
+      size_t k = i*Ny + j;                       // current index in data arrays
+      x[k]   = xMin + i * xStep;                 // x coordinate (for tail of vector)
+      y[k]   = yMin + j * yStep;                 // y corrdinate (for tail of vector)
+      dx[k]  = fx(x[k], y[k]);                   // vector's x component
+      dy[k]  = fy(x[k], y[k]);                   // vector's y component
       c[k]   = hypot(dx[k], dy[k]);              // store length in c for use as color
       if(c[k] != T(0)) s = arrowLength / c[k];   // length normalizing scaler...
       else             s = T(0);                 // ...catch div-by-0
-      dx[k] *= s;
-      dy[k] *= s;
+      dx[k] *= s;                                // we normalize the length...
+      dy[k] *= s;                                // ...of the vector
     }
   }
 
@@ -172,6 +172,7 @@ void complexExperiment()
 
   // todo: try other ways to visualize a complex function - for example by showing, how grid-lines
   // are mapped (real, imag, radial, angular)
+  // how about drawing curves in the z-plane (domain) and their image curves in the w-plane (range)
 }
 
 
