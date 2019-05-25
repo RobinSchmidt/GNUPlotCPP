@@ -111,9 +111,10 @@ void plotVectorField2D(
   // plot:
   GNUPlotter plt;
   plt.addDataArrays(Nv, &x[0], &y[0], &dx[0], &dy[0], &c[0]);
-  plt.addGraph("index 0 using 1:2:3:4:5 with vectors head size 0.1,20,60 filled lc palette notitle");
+  //plt.addGraph("index 0 using 1:2:3:4:5 with vectors head size 0.2,10,30 filled lc palette notitle");
+  plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
   plt.plot();
-  // ok - but the color-map is bad and maybe the arrow heads should be smaller - also we should 
+  // ok - but the color-map is bad - also we should 
   // give the user the option to scale the arrow-lengths
   // but: the arrows do not point into expeceted directions - may we have a bug? at the horizontal
   // (y=0), they should all point to the right - this is just x^2
@@ -121,6 +122,8 @@ void plotVectorField2D(
 // info for drawing vector fields:
 // https://stackoverflow.com/questions/5442401/vector-field-using-gnuplot
 // http://www.gnuplotting.org/vector-field-from-data-file/
+// for styling the arrows, see here:
+// http://www.gnuplot.info/demo/arrowstyle.html
 
 //-------------------------------------------------------------------------------------------------
 // actual experiments:
@@ -174,7 +177,7 @@ void vectorFieldExperiment()
   // w = f(z) = z^2 = (x + iy)^2
   std::function<double(double, double)> fx, fy;
   fx = [] (double x, double y) { return x*x - y*y; }; // x^2 - y^2 = Re{ z^2 }
-  fy = [] (double u, double v) { return u+v; };       // 2xy       = Im{ z^2 }
+  fy = [] (double x, double y) { return 2*x*y;     }; // 2xy       = Im{ z^2 }
 
   // plot the function as vector field:
   plotVectorField2D(fx, fy, 31, -3., +3., 21, -2., +2.);
