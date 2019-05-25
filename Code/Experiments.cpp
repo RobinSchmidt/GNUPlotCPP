@@ -89,28 +89,34 @@ void plotVectorField2D(
   // create data:
   int Nv = Nx*Ny;  // number of vectors to draw
   vector<T> x(Nv), y(Nv), dx(Nv), dy(Nv), c(Nv);
-  T xStep = (xMax-xMin) / T(Nx-1);         // step size for x
-  T yStep = (yMax-yMin) / T(Ny-1);         // step size for y
-  T arrowLength = min(xStep, yStep);       // length of arrows to draw
+  T xStep = (xMax-xMin) / T(Nx-1);               // step size for x
+  T yStep = (yMax-yMin) / T(Ny-1);               // step size for y
+  T arrowLength = min(xStep, yStep);             // length of arrows to draw
+  T s;
   for(size_t i = 0; i < Nx; i++) {
     for(size_t j = 0; j < Ny; j++) {
-      size_t k = i*Ny + j;                 // current index
+      size_t k = i*Ny + j;                       // current index
       x[k]   = xMin + i * xStep;
       y[k]   = yMin + j * yStep;
       dx[k]  = fx(x[k], y[k]);
       dy[k]  = fy(x[k], y[k]);
-      c[k]   = hypot(dx[k], dy[k]);       // store length in c for use as color
-
-      T s    = arrowLength / c[k];        // length normalizing scaler 
-      // todo: catch div-by-0 or we may get NaNs in our data
-
+      c[k]   = hypot(dx[k], dy[k]);              // store length in c for use as color
+      if(c[k] != T(0)) s = arrowLength / c[k];   // length normalizing scaler...
+      else             s = T(0);                 // ...catch div-by-0
       dx[k] *= s;
       dy[k] *= s;
     }
   }
 
-
-
+  // plot:
+  GNUPlotter plt;
+  plt.addDataArrays(Nv, &x[0], &y[0], &dx[0], &dy[0], &c[0]);
+  plt.addGraph("index 0 using 1:2:3:4:5 with vectors head size 0.1,20,60 filled lc palette notitle");
+  plt.plot();
+  // ok - but the color-map is bad and maybe the arrow heads should be smaller - also we should 
+  // give the user the option to scale the arrow-lengths
+  // but: the arrows do not point into expeceted directions - may we have a bug? at the horizontal
+  // (y=0), they should all point to the right - this is just x^2
 }
 // info for drawing vector fields:
 // https://stackoverflow.com/questions/5442401/vector-field-using-gnuplot
