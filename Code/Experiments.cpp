@@ -79,16 +79,16 @@ void plotVectorField2D(
   int Nx, T xMin, T xMax,
   int Ny, T yMin, T yMax)
 {
-  // Data for vector fields is in 4 or 5 columns: x, y, dx, dy, c where the optional 5th column is 
-  // used to color the vectors. The dx,dy values is the vector as defined by the vector-field like
-  // (dx,dy) = (fx(x,y, fy(x,y) ...but here we normalize the lengths of the dx,dy vectors and 
-  // instead pass the length in the 5th column for coloring, such that in the plot, all drawn 
-  // vectors will have the same length (and indicate only direction) and the color will indicate 
-  // the magnitudes.
+  // Data for vector fields is passed in 4 or 5 columns: x, y, dx, dy, c where the optional 5th 
+  // column c is used to color the vectors. The dx,dy values represent the vector to be drawn at 
+  // x,y as defined by the vector-field like (dx,dy) = (fx(x,y, fy(x,y) ...but here we normalize 
+  // the lengths of the dx,dy vectors and instead pass the length in the 5th column for coloring,
+  // such that in the plot, all drawn vectors will have the same length (and indicate only 
+  // direction) and the color will indicate the magnitudes.
 
   // create data:
-  int Nv = Nx*Ny;  // number of vectors to draw
-  vector<T> x(Nv), y(Nv), dx(Nv), dy(Nv), c(Nv);
+  int Nv = Nx*Ny;                                // number of vectors to draw
+  vector<T> x(Nv), y(Nv), dx(Nv), dy(Nv), c(Nv); // arrays to hold our data
   T xStep = (xMax-xMin) / T(Nx-1);               // step size for x
   T yStep = (yMax-yMin) / T(Ny-1);               // step size for y
   T arrowLength = min(xStep, yStep);             // length of arrows to draw
@@ -109,21 +109,25 @@ void plotVectorField2D(
   }
 
   // plot:
-  GNUPlotter plt;
-  plt.addDataArrays(Nv, &x[0], &y[0], &dx[0], &dy[0], &c[0]);
-  //plt.addGraph("index 0 using 1:2:3:4:5 with vectors head size 0.2,10,30 filled lc palette notitle");
-  plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
-  plt.plot();
-  // ok - but the color-map is bad - also we should 
-  // give the user the option to scale the arrow-lengths
-  // but: the arrows do not point into expeceted directions - may we have a bug? at the horizontal
-  // (y=0), they should all point to the right - this is just x^2
+  GNUPlotter p;
+  p.addDataArrays(Nv, &x[0], &y[0], &dx[0], &dy[0], &c[0]);
+  //p.addGraph("index 0 using 1:2:3:4:5 with vectors head size 0.2,10,30 filled lc palette notitle");
+  p.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
+  //p.addCommand("set palette gray negative");
+  p.addCommand("set palette rgbformulae 30,31,32 negative");
+
+  //p.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette gray notitle");
+
+  p.plot();
+  // -maybe give the user the option to scale the arrow-lengths
 }
 // info for drawing vector fields:
 // https://stackoverflow.com/questions/5442401/vector-field-using-gnuplot
 // http://www.gnuplotting.org/vector-field-from-data-file/
 // for styling the arrows, see here:
 // http://www.gnuplot.info/demo/arrowstyle.html
+// -maybe make it possible to drsw curves (i.e. integration paths) on top of the vector fields
+// -how about equipotential lines?
 
 //-------------------------------------------------------------------------------------------------
 // actual experiments:

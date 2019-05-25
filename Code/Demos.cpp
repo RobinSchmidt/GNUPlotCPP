@@ -881,6 +881,7 @@ void demoSincRadialHeatMap()
 
   // see http://gnuplot.sourceforge.net/demo_5.1/pm3d.html
   // for more examples of palettes
+  // todo: add a convenience command setColorMap to GNUPlotter class
 
   // http://gnuplot.sourceforge.net/docs_4.2/node216.html lists the available rgbformulae
   // 7,5,15   ... traditional pm3d (black-blue-red-yellow)
