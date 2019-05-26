@@ -146,16 +146,34 @@ void vectorFieldExperiment()
 // http://www.gnuplotting.org/vector-field-from-data-file/
 // for styling the arrows, see here:
 // http://www.gnuplot.info/demo/arrowstyle.html
-// -maybe make it possible to draw curves (i.e. integration paths) on top of the vector fields
-// -how about equipotential lines?
+
 // -maybe give the user the option to scale the arrow-lengths
 
-/*
-void pathIntegralExperiment()
-{
 
+void curveInVectorFieldExperiment()
+{
+  // We plot a 2D vector field and a curve.
+
+  // the 2 bivariate functions for the vector field:
+  std::function<double(double, double)> fx, fy;
+  fx = [] (double x, double y) { return x*x - y*y; }; // x^2 - y^2 = Re{ z^2 }
+  fy = [] (double x, double y) { return 2*x*y;     }; // 2xy       = Im{ z^2 }
+
+  // the 2 univariate functions for the curve:
+  std::function<double(double)> gx, gy;
+  gx = [] (double t) { return cos(3*t); };
+  gy = [] (double t) { return sin(2*t); };
+
+  GNUPlotter plt;
+  plt.addDataVectorField2D(fx, fy, 21, -2., +2., 21, -2., +2.);
+  //plt.addDataCurve2D(gx, gy, 201, 0., 2*M_PI);
+  plt.plot();
+  // doesn't work - vector field data is interpreted the wrong way - which is not surprising
 }
-*/
+// -maybe make it possible to draw curves (i.e. integration paths) on top of the vector fields
+// -how about equipotential lines? for this, we perhaps first should figure out how to draw several
+//  curves on top of a scalar field in general
+
 
 
 /*

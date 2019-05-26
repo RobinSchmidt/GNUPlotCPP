@@ -93,6 +93,8 @@ public:
   static void plotVectorField2D(const std::function<T(T, T)>& fx, const std::function<T(T, T)>& fy,
     int Nx, T xMin, T xMax, int Ny, T yMin, T yMax);
 
+  // todo: plotFunction, plotBivariateFunction ...this would be the same as plotScalarField2D
+
 
   //-----------------------------------------------------------------------------------------------
   /** \name Plotting */

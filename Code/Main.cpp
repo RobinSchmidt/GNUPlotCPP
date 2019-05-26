@@ -45,10 +45,11 @@ int main(int argc, char** argv)
   //testDataSetup2();
 
   // Experiments:
-  curveExperiment2D();
+  //curveExperiment2D();
   //surfaceExperiment();
   //complexExperiment();
   //vectorFieldExperiment();
+  curveInVectorFieldExperiment();
 
   //getchar();
   return(EXIT_SUCCESS);
