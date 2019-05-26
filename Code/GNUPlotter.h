@@ -93,6 +93,15 @@ public:
   static void plotVectorField2D(const std::function<T(T, T)>& fx, const std::function<T(T, T)>& fy,
     int Nx, T xMin, T xMax, int Ny, T yMin, T yMax);
 
+  /** Interprets a complex function w = f(z) as a 2D vector field and plots it as such. By default, 
+  it conjugates the result to create what is also known as a Polya plot, but this conjugation can 
+  also be turned off, if desired.
+  see: http://mathworld.wolfram.com/PolyaPlot.html  */
+  template<class T>
+  static void plotComplexVectorField(const std::function<std::complex<T>(std::complex<T>)>& f,
+    int Nr, T rMin, T rMax, int Ni, T iMin, T iMax, bool conjugate = true);
+
+
   // todo: plotFunction, plotBivariateFunction ...this would be the same as plotScalarField2D
 
 

@@ -35,6 +35,10 @@ void demoPow();
 void demoSincRadial();
 void demoSincRadialHeatMap();
 
+void demoDipole();
+
+
+
 // make demos that show various linestyles, pointtypes, etc - provide a legend that shows the
 // corrsponding GNUPlot command
 

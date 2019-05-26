@@ -39,15 +39,25 @@ template<class T>
 void plotComplexVectorField(const function<complex<T>(complex<T>)>& f,
   int Nr, T rMin, T rMax, int Ni, T iMin, T iMax)
 {
+  GNUPlotter::plotComplexVectorField(f, Nr, rMin, rMax, Ni, iMin, iMax, false);
+  /*
   std::function<T(T, T)> fx, fy;
   fx = [&] (T re, T im) { return real(f(complex<T>(re, im))); };
   fy = [&] (T re, T im) { return imag(f(complex<T>(re, im))); };
   GNUPlotter::plotVectorField2D(fx, fy, Nr, rMin, rMax, Ni, iMin, iMax);
+  */
 }
 // maybe have a function plotComplexVectorFieldPolar? does that make sense? or maybe we should 
 // generally allow for vector fields where the input is in polar coordinates? that may make sense
 // in some cases, for example for a rotationally symmetric gravitational field
 // -> plotVectorFieldPolar ...maybe factor out a function that creates the pairs of xy-values
+
+// seems like sucha plot is called Polya-plot - see here
+// http://mathworld.wolfram.com/PolyaPlot.html
+// here at the bottom, they say something about Polya plots having an additional complex 
+// conjugation involved - maybe let the complex conjugation be optional and on by default
+// https://mathematica.stackexchange.com/questions/4244/visualizing-a-complex-vector-field-near-poles
+// iirc, Visual Complex Analysis says soemthing about this - look up
 
 
 
@@ -165,10 +175,16 @@ void curveInVectorFieldExperiment()
   gy = [] (double t) { return sin(2*t); };
 
   GNUPlotter plt;
+
   plt.addDataVectorField2D(fx, fy, 21, -2., +2., 21, -2., +2.);
-  //plt.addDataCurve2D(gx, gy, 201, 0., 2*M_PI);
+  plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
+  plt.addCommand("set palette rgbformulae 30,31,32 negative");
+
+  plt.addDataCurve2D(gx, gy, 201, 0., 2*M_PI);
+  plt.addGraph("index 1 using 1:2 with lines notitle");
+  // line color is blue - why?
+
   plt.plot();
-  // doesn't work - vector field data is interpreted the wrong way - which is not surprising
 }
 // -maybe make it possible to draw curves (i.e. integration paths) on top of the vector fields
 // -how about equipotential lines? for this, we perhaps first should figure out how to draw several
@@ -178,7 +194,12 @@ void curveInVectorFieldExperiment()
 
 /*
 Ideas:
--plot 2D curves, later 3D as well
+-move high-level vector-field to demos - make a demo showing a positive charge at +1 and a negative
+ charge at -1 using the physically correct law for the lectric field - make another plot with two
+ negative and two positive charges - the two negative charges should look like 2 gravitational 
+ fields - call it demoDipole
+
+-plot 3D curves (trefoil knot)
 -plot 3D vector fields
 -plot curves on top of a 2D vector field - can be used to show equipotential curves and/or 
  integration paths

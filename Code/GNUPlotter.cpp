@@ -85,6 +85,22 @@ template void GNUPlotter::plotVectorField2D(const function<float(float, float)>&
 template void GNUPlotter::plotVectorField2D(const function<double(double, double)>& fx, const function<double(double, double)>& fy, int Nx, double xMin, double xMax, int Ny, double yMin, double yMax);
 
 
+template<class T>
+void GNUPlotter::plotComplexVectorField(const function<complex<T>(complex<T>)>& f,
+  int Nr, T rMin, T rMax, int Ni, T iMin, T iMax, bool conj)
+{
+  T sign = T(1); if(conj) sign = T(-1);
+  std::function<T(T, T)> fx, fy;
+  fx = [&] (T re, T im) { return        real(f(complex<T>(re, im))); };
+  fy = [&] (T re, T im) { return sign * imag(f(complex<T>(re, im))); };
+  plotVectorField2D(fx, fy, Nr, rMin, rMax, Ni, iMin, iMax);
+}
+template void GNUPlotter::plotComplexVectorField(const function<complex<int>(complex<int>)>& f, int Nr, int rMin, int rMax, int Ni, int iMin, int iMax, bool conj);
+template void GNUPlotter::plotComplexVectorField(const function<complex<float>(complex<float>)>& f, int Nr, float rMin, float rMax, int Ni, float iMin, float iMax, bool conj);
+template void GNUPlotter::plotComplexVectorField(const function<complex<double>(complex<double>)>& f, int Nr, double rMin, double rMax, int Ni, double iMin, double iMax, bool conj);
+
+
+
 // plotting:
 
 
@@ -559,8 +575,6 @@ void GNUPlotter::addDataMatrix(int Nx, int Ny, T *x, T *y, T **z)
 // ...maybe allow the user to select row-major and column-major formats - we should allow a format
 // that is compatible with LaPack (flat, column-major)
 
-
-
 template <class T>
 void GNUPlotter::addDataCurve2D(const std::function<T(T)>& fx, const std::function<T(T)>& fy,
   int Nt, T tMin, T tMax)
@@ -574,8 +588,12 @@ void GNUPlotter::addDataCurve2D(const std::function<T(T)>& fx, const std::functi
   }
   addDataArrays(Nt, &x[0], &y[0]);
   // todo: maybe we could (optionally) also write a data-column with the values of t itself into 
-  // the datafile? would that be useful? maybe for using color to indiacte the t-value along the 
-  // curve?
+  // the datafile? would that be useful? maybe for using color to indicate the t-value along the 
+  // curve? or maybe use tick-marks along the curve - for example, if t in in 0..1 ste markers
+  // at 0.1, 0.2, 0.9, 1.0 - maybe these markers could be little arrows to also convey the 
+  // orientation of the curve?
+  // how about drawing tangent vectors along the curve? make a function addDataCurveWithTangents2D
+  // compute the actual tangents numerically
 }
 
 

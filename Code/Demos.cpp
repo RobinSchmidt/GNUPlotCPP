@@ -894,6 +894,33 @@ void demoSincRadialHeatMap()
   // 3,2,2    ... red-yellow-green-cyan-blue-magenta-red A full color palette in HSV color space 
 }
 
+
+std::complex<double> dipoleField(std::complex<double> z,
+  std::complex<double> cl = -1.0, std::complex<double> cr = +1.0)
+{
+  // Computes the field of a dipole with two charges at z = -1 and z = +1 with charge cl and cr
+  // respectively (cl, cr stand for for left and right charge)
+
+  return 0.0; // preliminary
+}
+
+void demoDipole()
+{
+  function<complex<double>(complex<double>)> f;
+  f = [] (complex<double> z) { return dipoleField(z); };
+
+
+  //GNUPlotter::plotComplexVectorField(f, Nr, rMin, rMax, Ni, iMin, iMax);
+
+
+}
+
+
+
+
+
+
+
 // here is a good tutorial:
 // http://lowrank.net/gnuplot/index-e.html
 
