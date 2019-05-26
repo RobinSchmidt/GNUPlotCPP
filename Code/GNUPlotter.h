@@ -51,7 +51,9 @@ public:
   void initialize();
 
   //-----------------------------------------------------------------------------------------------
-  /** \name Convenience functions */
+  /** \name Convenience functions 
+  These functions can be called simply like GNUPlotter::plot... without creating a GNUPlotter 
+  object and are meant for some quick and dirty plots with default look. */
 
   /** Convenience function to allow plotting without having client code instantiate a plotter 
   object, set it up, etc. */
@@ -70,7 +72,7 @@ public:
   thought of as time. In this interpretation, the curve could represent the trace of a point-like 
   particle moving around in the plane. */
   template <class T>
-  void plotCurve2D(const std::function<T(T)>& fx, const std::function<T(T)>& fy, 
+  static void plotCurve2D(const std::function<T(T)>& fx, const std::function<T(T)>& fy, 
     int Nt, T tMin, T tMax);
 
   /** Plots a parametric surface in 3-dimensional space. Such a surface is described by 3 bivariate 

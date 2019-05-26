@@ -58,9 +58,16 @@ void plotComplexVectorField(const function<complex<T>(complex<T>)>& f,
 void curveExperiment2D()
 {
   // we plot a Lissajous curve...
+  double wx = 3, wy = 2;  // frequencies for x and y functions
+  double ax = 1, ay = 1;  // amplitudes
 
   double tMin = 0; double tMax = 2*M_PI; int Nt = 200;
 
+  std::function<double(double)> fx, fy;
+  fx = [&] (double t) { return ax * cos(wx*t); };
+  fy = [&] (double t) { return ay * sin(wy*t); };
+
+  GNUPlotter::plotCurve2D(fx, fy, Nt, tMin, tMax);
 }
 
 void surfaceExperiment()

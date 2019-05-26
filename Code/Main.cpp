@@ -45,8 +45,9 @@ int main(int argc, char** argv)
   //testDataSetup2();
 
   // Experiments:
+  curveExperiment2D();
   //surfaceExperiment();
-  complexExperiment();
+  //complexExperiment();
   //vectorFieldExperiment();
 
   //getchar();
