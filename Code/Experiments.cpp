@@ -40,12 +40,6 @@ void plotComplexVectorField(const function<complex<T>(complex<T>)>& f,
   int Nr, T rMin, T rMax, int Ni, T iMin, T iMax)
 {
   GNUPlotter::plotComplexVectorField(f, Nr, rMin, rMax, Ni, iMin, iMax, false);
-  /*
-  std::function<T(T, T)> fx, fy;
-  fx = [&] (T re, T im) { return real(f(complex<T>(re, im))); };
-  fy = [&] (T re, T im) { return imag(f(complex<T>(re, im))); };
-  GNUPlotter::plotVectorField2D(fx, fy, Nr, rMin, rMax, Ni, iMin, iMax);
-  */
 }
 // maybe have a function plotComplexVectorFieldPolar? does that make sense? or maybe we should 
 // generally allow for vector fields where the input is in polar coordinates? that may make sense
@@ -190,14 +184,22 @@ void curveInVectorFieldExperiment()
 // -how about equipotential lines? for this, we perhaps first should figure out how to draw several
 //  curves on top of a scalar field in general
 
-
+// todo: plot vector field of a polynomial with zeros placed at -1, +1, -i, +i, 0, maybe
+// also plot vector fields of rational functions
 
 /*
 Ideas:
 -move high-level vector-field to demos - make a demo showing a positive charge at +1 and a negative
- charge at -1 using the physically correct law for the lectric field - make another plot with two
+ charge at -1 using the physically correct law for the electric field - make another plot with two
  negative and two positive charges - the two negative charges should look like 2 gravitational 
  fields - call it demoDipole
+
+-draw field lines of 2D vector fields - how do we find them? start somewhere and follow the field?
+ ...but what about error accumulation? ...in any case, it seems we need a general way to add many
+ curves to a vector field (for field lines of vector fields and equipotential lines for scalar
+ fields)
+ https://www.quora.com/How-can-I-find-an-expression-for-vector-field-lines
+ https://math.stackexchange.com/questions/1992208/how-to-find-the-field-lines-of-a-vector-field
 
 -plot 3D curves (trefoil knot)
 -plot 3D vector fields

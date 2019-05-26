@@ -32,8 +32,10 @@ int main(int argc, char** argv)
   //demoPow(); // boring - remove
   demoSincRadial();
   demoSincRadialHeatMap();
-
   */
+
+  demoVectorField();
+  //demoDipole();  // not so interesting - we should draw field lines, not the vector field
 
   // If you want to see, how they were done, jump into the implementations of these functions - 
   // there you will find commented code that should make it clear how the plotter class is supposed
@@ -49,7 +51,7 @@ int main(int argc, char** argv)
   //surfaceExperiment();
   //complexExperiment();
   //vectorFieldExperiment();
-  curveInVectorFieldExperiment();
+  //curveInVectorFieldExperiment();
 
   //getchar();
   return(EXIT_SUCCESS);

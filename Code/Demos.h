@@ -35,7 +35,11 @@ void demoPow();
 void demoSincRadial();
 void demoSincRadialHeatMap();
 
+
+void demoVectorField();
 void demoDipole();
+
+
 
 
 
