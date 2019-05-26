@@ -36,6 +36,18 @@ void GNUPlotter::initialize()
 
 // convenience functions:
 
+template <class T>
+void GNUPlotter::plotCurve2D(const std::function<T(T)>& fx, const std::function<T(T)>& fy,
+  int Nt, T tMin, T tMax)
+{
+  GNUPlotter p;
+  p.addDataCurve2D(fx, fy, Nt, tMin, tMax);
+  p.plot();
+}
+// explicit instantiations for int, float and double:
+template void GNUPlotter::plotCurve2D(const std::function<int(int)>& fx, const std::function<int(int)>& fy, int Nt, int tMin, int tMax);
+template void GNUPlotter::plotCurve2D(const std::function<float(float)>& fx, const std::function<float(float)>& fy, int Nt, float tMin, float tMax);
+template void GNUPlotter::plotCurve2D(const std::function<double(double)>& fx, const std::function<double(double)>& fy, int Nt, double tMin, double tMax);
 
 template <class T>
 void GNUPlotter::plotSurface(
@@ -53,23 +65,9 @@ void GNUPlotter::plotSurface(
   //p.addCommand("set ztics 0.5");                 // density of z-axis tics
   p.plot3D();                                    // invoke GNUPlot
 }
-// explicit instantiations for int, float and double:
-template void GNUPlotter::plotSurface(
-  const std::function<int(int, int)>& fx,
-  const std::function<int(int, int)>& fy,
-  const std::function<int(int, int)>& fz,
-  int Nu, int uMin, int uMax, int Nv, int vMin, int vMax);
-template void GNUPlotter::plotSurface(
-  const std::function<float(float, float)>& fx,
-  const std::function<float(float, float)>& fy,
-  const std::function<float(float, float)>& fz,
-  int Nu, float uMin, float uMax, int Nv, float vMin, float vMax);
-template void GNUPlotter::plotSurface(
-  const std::function<double(double, double)>& fx,
-  const std::function<double(double, double)>& fy,
-  const std::function<double(double, double)>& fz,
-  int Nu, double uMin, double uMax, int Nv, double vMin, double vMax);
-
+template void GNUPlotter::plotSurface(const std::function<int(int, int)>& fx, const std::function<int(int, int)>& fy, const std::function<int(int, int)>& fz, int Nu, int uMin, int uMax, int Nv, int vMin, int vMax);
+template void GNUPlotter::plotSurface(const std::function<float(float, float)>& fx, const std::function<float(float, float)>& fy, const std::function<float(float, float)>& fz, int Nu, float uMin, float uMax, int Nv, float vMin, float vMax);
+template void GNUPlotter::plotSurface(const std::function<double(double, double)>& fx, const std::function<double(double, double)>& fy, const std::function<double(double, double)>& fz, int Nu, double uMin, double uMax, int Nv, double vMin, double vMax);
 
 template<class T>
 void GNUPlotter::plotVectorField2D(const function<T(T, T)>& fx, const function<T(T, T)>& fy,
@@ -82,18 +80,9 @@ void GNUPlotter::plotVectorField2D(const function<T(T, T)>& fx, const function<T
   p.addCommand("set palette rgbformulae 30,31,32 negative");
   p.plot();
 }
-template void GNUPlotter::plotVectorField2D(
-  const function<int(int, int)>& fx, 
-  const function<int(int, int)>& fy,
-  int Nx, int xMin, int xMax, int Ny, int yMin, int yMax);
-template void GNUPlotter::plotVectorField2D(
-  const function<float(float, float)>& fx, 
-  const function<float(float, float)>& fy,
-  int Nx, float xMin, float xMax, int Ny, float yMin, float yMax);
-template void GNUPlotter::plotVectorField2D(
-  const function<double(double, double)>& fx, 
-  const function<double(double, double)>& fy,
-  int Nx, double xMin, double xMax, int Ny, double yMin, double yMax);
+template void GNUPlotter::plotVectorField2D(const function<int(int, int)>& fx, const function<int(int, int)>& fy, int Nx, int xMin, int xMax, int Ny, int yMin, int yMax);
+template void GNUPlotter::plotVectorField2D(const function<float(float, float)>& fx, const function<float(float, float)>& fy, int Nx, float xMin, float xMax, int Ny, float yMin, float yMax);
+template void GNUPlotter::plotVectorField2D(const function<double(double, double)>& fx, const function<double(double, double)>& fy, int Nx, double xMin, double xMax, int Ny, double yMin, double yMax);
 
 
 // plotting:
@@ -556,8 +545,7 @@ void GNUPlotter::addDataMatrix(int Nx, int Ny, T *x, T *y, T **z)
   for(i = 0; i < Nx; i++)
     out << " " + sd(x[i]);
   out << "\n";
-  for(j = 0; j < Ny; j++)
-  {
+  for(j = 0; j < Ny; j++) {
     out << sd(y[j]);
     for(i = 0; i < Nx; i++)
       out << " " + sd(z[i][j]);
@@ -567,6 +555,30 @@ void GNUPlotter::addDataMatrix(int Nx, int Ny, T *x, T *y, T **z)
   out.close();
   dataInfo.push_back(DataInfo(1, Nx+1, "matrix"));
 }
+// todo: allow also flat matrices - i.e. z is not pointer-to-pointer but just a regular pointer
+// ...maybe allow the user to select row-major and column-major formats - we should allow a format
+// that is compatible with LaPack (flat, column-major)
+
+
+
+template <class T>
+void GNUPlotter::addDataCurve2D(const std::function<T(T)>& fx, const std::function<T(T)>& fy,
+  int Nt, T tMin, T tMax)
+{
+  T tStep = (tMax-tMin) / T(Nt-1);          // step size for t
+  vector<T> x(Nt), y(Nt);
+  for(int i = 0; i < Nt; i++) {
+    T t = tMin + T(i) * tStep;              // current time instant
+    x[i] = fx(t);
+    y[i] = fy(t);
+  }
+  addDataArrays(Nt, &x[0], &y[0]);
+  // todo: maybe we could (optionally) also write a data-column with the values of t itself into 
+  // the datafile? would that be useful? maybe for using color to indiacte the t-value along the 
+  // curve?
+}
+
+
 
 template <class T>
 void GNUPlotter::addDataSurface(
@@ -576,7 +588,7 @@ void GNUPlotter::addDataSurface(
   // The outer index runs over the indices for parameter u, the middle index runs over v and the 
   // innermost vector index runs from 0...2 giving a 3-vector containing x, y, z coordinates for 
   // each point:
-  vector<vector<vector<double>>> d;              // doubly nested vector of data
+  vector<vector<vector<T>>> d;                   // doubly nested vector of data
   T uStep = (uMax-uMin) / T(Nu-1);               // step size for u
   T vStep = (vMax-vMin) / T(Nv-1);               // step size for v
   d.resize(Nu);                                  // we have Nu blocks of data
@@ -650,6 +662,11 @@ void GNUPlotter::addDataVectorField2D(const function<T(T, T)>& fx, const functio
     }
   }
   addDataArrays(Nv, &x[0], &y[0], &dx[0], &dy[0], &c[0]);
+  // maybe allow the vector field to be evaluated at an arbitrary set of sample points - not 
+  // necessarily all on a rectangular grid - we may also want a polar grid...maybe the function 
+  // should take a matrix of vectors
+  // addDataVectorField2D(fx, fy, Nx, Ny, T** x, T** y, T** dx, T** dy, T** c = nullptr)
+  // but maybe allow also flat matrices - i.e. not pointer-to-pointer
 }
 
 
@@ -957,3 +974,12 @@ void GNUPlotter::setStringVector(vector<string>& v, CSR s0, CSR s1, CSR s2, CSR 
   v.clear();
   addToStringVector(v, s0, s1, s2, s3, s4, s5, s6, s7, s8, s9);
 }
+
+/*
+ToDo:
+-maybe move the explicit template instantiations to another file...that would reduce clutter in 
+ this implementation file - but would make the library harder to use - the user would have to deal
+ with more files...so it's probably not such a good idea...simple use is more important than
+ nice looking code
+
+*/

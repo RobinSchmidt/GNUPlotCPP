@@ -63,6 +63,15 @@ public:
     plt.addDataArrays(N, x, y1, y2, y3, y4, y5, y6, y7, y8, y9);
     plt.plot();
   }
+  // maybe de-inline
+
+  /** Plots parametric curve on a 2-dimensional plane. Such curves are described by 2 functions 
+  x(t), y(t) - one for each coordinate - that depend on a single parameter t, which is often 
+  thought of as time. In this interpretation, the curve could represent the trace of a point-like 
+  particle moving around in the plane. */
+  template <class T>
+  void plotCurve2D(const std::function<T(T)>& fx, const std::function<T(T)>& fy, 
+    int Nt, T tMin, T tMax);
 
   /** Plots a parametric surface in 3-dimensional space. Such a surface is described by 3 bivariate 
   scalar-valued functions fx(u,v), fy(u,v), fz(u,v) which respectively compute the 3 coordinates of
@@ -350,23 +359,35 @@ public:
   template <class T>
   void addDataMatrix(int Nx, int Ny, T *x, T *y, T **z);
 
-  // todo: addDataCurve2D, addDataCurve3D
+  /** Adds a data set representing parametric curve on a 2-dimensional plane. */
+  template <class T>
+  void addDataCurve2D(const std::function<T(T)>& fx, const std::function<T(T)>& fy, 
+    int Nt, T tMin, T tMax);
+
+  // todo: addDataCurve3D
 
   /** Adds a data set representing parametric surface in 3-dimensional space. */
   template <class T>
   void addDataSurface(
-    const std::function<T(T, T)>& fx, 
-    const std::function<T(T, T)>& fy, 
+    const std::function<T(T, T)>& fx,
+    const std::function<T(T, T)>& fy,
     const std::function<T(T, T)>& fz,
     int Nu, T uMin, T uMax, int Nv, T vMin, T vMax);
+
+
 
   template <class T>
   void addDataBivariateFunction(int Nx, int Ny, T *x, T *y,  T (*f)(T,T));
 
   template <class T>
   void addDataBivariateFunction(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax, T (*f)(T, T));
-    // \todo: add 2 optional boolean parameters to let x- and/or y array be exponentially scaled 
-    // instead of linear bool xLog = false, bool yLog = false
+  // todo: add 2 optional boolean parameters to let x- and/or y array be exponentially scaled 
+  // instead of linear bool xLog = false, bool yLog = false
+
+  // todo: add function that takes bivariate data and uses std::function instead of a function
+  // pointer
+  // 2D-input/1D output
+
 
 
   /** Adds data for 2-dimensional vector fields. Such data is passed to GNUPlot in 4 or 5 columns: 
