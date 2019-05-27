@@ -163,11 +163,9 @@ void vectorFieldExperiment()
 
 // x-component of 1st solution to the first order ODE system x' = x^2 - y^2, y' = 2*x*y which can 
 // be obtained by wolfram alpha via:
-// DSolve[ {x'[t] == x[t]^2 - y[t]^2, y'[t] == 2 x[t] y[t]}, {x, y}, t] which gives:
-// x = -(e^(2 C1) (t - 2 C2))/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)
-// y = 1/2 (e^(C1) + sqrt(e^(2 C1) - (4 e^(4 C1) (t - 2 C2)^2)/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)^2))
-
-double squareFieldX(double t, double C1, double C2) // rename to squareFieldX1, use X2 for 2nd solution
+// DSolve[ {x'[t] == x[t]^2 - y[t]^2, y'[t] == 2 x[t] y[t]}, {x, y}, t] 
+// which gives two solutions
+double squareFieldX1(double t, double C1, double C2)
 {
   double k1  = exp(C1);   // e^C1
   double k12 = k1*k1;     // e^(2 C1) = k1^2
@@ -175,16 +173,40 @@ double squareFieldX(double t, double C1, double C2) // rename to squareFieldX1, 
   return x;
   // x = -(e^(2 C1) (t - 2 C2))/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2);
 }
-double squareFieldY(double t, double C1, double C2)
+double squareFieldY1(double t, double C1, double C2)
 {
   double k1  = exp(C1);   // e^C1
   double k12 = k1*k1;     // e^(2 C1) = k1^2
   double a   = 1+4*k12*C2*C2 - 4*k12*t*C2 + k12*t*t;
   double b   = t - 2*C2;
-  double y   = (1./2) * ( k1 + sqrt(k12-(4*k12*k12*b*b) / a*a) );
+  double s   = k12-(4*k12*k12*b*b) / a*a;
+  double y   = (1./2) * (k1 + sqrt(s));
   return y;
   // y = 1/2 (e^(C1) + sqrt(e^(2 C1) - (4 e^(4 C1) (t - 2 C2)^2)/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)^2))
 }
+// 2nd solution:
+double squareFieldX2(double t, double C1, double C2)
+{
+  double k1  = exp(C1);   // e^C1
+  double k12 = k1*k1;     // e^(2 C1) = k1^2
+  double x = -(k12 * (t+2*C2)) / (1+4*k12*C2*C2 + k12*t*t + 4*k12*t*C2);
+  return x;
+  // x = -(e^(2 C1) (t + 2 C2))/(1 + e^(2 C1) t^2 + 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)
+}
+double squareFieldY2(double t, double C1, double C2)
+{
+  double k1  = exp(C1);   // e^C1
+  double k12 = k1*k1;     // e^(2 C1) = k1^2
+  double a   = 1+4*k12*C2*C2 + 4*k12*t*C2 + k12*t*t;
+  double b   = t + 2*C2;
+  double s   = k12-(4*k12*k12*b*b) / a*a;
+  double y   = (1./2) * (k1 - sqrt(s));
+  return y;
+  // y = 1/2 (e^(C1) - sqrt(e^(2 C1) - (4 e^(4 C1) (t + 2 C2)^2)/(1 + e^(2 C1) t^2 + 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)^2))
+}
+// todo: refactor to avoid code duplication...maybe try to avoid recomputations - but to fully 
+// avoid them, we may need to be able to pass a vector-valued function to the plotter instead of 
+// two scalar valued functions (the computations for x and y have terms in common)
 
 void curveInVectorFieldExperiment()
 {
@@ -203,20 +225,24 @@ void curveInVectorFieldExperiment()
   
   // but now let's try to replace this totally arbitrary lissajous curve with a 
   // streamline/field-line of the above evctor field...
-  //double C1 = -1, C2 = 1;
-  //gx = [&] (double t) { return squareFieldX(t, C1, C2); };
-  //gy = [&] (double t) { return squareFieldY(t, C1, C2); };
-  //// doesn't work - we get NaN for y
+  double C1 = 1.0, C2 = -0.5;
+  gx = [&] (double t) { return squareFieldX2(t, C1, C2); };
+  gy = [&] (double t) { return squareFieldY2(t, C1, C2); };
+  // it seems, we see the lower half of one of the streamlines - how to get the upper half?
+  // ...maybe the second solution gives it? ..well - at least not with the chosen parameter
+  // range - try to figure out appropriate parameter ranges for the two solution, given the two 
+  // parameter C1, C2 ...damn! that simple f(z) = z^2 function keeps me busy for quite some time
+  // maybe print the paramater value t also into the datafile
 
 
   GNUPlotter plt;
 
-  //plt.addDataVectorField2D(fx, fy, 21, -2., +2., 21, -2., +2.);
-  //plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
-  //plt.addCommand("set palette rgbformulae 30,31,32 negative");
+  plt.addDataVectorField2D(fx, fy, 21, -2., +2., 21, -2., +2.);
+  plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
+  plt.addCommand("set palette rgbformulae 30,31,32 negative");
 
-  plt.addDataCurve2D(gx, gy, 201, 0., 2*M_PI);
-  //plt.addDataCurve2D(gx, gy, 201, 0., 1.);
+  //plt.addDataCurve2D(gx, gy, 201, 0., 2*M_PI);
+  plt.addDataCurve2D(gx, gy, 401, 0.5, 2.0);
   plt.addGraph("index 1 using 1:2 with lines notitle");
   // line color is blue - why?
 
@@ -282,7 +308,7 @@ Field lines:
   x = -(e^(2 C1) (t - 2 C2))/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)
   y = 1/2 (e^(C1) + sqrt(e^(2 C1) - (4 e^(4 C1) (t - 2 C2)^2)/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)^2))
 
-  x = -(e^(2 C[1]) (t + 2 C[2]))/(1 + e^(2 C[1]) t^2 + 4 e^(2 C[1]) t C[2] + 4 e^(2 C[1]) (C[2])^2)
+  x = -(e^(2 C1) (t + 2 C2))/(1 + e^(2 C1) t^2 + 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)
   y = 1/2 (e^(C1) - sqrt(e^(2 C1) - (4 e^(4 C1) (t + 2 C2)^2)/(1 + e^(2 C1) t^2 + 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)^2))
 
   ...try plotting them for various values of C1, C2 ...maybe to simplify, define 

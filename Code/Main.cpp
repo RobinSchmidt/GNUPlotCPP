@@ -53,6 +53,6 @@ int main(int argc, char** argv)
   //vectorFieldExperiment();
   curveInVectorFieldExperiment();
 
-  //getchar();
+  getchar();
   return(EXIT_SUCCESS);
 }
