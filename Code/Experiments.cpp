@@ -184,6 +184,26 @@ double squareFieldY1(double t, double C1, double C2)
   return y;
   // y = 1/2 (e^(C1) + sqrt(e^(2 C1) - (4 e^(4 C1) (t - 2 C2)^2)/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)^2))
 }
+void squareFieldParamLimits1(double c1, double c2, double* tMin, double* tMax)
+{
+  // Computes the limits between which the value under the square root in the above function
+  // s = k^2-(4*k^4*b*b) / a*a is nonnegative - this is the range, which the parameter t is allowed
+  // to traverse
+  // sage:
+  //  var("t a b k c2")
+  //  a = 1+4*k^2*c2^2 - 4*k^2*t*c2 + k^2*t*t
+  //  b = t - 2*c2;
+  //  s = k^2-(4*k^2*k^2*b*b) / a*a;
+  //  solve(s == 0, t)
+  // gives:
+  //  t == 1/2*(4*c2*k - 1)/k, t == 1/2*(4*c2*k + 1)/k
+
+  double k = exp(c1);
+  *tMin = (1./2)*(4*c2*k - 1)/k;   // ...simplify/optimize
+  *tMax = (1./2)*(4*c2*k + 1)/k;
+}
+
+
 // 2nd solution:
 double squareFieldX2(double t, double C1, double C2)
 {
@@ -211,9 +231,9 @@ double squareFieldY2(double t, double C1, double C2)
 // maybe try to use natural parametrization (nach bogenlänge parametrisieren) - find a function to
 // apply to t to find s...or actually we need t as function of s
 
-void squareFieldParamLimits(double c1, double c2, double* tMin, double* tMax)
+void squareFieldParamLimits2(double c1, double c2, double* tMin, double* tMax)
 {
-  // Computes the limits between which the value under the square root in the above functions 
+  // Computes the limits between which the value under the square root in the above function
   // s = k^2-(4*k^4*b*b) / a*a is nonnegative - this is the range, which the parameter t is allowed
   // to traverse
   // sage:
@@ -245,34 +265,39 @@ void curveInVectorFieldExperiment()
   // ok - works.. 
   
   // but now let's try to replace this totally arbitrary lissajous curve with a 
-  // streamline/field-line of the above evctor field...
-  double c1 = 1.0, c2 = -0.5;
+  // streamline/field-line of the above vector field...
+  double c1 = 1.0, c2 = -0.5;  
   gx = [&] (double t) { return squareFieldX2(t, c1, c2); };
   gy = [&] (double t) { return squareFieldY2(t, c1, c2); };
+  // c1 controls size of the field lines but c2 seems to have no visible effect (maybe it controls
+  // the speed and therefore the range tMin..tMax?)
   // it seems, we see the lower half of one of the streamlines - how to get the upper half?
-  // ...maybe the second solution gives it? ..well - at least not with the chosen parameter
-  // range - try to figure out appropriate parameter ranges for the two solutions, given the two 
-  // parameters C1, C2 ...damn! that simple f(z) = z^2 function keeps me busy for quite some time
-  // maybe print the paramater value t also into the datafile
-  // the parameter limits are given by the requirement s >= where
-  // s = k - (4 k^2 b^2) / a^2, b = t + 2 c2, a = 1 + 4 k c2^2 t + k t^2, k = e^(2 c1), so we need
-  // to solve the quadratic equation: s = 0 = q(t) for t (q(t) stands for: some quadratic in t)
-  // the condition for the value s under the sqrt to be 
+  // ...maybe the other solution gives it? ..well - at least not with the chosen parameter
+  // range. the other solution just plots a small line segment ...verify the code/formulas
+  // oh - it seems, i can't use the same formula to compute the limits because the a and b are 
+  // defined differently - we need to derive another formula for the limits
+
 
 
   GNUPlotter plt;
-
-  plt.addDataVectorField2D(fx, fy, 21, -2., +2., 21, -2., +2.);
+  plt.addDataVectorField2D(fx, fy, 31, -3., +3., 31, -3., +3.);
   plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
   plt.addCommand("set palette rgbformulae 30,31,32 negative");
 
 
-  double tMin = 0.5, tMax = 2.0;
-  squareFieldParamLimits(c1, c2, &tMin, &tMax);
+  double tMin, tMax; 
+  squareFieldParamLimits2(c1, c2, &tMin, &tMax);        // compute limits for time parameter
 
-  //plt.addDataCurve2D(gx, gy, 201, 0., 2*M_PI);
+
+
+  // test for upper half:
+  squareFieldParamLimits1(c1, c2, &tMin, &tMax);
+  gx = [&] (double t) { return squareFieldX1(t, c1, c2); };
+  gy = [&] (double t) { return squareFieldY1(t, c1, c2); };
+  // curve looks ok  - next step: draw both arcs (also: use the same color for all field lines)
+
+
   plt.addDataCurve2D(gx, gy, 401, tMin, tMax, true);
-  //plt.addDataCurve2D(gx, gy, 401, 0.8, 1.2, true);
   //plt.addDataCurve2D(gx, gy, 401, 0.82, 1.18, true); // 0.82..1.18 produces no NaNs, higher ranges do
   plt.addGraph("index 1 using 2:3 with lines notitle"); // 2:3 bcs 1 is the parameter t
   // line color is blue - why?
