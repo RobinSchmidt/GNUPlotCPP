@@ -160,6 +160,8 @@ void vectorFieldExperiment()
 
 
 
+// maybe wrap this code into a class "VectorFieldZedSquared" ..or just ZedSquared...maybe have 
+// similar functions ZedCubed, ZedInverse or OneOverZed, ExpZed, SineZed, etc.
 
 // x-component of 1st solution to the first order ODE system x' = x^2 - y^2, y' = 2*x*y which can 
 // be obtained by wolfram alpha via:
@@ -249,62 +251,49 @@ void squareFieldParamLimits2(double c1, double c2, double* tMin, double* tMax)
   *tMin = (-1./2)*(4*c2*k + 1)/k;   // ...simplify/optimize
   *tMax = (-1./2)*(4*c2*k - 1)/k;
 }
-void curveInVectorFieldExperiment()
+void curveInVectorFieldExperiment()  // rename to zedSquaredVectorField
 {
   // We plot a 2D vector field and a curve.
 
-  // the 2 bivariate functions for the vector field:
+  // add data for the 2 bivariate functions and commands for plotting the vector field:
+  GNUPlotter plt;
   std::function<double(double, double)> fx, fy;
   fx = [] (double x, double y) { return x*x - y*y; }; // x^2 - y^2 = Re{ z^2 }
   fy = [] (double x, double y) { return 2*x*y;     }; // 2xy       = Im{ z^2 }
-
-  // the 2 univariate functions for the curve:
-  std::function<double(double)> gx, gy;
-  //gx = [] (double t) { return cos(3*t); };
-  //gy = [] (double t) { return sin(2*t); };
-  // ok - works.. 
-  
-  // but now let's try to replace this totally arbitrary lissajous curve with a 
-  // streamline/field-line of the above vector field...
-  double c1 = 1.0, c2 = -0.5;  
-  gx = [&] (double t) { return squareFieldX2(t, c1, c2); };
-  gy = [&] (double t) { return squareFieldY2(t, c1, c2); };
-  // c1 controls size of the field lines but c2 seems to have no visible effect (maybe it controls
-  // the speed and therefore the range tMin..tMax?)
-  // it seems, we see the lower half of one of the streamlines - how to get the upper half?
-  // ...maybe the other solution gives it? ..well - at least not with the chosen parameter
-  // range. the other solution just plots a small line segment ...verify the code/formulas
-  // oh - it seems, i can't use the same formula to compute the limits because the a and b are 
-  // defined differently - we need to derive another formula for the limits
-
-
-
-  GNUPlotter plt;
   plt.addDataVectorField2D(fx, fy, 31, -3., +3., 31, -3., +3.);
   plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
   plt.addCommand("set palette rgbformulae 30,31,32 negative");
 
 
-  double tMin, tMax; 
-  squareFieldParamLimits2(c1, c2, &tMin, &tMax);        // compute limits for time parameter
+  // plot a field line (later: plot many)
+  double c1 = 1.0, c2 = -0.5;             // field line parameters (select, which line is drawn)
+  std::function<double(double)> gx, gy;   // field line functions x(t), y(t)
+  double tMin, tMax;                      // limits for time parameter
+  // c1 controls size of the field lines but c2 seems to have no visible effect (maybe it controls
+  // the speed and therefore the range tMin..tMax?)
 
-
-
-  // test for upper half:
+  // data and commands for the first half of the field line:
   squareFieldParamLimits1(c1, c2, &tMin, &tMax);
   gx = [&] (double t) { return squareFieldX1(t, c1, c2); };
   gy = [&] (double t) { return squareFieldY1(t, c1, c2); };
-  // curve looks ok  - next step: draw both arcs (also: use the same color for all field lines)
-
-
   plt.addDataCurve2D(gx, gy, 401, tMin, tMax, true);
-  //plt.addDataCurve2D(gx, gy, 401, 0.82, 1.18, true); // 0.82..1.18 produces no NaNs, higher ranges do
   plt.addGraph("index 1 using 2:3 with lines notitle"); // 2:3 bcs 1 is the parameter t
   // line color is blue - why?
 
+  // data and commands for the second half of the field line:
+  squareFieldParamLimits2(c1, c2, &tMin, &tMax);
+  gx = [&] (double t) { return squareFieldX2(t, c1, c2); };
+  gy = [&] (double t) { return squareFieldY2(t, c1, c2); };
+  plt.addDataCurve2D(gx, gy, 401, tMin, tMax, true);
+  plt.addGraph("index 2 using 2:3 with lines notitle");
+
   plt.plot();
+  // todo:
+  // -fix color of the field line
+  // -plot muliple field lines
+  // -add arrows and maybe something that let's use see the speed (maybe plot segments where the 
+  //  particle is fast fainter - resembles an analog oscilloscope look)
 }
-// -maybe make it possible to draw curves (i.e. integration paths) on top of the vector fields
 // -how about equipotential lines? for this, we perhaps first should figure out how to draw several
 //  curves on top of a scalar field in general
 
