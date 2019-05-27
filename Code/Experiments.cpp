@@ -251,36 +251,44 @@ void squareFieldParamLimits2(double c1, double c2, double* tMin, double* tMax)
   *tMin = (-1./2)*(4*c2*k + 1)/k;   // ...simplify/optimize
   *tMax = (-1./2)*(4*c2*k - 1)/k;
 }
+
 void curveInVectorFieldExperiment()  // rename to zedSquaredVectorField
 {
-  // We plot a 2D vector field and a curve.
+  // We plot the 2D vector field corresponding to the complex function f(z) = z^2 and also draw a
+  // curve that represents a field line (todo: draw may field lines for various values of c1 (and
+  // maybe c2))
+
+  // user parameters:
+  double c1 = 1.0, c2 = -0.5;             // field line parameters (select, which line is drawn)
+
+  // create and set up plotter:
+  GNUPlotter plt;                         // plotter object
+  plt.clearCommandFile();                 // we don't want to use the default line styles/colors
+  plt.setGrid();
+  //plt.setGraphColors("FF0000", "0000FF"); // doesn't work - but default color cyan looks ok
+
+  // local variables:
+  std::function<double(double, double)> fx, fy; // vector field fx(x,y), fy(x,y)
+  std::function<double(double)> gx, gy;         // field line functions x(t), y(t)
+  double tMin, tMax;                            // limits for time parameter for field line
+  // c1 controls size of the field lines but c2 seems to have no visible effect (maybe it controls
+  // the speed and therefore the range tMin..tMax?)
 
   // add data for the 2 bivariate functions and commands for plotting the vector field:
-  GNUPlotter plt;
-  std::function<double(double, double)> fx, fy;
   fx = [] (double x, double y) { return x*x - y*y; }; // x^2 - y^2 = Re{ z^2 }
   fy = [] (double x, double y) { return 2*x*y;     }; // 2xy       = Im{ z^2 }
   plt.addDataVectorField2D(fx, fy, 31, -3., +3., 31, -3., +3.);
   plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
   plt.addCommand("set palette rgbformulae 30,31,32 negative");
 
-
-  // plot a field line (later: plot many)
-  double c1 = 1.0, c2 = -0.5;             // field line parameters (select, which line is drawn)
-  std::function<double(double)> gx, gy;   // field line functions x(t), y(t)
-  double tMin, tMax;                      // limits for time parameter
-  // c1 controls size of the field lines but c2 seems to have no visible effect (maybe it controls
-  // the speed and therefore the range tMin..tMax?)
-
-  // data and commands for the first half of the field line:
+  // add data and commands for the first half of the field line:
   squareFieldParamLimits1(c1, c2, &tMin, &tMax);
   gx = [&] (double t) { return squareFieldX1(t, c1, c2); };
   gy = [&] (double t) { return squareFieldY1(t, c1, c2); };
   plt.addDataCurve2D(gx, gy, 401, tMin, tMax, true);
   plt.addGraph("index 1 using 2:3 with lines notitle"); // 2:3 bcs 1 is the parameter t
-  // line color is blue - why?
 
-  // data and commands for the second half of the field line:
+  // add data and commands for the second half of the field line:
   squareFieldParamLimits2(c1, c2, &tMin, &tMax);
   gx = [&] (double t) { return squareFieldX2(t, c1, c2); };
   gy = [&] (double t) { return squareFieldY2(t, c1, c2); };
@@ -289,7 +297,6 @@ void curveInVectorFieldExperiment()  // rename to zedSquaredVectorField
 
   plt.plot();
   // todo:
-  // -fix color of the field line
   // -plot muliple field lines
   // -add arrows and maybe something that let's use see the speed (maybe plot segments where the 
   //  particle is fast fainter - resembles an analog oscilloscope look)

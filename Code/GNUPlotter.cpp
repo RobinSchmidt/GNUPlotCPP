@@ -723,6 +723,11 @@ void GNUPlotter::rangeLogarithmic(T *x, int N, T min, T max)
 template void GNUPlotter::rangeLogarithmic(float *x, int N, float min, float max);
 template void GNUPlotter::rangeLogarithmic(double *x, int N, double min, double max);
 
+void GNUPlotter::clearCommandFile()
+{
+  initFile(commandPath);
+}
+
 void GNUPlotter::invokeGNUPlot()
 {
   // create the callstring and invoke GNUPlot:

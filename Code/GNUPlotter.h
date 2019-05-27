@@ -452,6 +452,10 @@ public:
   template <class T>
   static void rangeLogarithmic(T *x, int N, T min, T max);
 
+  /** Initializes the command file. May be called by client code, if it wants to start with an 
+  empty command file, i.e. a file that doesn't contain the default commands. */
+  void clearCommandFile();
+
   /** Executes GNUPlot with the appropriate commandline parameter to read the command file. */
   void invokeGNUPlot();
 
