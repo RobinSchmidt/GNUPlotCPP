@@ -252,12 +252,22 @@ void squareFieldParamLimits2(double c1, double c2, double* tMin, double* tMax)
   *tMax = (-1./2)*(4*c2*k - 1)/k;
 }
 
-void addFieldLine(GNUPlotter& plt, double c1, double c2 = 0.0) 
+void addFieldLine(GNUPlotter& plt, double c1, bool flipY = false) 
 {
-  // c1 controls the size of the loop that the field line draws, c2 seems to have no visible effect
-  // (maybe it controls the speed and therefore the range tMin..tMax?)
+  // c1 controls the size of the loop that the field line draws, flipY lets the field line flipped
+  // along the x-axis (i.e. the sign of y is flipped). somehow, we don't seem to get the lower 
+  // halfplane field lines from the equations, so we cheat and just add the via symmetry - figure
+  // out, why we don't get them naturally from the equations - have we missed a solution to the
+  // ODE system?
+
 
   static int numFieldLines = 0; // quick and dirty counter - todo: make a class, use a member
+
+  double c2 = 0;
+  // c2 seems to have no visible effect (maybe it controls the speed and therefore the range 
+  // tMin..tMax?)
+
+  double sign = 1; if(flipY) sign = -1;
 
   std::function<double(double)> gx, gy;
   double tMin, tMax;
@@ -272,16 +282,16 @@ void addFieldLine(GNUPlotter& plt, double c1, double c2 = 0.0)
   // add data and commands for the first half of the field line:
   s2 = to_string(2*numFieldLines+1);
   squareFieldParamLimits1(c1, c2, &tMin, &tMax);
-  gx = [&] (double t) { return squareFieldX1(t, c1, c2); };
-  gy = [&] (double t) { return squareFieldY1(t, c1, c2); };
+  gx = [&] (double t) { return        squareFieldX1(t, c1, c2); };
+  gy = [&] (double t) { return sign * squareFieldY1(t, c1, c2); };
   plt.addDataCurve2D(gx, gy, numPoints, tMin, tMax);
   plt.addGraph(s1+s2+s3); 
 
   // add data and commands for the second half of the field line:
   s2 = to_string(2*numFieldLines+2);
   squareFieldParamLimits2(c1, c2, &tMin, &tMax);
-  gx = [&] (double t) { return squareFieldX2(t, c1, c2); };
-  gy = [&] (double t) { return squareFieldY2(t, c1, c2); };
+  gx = [&] (double t) { return        squareFieldX2(t, c1, c2); };
+  gy = [&] (double t) { return sign * squareFieldY2(t, c1, c2); };
   plt.addDataCurve2D(gx, gy, numPoints, tMin, tMax);
   plt.addGraph(s1+s2+s3);
 
@@ -308,15 +318,27 @@ void curveInVectorFieldExperiment()  // rename to zedSquaredVectorField
   plt.addCommand("set palette rgbformulae 30,31,32 negative");
 
   // add data and commands for field lines:
-  addFieldLine(plt, -1.0);
-  addFieldLine(plt, -0.5);
-  addFieldLine(plt,  0.0);
-  addFieldLine(plt,  0.5);
-  addFieldLine(plt,  1.0);
+  addFieldLine(plt, -1.0, false);
+  addFieldLine(plt, -0.5, false);
+  addFieldLine(plt,  0.0, false);
+  addFieldLine(plt,  0.5, false);
+  addFieldLine(plt,  1.0, false);
+
+  addFieldLine(plt, -1.0, true);
+  addFieldLine(plt, -0.5, true);
+  addFieldLine(plt,  0.0, true);
+  addFieldLine(plt,  0.5, true);
+  addFieldLine(plt,  1.0, true);
+
+
+
   // they have all different colors and for some, even the upper and lower half have different
   // colors -> fix this!
   // hmm...all these field lines are in the upper half plane - how do we get those for the lower
   // half plane? ...have we missed a solution of our ODE system?
+  // -> we could obtain the lower half field lines by symmetry, i.e. by just flipping the sign of
+  //    y-coordinate - but that feels like cheating
+  // we could do it directly in addFieldLine - it could have a bool flipY parameter
   // todo: -use a loop to add many field lines for various values fo c1
   //  -find a rule how to use visually pleasant values of c1 - maybe such that the upper 
   //   boudaries become equidistant
