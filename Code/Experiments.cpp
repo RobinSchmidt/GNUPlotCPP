@@ -263,13 +263,13 @@ void addFieldLine(GNUPlotter& plt, double c1, double c2 = 0.0)
   double tMin, tMax;
   std::string s2;
   std::string s1 = "index ";
-  std::string s3 = " using 2:3 with lines notitle"; 
+  //std::string s3 = " using 2:3 with lines notitle"; 
+  std::string s3 = " using 2:3 with lines lt 1 notitle"; 
   // 2:3 bcs 1 is the parameter t - todo: get rid of "true" below and use 1:2
 
   int numPoints = 401; 
   // maybe this should depend on the total length of the field line - evaluate the line integral
   // for length computation
-
 
   // add data and commands for the first half of the field line:
   s2 = to_string(2*numFieldLines+1);
@@ -296,11 +296,10 @@ void curveInVectorFieldExperiment()  // rename to zedSquaredVectorField
   // curves that represents a field lines
 
   // create and set up plotter:
-  GNUPlotter plt;                         // plotter object
-  plt.clearCommandFile();                 // we don't want to use the default line styles/colors
+  GNUPlotter plt;                 // plotter object
+  plt.clearCommandFile();         // we don't want to use the default line styles/colors
   plt.setGrid();
-  //plt.setGraphColors("FF0000", "0000FF"); // doesn't work - but default color cyan looks ok
-
+  plt.setGraphColors("209050");   // field line color, visible on top of the arrows
 
   // add data for the 2 bivariate functions and commands for plotting the vector field:
   std::function<double(double, double)> fx, fy; // vector field fx(x,y), fy(x,y)
