@@ -213,21 +213,24 @@ void squareFieldParamLimits(double c1, double c2, double* tMin, double* tMax)
   // Computes the limits between which the value under the square root in the above functions 
   // s = k-(4*k^2*b^2) / a^2 >= 0 (we renamed k12 to k for convenience), so we want to solve
   // k-(4*k^2*b^2) / a^2 = 0 where a = 1+4*k*c2*c2 + 4*k*t*c2 + k*t^2, b = t + 2*c2, k = e^(2*c1)
+  // this leads to 4*k*b^2 = a^2, taking the sqrt: 2*sqrt(k)*b = a (or 2*sqrt(k)*b = -a)
   // ..this leads to a quadratic equation for t  (well, actually, two of them - but let's consider
   // the first one first)
+  // sage:
+  // var("t a b k c2")
+  // a = 1 + 4*k*c2^2 + 4*k*c2*t + k*t^2
+  // b = 2*c2 + t
+  // t1 = solve( a == 2*sqrt(k)*b, t) 
+  // t2 = solve(-a == 2*sqrt(k)*b, t) 
+  // t1, t2
+  // gives:
+  // ([t == -(2*c2*k - sqrt(k))/k], [t == -(2*c2*k + sqrt(k))/k])
 
-  double k = exp(2*c1);
-  double q = 1/k + 4*c2*c2 - 8*c2;
-  double p = 4*(c2-1);
-  double d = p*p/4 - q;   // discriminant (value under sqrt in eq for t)
-  double s = sqrt(d);
-  *tMin = -p/2 - q;
-  *tMax = -p/2 + q;
+  double k = exp(2*c1);   // maybe call this k^2 or k2
+  *tMin = -(2*c2*k + sqrt(k))/k;
+  *tMax = -(2*c2*k - sqrt(k))/k;  // simplify these...
   int dummy = 0;
-  // hmm...these values seem wrong...
 
-  // maybe depending on the values c1, c2 we must use one or the other equation, i.e.
-  // a = 4*k*b or a = -4*k*b?
 }
 void curveInVectorFieldExperiment()
 {
