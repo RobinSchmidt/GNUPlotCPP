@@ -263,9 +263,7 @@ void addFieldLine(GNUPlotter& plt, double c1, double c2 = 0.0)
   double tMin, tMax;
   std::string s2;
   std::string s1 = "index ";
-  //std::string s3 = " using 2:3 with lines notitle"; 
-  std::string s3 = " using 2:3 with lines lt 1 notitle"; 
-  // 2:3 bcs 1 is the parameter t - todo: get rid of "true" below and use 1:2
+  std::string s3 = " using 1:2 with lines lt 1 notitle"; 
 
   int numPoints = 401; 
   // maybe this should depend on the total length of the field line - evaluate the line integral
@@ -276,7 +274,7 @@ void addFieldLine(GNUPlotter& plt, double c1, double c2 = 0.0)
   squareFieldParamLimits1(c1, c2, &tMin, &tMax);
   gx = [&] (double t) { return squareFieldX1(t, c1, c2); };
   gy = [&] (double t) { return squareFieldY1(t, c1, c2); };
-  plt.addDataCurve2D(gx, gy, numPoints, tMin, tMax, true);
+  plt.addDataCurve2D(gx, gy, numPoints, tMin, tMax);
   plt.addGraph(s1+s2+s3); 
 
   // add data and commands for the second half of the field line:
@@ -284,7 +282,7 @@ void addFieldLine(GNUPlotter& plt, double c1, double c2 = 0.0)
   squareFieldParamLimits2(c1, c2, &tMin, &tMax);
   gx = [&] (double t) { return squareFieldX2(t, c1, c2); };
   gy = [&] (double t) { return squareFieldY2(t, c1, c2); };
-  plt.addDataCurve2D(gx, gy, numPoints, tMin, tMax, true);
+  plt.addDataCurve2D(gx, gy, numPoints, tMin, tMax);
   plt.addGraph(s1+s2+s3);
 
   numFieldLines++;
