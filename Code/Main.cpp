@@ -34,7 +34,7 @@ int main(int argc, char** argv)
   demoSincRadialHeatMap();
   */
 
-  demoVectorField();
+  //demoVectorField();
   //demoDipole();  // not so interesting - we should draw field lines, not the vector field
 
   // If you want to see, how they were done, jump into the implementations of these functions - 
@@ -51,7 +51,7 @@ int main(int argc, char** argv)
   //surfaceExperiment();
   //complexExperiment();
   //vectorFieldExperiment();
-  //curveInVectorFieldExperiment();
+  curveInVectorFieldExperiment();
 
   //getchar();
   return(EXIT_SUCCESS);

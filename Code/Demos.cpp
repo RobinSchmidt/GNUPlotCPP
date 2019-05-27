@@ -900,7 +900,8 @@ std::complex<double> rationalVectorField(std::complex<double> z)
   // Computes the value of a rational function
   complex<double> i(0, 1);  // imaginary unit
   return (z-1.) * (z+1.) * (z-i) * (z+i) / z;
-  // maybe try more interesting patterns of poles and zeros
+  // maybe try more interesting patterns of poles and zeros, try visualizing filter transfer 
+  // functions as vector fields
 }
 void demoVectorField()
 {

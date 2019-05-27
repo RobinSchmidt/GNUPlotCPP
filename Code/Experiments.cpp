@@ -123,7 +123,9 @@ void complexExperiment()
 
   // plot the surface corresponding to the function:
   //plotComplexSurface(f, Nr, rMin, rMax, Ni, iMin, iMax);
-  plotComplexVectorField(f, Nr, rMin, rMax, Ni, iMin, iMax);
+  //plotComplexVectorField(f, Nr, rMin, rMax, Ni, iMin, iMax);
+  GNUPlotter::plotComplexVectorField(f, Nr, rMin, rMax, Ni, iMin, iMax, true);
+  GNUPlotter::plotComplexVectorField(f, Nr, rMin, rMax, Ni, iMin, iMax, false);
 
   // todo: try other ways to visualize a complex function - for example by showing, how grid-lines
   // are mapped (real, imag, radial, angular)
@@ -144,6 +146,9 @@ void vectorFieldExperiment()
 
   // plot the function as vector field:
   GNUPlotter::plotVectorField2D(fx, fy, 31, -3., +3., 21, -2., +2.);
+
+
+
 }
 // info for drawing vector fields:
 // https://stackoverflow.com/questions/5442401/vector-field-using-gnuplot
@@ -153,6 +158,33 @@ void vectorFieldExperiment()
 
 // -maybe give the user the option to scale the arrow-lengths
 
+
+
+
+// x-component of 1st solution to the first order ODE system x' = x^2 - y^2, y' = 2*x*y which can 
+// be obtained by wolfram alpha via:
+// DSolve[ {x'[t] == x[t]^2 - y[t]^2, y'[t] == 2 x[t] y[t]}, {x, y}, t] which gives:
+// x = -(e^(2 C1) (t - 2 C2))/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)
+// y = 1/2 (e^(C1) + sqrt(e^(2 C1) - (4 e^(4 C1) (t - 2 C2)^2)/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)^2))
+
+double squareFieldX(double t, double C1, double C2) // rename to squareFieldX1, use X2 for 2nd solution
+{
+  double k1  = exp(C1);   // e^C1
+  double k12 = k1*k1;     // e^(2 C1) = k1^2
+  double x   = -(k12 * (t-2*C2)) / (1+4*k12*C2*C2 + k12*t*t - 4*k12*t*C2);
+  return x;
+  // x = -(e^(2 C1) (t - 2 C2))/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2);
+}
+double squareFieldY(double t, double C1, double C2)
+{
+  double k1  = exp(C1);   // e^C1
+  double k12 = k1*k1;     // e^(2 C1) = k1^2
+  double a   = 1+4*k12*C2*C2 - 4*k12*t*C2 + k12*t*t;
+  double b   = t - 2*C2;
+  double y   = (1./2) * ( k1 + sqrt(k12-(4*k12*k12*b*b) / a*a) );
+  return y;
+  // y = 1/2 (e^(C1) + sqrt(e^(2 C1) - (4 e^(4 C1) (t - 2 C2)^2)/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)^2))
+}
 
 void curveInVectorFieldExperiment()
 {
@@ -165,16 +197,26 @@ void curveInVectorFieldExperiment()
 
   // the 2 univariate functions for the curve:
   std::function<double(double)> gx, gy;
-  gx = [] (double t) { return cos(3*t); };
-  gy = [] (double t) { return sin(2*t); };
+  //gx = [] (double t) { return cos(3*t); };
+  //gy = [] (double t) { return sin(2*t); };
+  // ok - works.. 
+  
+  // but now let's try to replace this totally arbitrary lissajous curve with a 
+  // streamline/field-line of the above evctor field...
+  //double C1 = -1, C2 = 1;
+  //gx = [&] (double t) { return squareFieldX(t, C1, C2); };
+  //gy = [&] (double t) { return squareFieldY(t, C1, C2); };
+  //// doesn't work - we get NaN for y
+
 
   GNUPlotter plt;
 
-  plt.addDataVectorField2D(fx, fy, 21, -2., +2., 21, -2., +2.);
-  plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
-  plt.addCommand("set palette rgbformulae 30,31,32 negative");
+  //plt.addDataVectorField2D(fx, fy, 21, -2., +2., 21, -2., +2.);
+  //plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
+  //plt.addCommand("set palette rgbformulae 30,31,32 negative");
 
   plt.addDataCurve2D(gx, gy, 201, 0., 2*M_PI);
+  //plt.addDataCurve2D(gx, gy, 201, 0., 1.);
   plt.addGraph("index 1 using 1:2 with lines notitle");
   // line color is blue - why?
 
@@ -194,12 +236,7 @@ Ideas:
  negative and two positive charges - the two negative charges should look like 2 gravitational 
  fields - call it demoDipole
 
--draw field lines of 2D vector fields - how do we find them? start somewhere and follow the field?
- ...but what about error accumulation? ...in any case, it seems we need a general way to add many
- curves to a vector field (for field lines of vector fields and equipotential lines for scalar
- fields)
- https://www.quora.com/How-can-I-find-an-expression-for-vector-field-lines
- https://math.stackexchange.com/questions/1992208/how-to-find-the-field-lines-of-a-vector-field
+
 
 -plot 3D curves (trefoil knot)
 -plot 3D vector fields
@@ -210,10 +247,81 @@ Ideas:
  https://www.youtube.com/watch?v=BhtnlKOC-0s&t=189s
 
 
+Field lines:
+-draw field lines of 2D vector fields - how do we find them? start somewhere and follow the field?
+ ...but what about error accumulation? ...in any case, it seems we need a general way to add many
+ curves to a vector field (for field lines of vector fields and equipotential lines for scalar
+ fields)
+ https://www.quora.com/How-can-I-find-an-expression-for-vector-field-lines
+ https://math.stackexchange.com/questions/1992208/how-to-find-the-field-lines-of-a-vector-field
+-maybe we should plot the field lines as parametric curves whose equations should be obtained
+ analytically? maybe like this:
+ -let f(x,y) and g(x,y) be the functions that define our vector field
+ -we want a family of parametric curves x(t), y(t) such that in any point x,y on one of the curves, 
+  the curve's tangent is in the direction of the vector field - so we require: 
+  x'(t) = f(x(t),y(t)), y'(t) = g(x(t),y(t)) for any t, or shorter: x' = f(x,y), y' = g(x,y)
+  -> this is a system of 2 first order differential equations
+  -> maybe if f and g are simple enough, we can find an analytic solution to this system?
+  -> if, not - use a numerical initial value solver:
+     -choose a couple of strategically placed points in the plane (for example, equidistant on
+      one of the axes) and just follow the field for positive and negative times
+     -if start and end-points are known (such as with a dipole), maybe a boundary value solver
+      can be used? 
+      -for the dipole, we know that lines start at the source and end at the sink
+      -we may also have to select an initial direction
+     -maybe the function object passed to the plotter that generates the field lines is the solver?
+      or maybe i should pre-solve the equation and pass some sort of InterpolatingFunction object
+      (makes more sense, since the plotting routines want random access functions)
+-for the complex mapping w = f(z) = z^2 interpreted as vector field, this leads to the first order
+ ODE system x' = x^2 - y^2, y' = 2*x*y where the prime denotes differentiation with respect to the 
+ parameter t.
+ wolfram alpha can solve this with the command:
+ DSolve[ {x'[t] == x[t]^2 - y[t]^2, y'[t] == 2 x[t] y[t]}, {x, y}, t]
+ which reults in 2 solutions:
+
+  x = -(e^(2 C1) (t - 2 C2))/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)
+  y = 1/2 (e^(C1) + sqrt(e^(2 C1) - (4 e^(4 C1) (t - 2 C2)^2)/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)^2))
+
+  x = -(e^(2 C[1]) (t + 2 C[2]))/(1 + e^(2 C[1]) t^2 + 4 e^(2 C[1]) t C[2] + 4 e^(2 C[1]) (C[2])^2)
+  y = 1/2 (e^(C1) - sqrt(e^(2 C1) - (4 e^(4 C1) (t + 2 C2)^2)/(1 + e^(2 C1) t^2 + 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)^2))
+
+  ...try plotting them for various values of C1, C2 ...maybe to simplify, define 
+  k1 = e^C1, k2 = e^C2, k12 = k1^2 = e^(2 C1), etc.
+
+  do the same for x' = x^2 - y^2, y' = -2*x*y - the additional minus sign accounts for complex 
+  conjugation of the Polya vector field associated to f(z) = z^2:
+  DSolve[ {x'[t] == x[t]^2 - y[t]^2, y'[t] == -2 x[t] y[t]}, {x, y}, t]
+  ...but wolfram alpha doesn't understand this - wtf - the only difference is a minus sign!
+
+  can we find a scalar valued function of x,y whose gradient is our desired vector field, i.e. a 
+  potential function for our vector field?
+
+
+
+
+
+
+  -> integrate with respect to t
+
+
+  so it seems we
+  must partially integrate f and g to obtain: 
+  x(t) = integral_a^t f(x,y) dx, y(t) = integral_b^t g(x,y) dy
+  for some constants a,b for the lower limits...is that correct? it seems reasonable to have two
+  free parameters a,b since for each point on the plane, there should be exactly one field line
+  that passes through it - so if we pick apoint x,y in the plane, we should be able to adjust a,b
+  to find a field line through it (however that same field line passes through many points..hmm)
+
+
+
 
 -how would we represent a scalar field in 3D? maybe as (semi-transparent) spheres with a size 
  representing the value? or maybe the transparency should represent the value? or both? ..or maybe
  cubes instead of spheres?
+
+
+
+
 
 
 */
