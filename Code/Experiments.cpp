@@ -252,8 +252,11 @@ void squareFieldParamLimits2(double c1, double c2, double* tMin, double* tMax)
   *tMax = (-1./2)*(4*c2*k - 1)/k;
 }
 
-void addFieldLine(GNUPlotter& plt, double c1, double c2) // maybe we don't need c2
+void addFieldLine(GNUPlotter& plt, double c1, double c2 = 0.0) 
 {
+  // c1 controls the size of the loop that the field line draws, c2 seems to have no visible effect
+  // (maybe it controls the speed and therefore the range tMin..tMax?)
+
   static int numFieldLines = 0; // quick and dirty counter - todo: make a class, use a member
 
   std::function<double(double)> gx, gy;
@@ -289,15 +292,8 @@ void addFieldLine(GNUPlotter& plt, double c1, double c2) // maybe we don't need 
 
 void curveInVectorFieldExperiment()  // rename to zedSquaredVectorField
 {
-  // We plot the 2D vector field corresponding to the complex function f(z) = z^2 and also draw a
-  // curve that represents a field line (todo: draw may field lines for various values of c1 (and
-  // maybe c2))
-
-  // user parameters:
-  double c1 = 1.0, c2 = -0.5;             // field line parameters (select, which line is drawn)
-  // c1 controls size of the field lines but c2 seems to have no visible effect (maybe it controls
-  // the speed and therefore the range tMin..tMax?)
-
+  // We plot the 2D vector field corresponding to the complex function f(z) = z^2 and also draw
+  // curves that represents a field lines
 
   // create and set up plotter:
   GNUPlotter plt;                         // plotter object
@@ -314,9 +310,19 @@ void curveInVectorFieldExperiment()  // rename to zedSquaredVectorField
   plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
   plt.addCommand("set palette rgbformulae 30,31,32 negative");
 
-
-  addFieldLine(plt, c1, c2); // todo: use a loop to add many field lines for various values fo c1
-
+  // add data and commands for field lines:
+  addFieldLine(plt, -1.0);
+  addFieldLine(plt, -0.5);
+  addFieldLine(plt,  0.0);
+  addFieldLine(plt,  0.5);
+  addFieldLine(plt,  1.0);
+  // they have all different colors and for some, even the upper and lower half have different
+  // colors -> fix this!
+  // hmm...all these field lines are in the upper half plane - how do we get those for the lower
+  // half plane? ...have we missed a solution of our ODE system?
+  // todo: -use a loop to add many field lines for various values fo c1
+  //  -find a rule how to use visually pleasant values of c1 - maybe such that the upper 
+  //   boudaries become equidistant
 
 
   plt.plot();
