@@ -577,21 +577,22 @@ void GNUPlotter::addDataMatrix(int Nx, int Ny, T *x, T *y, T **z)
 
 template <class T>
 void GNUPlotter::addDataCurve2D(const std::function<T(T)>& fx, const std::function<T(T)>& fy,
-  int Nt, T tMin, T tMax)
+  int Nt, T tMin, T tMax, bool writeT)
 {
-  T tStep = (tMax-tMin) / T(Nt-1);          // step size for t
-  vector<T> x(Nt), y(Nt);
+  vector<T> t(Nt), x(Nt), y(Nt);
+  rangeLinear(&t[0], Nt, tMin, tMax);
   for(int i = 0; i < Nt; i++) {
-    T t = tMin + T(i) * tStep;              // current time instant
-    x[i] = fx(t);
-    y[i] = fy(t);
+    x[i] = fx(t[i]);
+    y[i] = fy(t[i]);
   }
-  addDataArrays(Nt, &x[0], &y[0]);
-  // todo: maybe we could (optionally) also write a data-column with the values of t itself into 
-  // the datafile? would that be useful? maybe for using color to indicate the t-value along the 
+  if(writeT) addDataArrays(Nt, &t[0], &x[0], &y[0]); // write t-values into 1st column
+  else       addDataArrays(Nt,        &x[0], &y[0]); // ...or don't
+
+  // the t values may be useful for using color to indicate the t-value along the 
   // curve? or maybe use tick-marks along the curve - for example, if t in in 0..1 ste markers
   // at 0.1, 0.2, 0.9, 1.0 - maybe these markers could be little arrows to also convey the 
-  // orientation of the curve?
+  // orientation of the curve? in any case, the markers should not appear on each t - that would
+  // be far too dense - maybe every 20th sample or so would be appropriate
   // how about drawing tangent vectors along the curve? make a function addDataCurveWithTangents2D
   // compute the actual tangents numerically
 }

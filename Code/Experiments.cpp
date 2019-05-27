@@ -208,6 +208,27 @@ double squareFieldY2(double t, double C1, double C2)
 // avoid them, we may need to be able to pass a vector-valued function to the plotter instead of 
 // two scalar valued functions (the computations for x and y have terms in common)
 
+void squareFieldParamLimits(double c1, double c2, double* tMin, double* tMax)
+{
+  // Computes the limits between which the value under the square root in the above functions 
+  // s = k-(4*k^2*b^2) / a^2 >= 0 (we renamed k12 to k for convenience), so we want to solve
+  // k-(4*k^2*b^2) / a^2 = 0 where a = 1+4*k*c2*c2 + 4*k*t*c2 + k*t^2, b = t + 2*c2, k = e^(2*c1)
+  // ..this leads to a quadratic equation for t  (well, actually, two of them - but let's consider
+  // the first one first)
+
+  double k = exp(2*c1);
+  double q = 1/k + 4*c2*c2 - 8*c2;
+  double p = 4*(c2-1);
+  double d = p*p/4 - q;   // discriminant (value under sqrt in eq for t)
+  double s = sqrt(d);
+  *tMin = -p/2 - q;
+  *tMax = -p/2 + q;
+  int dummy = 0;
+  // hmm...these values seem wrong...
+
+  // maybe depending on the values c1, c2 we must use one or the other equation, i.e.
+  // a = 4*k*b or a = -4*k*b?
+}
 void curveInVectorFieldExperiment()
 {
   // We plot a 2D vector field and a curve.
@@ -225,14 +246,18 @@ void curveInVectorFieldExperiment()
   
   // but now let's try to replace this totally arbitrary lissajous curve with a 
   // streamline/field-line of the above evctor field...
-  double C1 = 1.0, C2 = -0.5;
-  gx = [&] (double t) { return squareFieldX2(t, C1, C2); };
-  gy = [&] (double t) { return squareFieldY2(t, C1, C2); };
+  double c1 = 1.0, c2 = -0.5;
+  gx = [&] (double t) { return squareFieldX2(t, c1, c2); };
+  gy = [&] (double t) { return squareFieldY2(t, c1, c2); };
   // it seems, we see the lower half of one of the streamlines - how to get the upper half?
   // ...maybe the second solution gives it? ..well - at least not with the chosen parameter
-  // range - try to figure out appropriate parameter ranges for the two solution, given the two 
-  // parameter C1, C2 ...damn! that simple f(z) = z^2 function keeps me busy for quite some time
+  // range - try to figure out appropriate parameter ranges for the two solutions, given the two 
+  // parameters C1, C2 ...damn! that simple f(z) = z^2 function keeps me busy for quite some time
   // maybe print the paramater value t also into the datafile
+  // the parameter limits are given by the requirement s >= where
+  // s = k - (4 k^2 b^2) / a^2, b = t + 2 c2, a = 1 + 4 k c2^2 t + k t^2, k = e^(2 c1), so we need
+  // to solve the quadratic equation: s = 0 = q(t) for t (q(t) stands for: some quadratic in t)
+  // the condition for the value s under the sqrt to be 
 
 
   GNUPlotter plt;
@@ -240,6 +265,10 @@ void curveInVectorFieldExperiment()
   plt.addDataVectorField2D(fx, fy, 21, -2., +2., 21, -2., +2.);
   plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
   plt.addCommand("set palette rgbformulae 30,31,32 negative");
+
+
+  double tMin = 0.5, tMax = 2.0;
+  squareFieldParamLimits(c1, c2, &tMin, &tMax);
 
   //plt.addDataCurve2D(gx, gy, 201, 0., 2*M_PI);
   plt.addDataCurve2D(gx, gy, 401, 0.5, 2.0);

@@ -372,10 +372,12 @@ public:
   template <class T>
   void addDataMatrix(int Nx, int Ny, T *x, T *y, T **z);
 
-  /** Adds a data set representing parametric curve on a 2-dimensional plane. */
+  /** Adds a data set representing parametric curve on a 2-dimensional plane. The optional 
+  writeParameters argument decides, whether or not the t-values shall be written into the 
+  datafile - if so, they will be written into the first column. */
   template <class T>
   void addDataCurve2D(const std::function<T(T)>& fx, const std::function<T(T)>& fy, 
-    int Nt, T tMin, T tMax);
+    int Nt, T tMin, T tMax, bool writeParameters = false);
 
   // todo: addDataCurve3D
 
