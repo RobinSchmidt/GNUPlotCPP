@@ -260,7 +260,6 @@ void addFieldLine(GNUPlotter& plt, double c1, bool flipY = false)
   // out, why we don't get them naturally from the equations - have we missed a solution to the
   // ODE system?
 
-
   static int numFieldLines = 0; // quick and dirty counter - todo: make a class, use a member
 
   double c2 = 0;
@@ -313,7 +312,8 @@ void curveInVectorFieldExperiment()  // rename to zedSquaredVectorField
   std::function<double(double, double)> fx, fy; // vector field fx(x,y), fy(x,y)
   fx = [] (double x, double y) { return x*x - y*y; }; // x^2 - y^2 = Re{ z^2 }
   fy = [] (double x, double y) { return 2*x*y;     }; // 2xy       = Im{ z^2 }
-  plt.addDataVectorField2D(fx, fy, 31, -3., +3., 31, -3., +3.);
+  //plt.addDataVectorField2D(fx, fy, 15, -1.5, 1.5, 31, -3.0, +3.0);
+  plt.addDataVectorField2D(fx, fy, 21, -2.0, 2.0, 31, -3.0, +3.0);
   plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
   plt.addCommand("set palette rgbformulae 30,31,32 negative");
 
@@ -323,25 +323,11 @@ void curveInVectorFieldExperiment()  // rename to zedSquaredVectorField
   addFieldLine(plt,  0.0, false);
   addFieldLine(plt,  0.5, false);
   addFieldLine(plt,  1.0, false);
-
   addFieldLine(plt, -1.0, true);
   addFieldLine(plt, -0.5, true);
   addFieldLine(plt,  0.0, true);
   addFieldLine(plt,  0.5, true);
   addFieldLine(plt,  1.0, true);
-
-
-
-  // they have all different colors and for some, even the upper and lower half have different
-  // colors -> fix this!
-  // hmm...all these field lines are in the upper half plane - how do we get those for the lower
-  // half plane? ...have we missed a solution of our ODE system?
-  // -> we could obtain the lower half field lines by symmetry, i.e. by just flipping the sign of
-  //    y-coordinate - but that feels like cheating
-  // we could do it directly in addFieldLine - it could have a bool flipY parameter
-  // todo: -use a loop to add many field lines for various values fo c1
-  //  -find a rule how to use visually pleasant values of c1 - maybe such that the upper 
-  //   boudaries become equidistant
 
 
   plt.plot();
