@@ -1,5 +1,6 @@
 #pragma once
 
+// todo: maybe make a separate project for this code, so the mess is not looked at by users
 
 /** Some experimental plots - to try out new stuff. Some things from these functions here may 
 eventually be integrated into the class GNUPlotter, when they are finished. Then, the 

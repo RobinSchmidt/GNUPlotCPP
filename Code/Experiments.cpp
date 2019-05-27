@@ -167,40 +167,40 @@ void vectorFieldExperiment()
 // which gives two solutions
 double squareFieldX1(double t, double C1, double C2)
 {
-  double k1  = exp(C1);   // e^C1
-  double k12 = k1*k1;     // e^(2 C1) = k1^2
-  double x   = -(k12 * (t-2*C2)) / (1+4*k12*C2*C2 + k12*t*t - 4*k12*t*C2);
+  double k1 = exp(C1);   // e^C1
+  double k2 = k1*k1;     // e^(2 C1) = k1^2
+  double x  = -(k2 * (t-2*C2)) / (1+4*k2*C2*C2 + k2*t*t - 4*k2*t*C2);
   return x;
   // x = -(e^(2 C1) (t - 2 C2))/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2);
 }
 double squareFieldY1(double t, double C1, double C2)
 {
-  double k1  = exp(C1);   // e^C1
-  double k12 = k1*k1;     // e^(2 C1) = k1^2
-  double a   = 1+4*k12*C2*C2 - 4*k12*t*C2 + k12*t*t;
-  double b   = t - 2*C2;
-  double s   = k12-(4*k12*k12*b*b) / a*a;
-  double y   = (1./2) * (k1 + sqrt(s));
+  double k1 = exp(C1);   // e^C1
+  double k2 = k1*k1;     // e^(2 C1) = k1^2
+  double a  = 1+4*k2*C2*C2 - 4*k2*t*C2 + k2*t*t;
+  double b  = t - 2*C2;
+  double s  = k2-(4*k2*k2*b*b) / a*a;
+  double y  = (1./2) * (k1 + sqrt(max(0.0,s)));
   return y;
   // y = 1/2 (e^(C1) + sqrt(e^(2 C1) - (4 e^(4 C1) (t - 2 C2)^2)/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)^2))
 }
 // 2nd solution:
 double squareFieldX2(double t, double C1, double C2)
 {
-  double k1  = exp(C1);   // e^C1
-  double k12 = k1*k1;     // e^(2 C1) = k1^2
-  double x = -(k12 * (t+2*C2)) / (1+4*k12*C2*C2 + k12*t*t + 4*k12*t*C2);
+  double k1 = exp(C1);   // e^C1
+  double k2 = k1*k1;     // e^(2 C1) = k1^2
+  double x  = -(k2 * (t+2*C2)) / (1+4*k2*C2*C2 + k2*t*t + 4*k2*t*C2);
   return x;
   // x = -(e^(2 C1) (t + 2 C2))/(1 + e^(2 C1) t^2 + 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)
 }
 double squareFieldY2(double t, double C1, double C2)
 {
-  double k1  = exp(C1);   // e^C1
-  double k12 = k1*k1;     // e^(2 C1) = k1^2
-  double a   = 1+4*k12*C2*C2 + 4*k12*t*C2 + k12*t*t;
-  double b   = t + 2*C2;
-  double s   = k12-(4*k12*k12*b*b) / a*a;
-  double y   = (1./2) * (k1 - sqrt(s));
+  double k1 = exp(C1);   // e^C1
+  double k2 = k1*k1;     // e^(2 C1) = k1^2
+  double a  = 1+4*k2*C2*C2 + 4*k2*t*C2 + k2*t*t;
+  double b  = t + 2*C2;
+  double s  = k2-(4*k2*k2*b*b) / a*a;
+  double y  = (1./2) * (k1 - sqrt(max(0.0,s)));
   return y;
   // y = 1/2 (e^(C1) - sqrt(e^(2 C1) - (4 e^(4 C1) (t + 2 C2)^2)/(1 + e^(2 C1) t^2 + 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)^2))
 }
@@ -208,29 +208,26 @@ double squareFieldY2(double t, double C1, double C2)
 // avoid them, we may need to be able to pass a vector-valued function to the plotter instead of 
 // two scalar valued functions (the computations for x and y have terms in common)
 
+// maybe try to use natural parametrization (nach bogenlänge parametrisieren) - find a function to
+// apply to t to find s...or actually we need t as function of s
+
 void squareFieldParamLimits(double c1, double c2, double* tMin, double* tMax)
 {
   // Computes the limits between which the value under the square root in the above functions 
-  // s = k-(4*k^2*b^2) / a^2 >= 0 (we renamed k12 to k for convenience), so we want to solve
-  // k-(4*k^2*b^2) / a^2 = 0 where a = 1+4*k*c2*c2 + 4*k*t*c2 + k*t^2, b = t + 2*c2, k = e^(2*c1)
-  // this leads to 4*k*b^2 = a^2, taking the sqrt: 2*sqrt(k)*b = a (or 2*sqrt(k)*b = -a)
-  // ..this leads to a quadratic equation for t  (well, actually, two of them - but let's consider
-  // the first one first)
+  // s = k^2-(4*k^4*b*b) / a*a is nonnegative - this is the range, which the parameter t is allowed
+  // to traverse
   // sage:
-  // var("t a b k c2")
-  // a = 1 + 4*k*c2^2 + 4*k*c2*t + k*t^2
-  // b = 2*c2 + t
-  // t1 = solve( a == 2*sqrt(k)*b, t) 
-  // t2 = solve(-a == 2*sqrt(k)*b, t) 
-  // t1, t2
+  //  var("t a b k c2")
+  //  a = 1 + 4*k^2*c2^2 + 4*k^2*c2*t + k^2*t^2
+  //  b = 2*c2 + t
+  //  s = k^2-(4*k^2*k^2*b*b) / a*a;
+  //  solve(s == 0, t)
   // gives:
-  // ([t == -(2*c2*k - sqrt(k))/k], [t == -(2*c2*k + sqrt(k))/k])
+  //  t == -1/2*(4*c2*k + 1)/k, t == -1/2*(4*c2*k - 1)/k
 
-  double k = exp(2*c1);   // maybe call this k^2 or k2
-  *tMin = -(2*c2*k + sqrt(k))/k;
-  *tMax = -(2*c2*k - sqrt(k))/k;  // simplify these...
-  int dummy = 0;
-
+  double k = exp(c1);
+  *tMin = (-1./2)*(4*c2*k + 1)/k;   // ...simplify/optimize
+  *tMax = (-1./2)*(4*c2*k - 1)/k;
 }
 void curveInVectorFieldExperiment()
 {
@@ -274,8 +271,10 @@ void curveInVectorFieldExperiment()
   squareFieldParamLimits(c1, c2, &tMin, &tMax);
 
   //plt.addDataCurve2D(gx, gy, 201, 0., 2*M_PI);
-  plt.addDataCurve2D(gx, gy, 401, 0.5, 2.0);
-  plt.addGraph("index 1 using 1:2 with lines notitle");
+  plt.addDataCurve2D(gx, gy, 401, tMin, tMax, true);
+  //plt.addDataCurve2D(gx, gy, 401, 0.8, 1.2, true);
+  //plt.addDataCurve2D(gx, gy, 401, 0.82, 1.18, true); // 0.82..1.18 produces no NaNs, higher ranges do
+  plt.addGraph("index 1 using 2:3 with lines notitle"); // 2:3 bcs 1 is the parameter t
   // line color is blue - why?
 
   plt.plot();
