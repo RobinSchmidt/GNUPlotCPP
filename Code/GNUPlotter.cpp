@@ -686,6 +686,9 @@ void GNUPlotter::addDataVectorField2D(const function<T(T, T)>& fx, const functio
   // should take a matrix of vectors
   // addDataVectorField2D(fx, fy, Nx, Ny, T** x, T** y, T** dx, T** dy, T** c = nullptr)
   // but maybe allow also flat matrices - i.e. not pointer-to-pointer
+
+  // maybe make not all of them the same length but scale only those which would be too long and
+  // leave the shorter ones as is
 }
 
 

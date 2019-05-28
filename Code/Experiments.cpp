@@ -108,10 +108,21 @@ void complexExperiment()
 
   // Define the complex function w = f(z) = z^2 as example complex function:
   function<complex<double>(complex<double>)> f;
-  f = [] (complex<double> z) { return z*z; };
+  //f = [] (complex<double> z) { return z*z; };
   //f = [] (complex<double> z) { return z*z*z; };
   //f = [] (complex<double> z) { return z*z*z*z; };
-  //f = [] (complex<double> z) { return 1./z; };                 // 1st order pole at z=0
+  //f = [] (complex<double> z) { return 1./z; };         // 1st order pole at z=0
+
+  f = [] (complex<double> z) { return z + 1./z; };
+  // https://www.youtube.com/watch?v=rB83DpBJQsE
+  // https://www.physik.uni-bielefeld.de/~borghini/Teaching/Hydrodynamics15/05_19.pdf
+  // https://www.physik.uni-bielefeld.de/~borghini/Teaching/Hydrodynamics15/Hydrodynamics.pdf
+  // -> page 61, eqIV.40: i think, we should use the negative derivative of 
+  //    z + 1/z for the velocity field, not the function itself
+
+  // https://en.wikipedia.org/wiki/Potential_flow_around_a_circular_cylinder
+  // https://en.wikipedia.org/wiki/Potential_flow#Analysis_for_two-dimensional_flow
+
   //f = [] (complex<double> z) { return 1./(z+1.) + 1./(z-1.); };  // 2 poles at -1 and +1 (dipole..verify)
   //f = [] (complex<double> z) { return exp(z); };
   //f = [] (complex<double> z) { return sin(2.0*z); };
@@ -318,22 +329,24 @@ void curveInVectorFieldExperiment()  // rename to zedSquaredVectorField
   plt.addCommand("set palette rgbformulae 30,31,32 negative");
 
   // add data and commands for field lines:
-  addFieldLine(plt, -1.0, false);
-  addFieldLine(plt, -0.5, false);
-  addFieldLine(plt,  0.0, false);
-  addFieldLine(plt,  0.5, false);
-  addFieldLine(plt,  1.0, false);
-  addFieldLine(plt, -1.0, true);
-  addFieldLine(plt, -0.5, true);
-  addFieldLine(plt,  0.0, true);
-  addFieldLine(plt,  0.5, true);
-  addFieldLine(plt,  1.0, true);
+  double cMin = -3.0, cMax = 1.0, cStep = 0.5;
+  double c = cMin;
+  while(c <= cMax) {
+    addFieldLine(plt, c, false);
+    addFieldLine(plt, c, true);
+    c += cStep;
+  }
+  // obtaining the field lines for the bottom halfplane by reflection is actually cheating - i 
+  // think, they should somehow naturally fall out of the equations - but for some reason didn't
 
 
   plt.plot();
   // todo:
   // -add arrows and maybe something that let's use see the speed (maybe plot segments where the 
   //  particle is fast fainter - resembles an analog oscilloscope look)
+  // -maybe we could add tangent/velocity vectors on the field line..this would amount to just 
+  //  evaluate the vector field at these points - but if all we have is the parametric equations,
+  //  we could also use numerical derivatives
 }
 // -how about equipotential lines? for this, we perhaps first should figure out how to draw several
 //  curves on top of a scalar field in general
@@ -357,6 +370,7 @@ Ideas:
 
  weitz on visualization:
  https://www.youtube.com/watch?v=BhtnlKOC-0s&t=189s
+ https://www.youtube.com/watch?v=BhtnlKOC-0s
 
 
 Field lines:
