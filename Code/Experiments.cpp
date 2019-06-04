@@ -354,6 +354,30 @@ void curveInVectorFieldExperiment()  // rename to zedSquaredVectorField
 // todo: plot vector field of a polynomial with zeros placed at -1, +1, -i, +i, 0, maybe
 // also plot vector fields of rational functions
 
+
+void pendulumPhasePortrait()
+{
+  // physical parameters:
+  double mu = 0.3; // damping constant
+  double g  = 1;   // gravitational pull/acceleration
+  double L  = 1;   // length of pendulum
+
+
+  std::function<double(double, double)> fx, fy; // vector field fx(x,y), fy(x,y)
+  fx = []  (double x, double y) { return y; };
+  fy = [&] (double x, double y) { return -mu*y - (g/L)*sin(x); }; 
+
+
+  GNUPlotter::plotVectorField2D(fx, fy, 51, -10., +10., 41, -4., +4.);
+  // let axis ticks be at 0, pi, 2pi, etc., use \theta, \dot{\theta} for the axes
+  // -later: add a trajectory ("field line") by solving the initial value problem for the ODE 
+  //  system
+  // -maybe try a black background (and invert the colormap)
+
+  int dummy = 0;
+}
+
+
 /*
 Ideas:
 -move high-level vector-field to demos - make a demo showing a positive charge at +1 and a negative
@@ -418,6 +442,9 @@ Field lines:
   conjugation of the Polya vector field associated to f(z) = z^2:
   DSolve[ {x'[t] == x[t]^2 - y[t]^2, y'[t] == -2 x[t] y[t]}, {x, y}, t]
   ...but wolfram alpha doesn't understand this - wtf - the only difference is a minus sign!
+  ok - wolfram cloud can do it - and the result is *much* more complicated than without the minus
+  sign - it's still strange that alpha says that it doesn't understand the question - it should
+  say something like: the problem is too complicated for alpha
 
   can we find a scalar valued function of x,y whose gradient is our desired vector field, i.e. a 
   potential function for our vector field?

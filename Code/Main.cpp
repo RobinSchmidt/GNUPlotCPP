@@ -51,7 +51,8 @@ int main(int argc, char** argv)
   //surfaceExperiment();
   //complexExperiment();
   //vectorFieldExperiment();
-  curveInVectorFieldExperiment();
+  //curveInVectorFieldExperiment();
+  pendulumPhasePortrait();
 
   getchar();
   return(EXIT_SUCCESS);
