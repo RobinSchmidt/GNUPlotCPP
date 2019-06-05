@@ -365,20 +365,60 @@ void pendulumPhasePortrait()
 
   std::function<double(double, double)> fx, fy; // vector field fx(x,y), fy(x,y)
   fx = []  (double x, double y) { return y; };
-  fy = [&] (double x, double y) { return -mu*y - (g/L)*sin(x); }; 
+  fy = [&] (double x, double y) { return -mu*y - (g/L)*sin(x); };
+  //fy = [&] (double x, double y) { return -mu*y - (g/L)*sin(2*M_PI*x); }; 
 
 
-  GNUPlotter::plotVectorField2D(fx, fy, 51, -10., +10., 41, -4., +4.);
+  GNUPlotter plt;
+  plt.addDataVectorField2D(fx, fy, 51, -10., +10., 41, -4., +4.);
+  plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
+    // maybe have a function addGraphVectorField2D and/or let the addData function have a bool
+    // parameter that lets the graph be added automatically
+  plt.addCommand("set palette rgbformulae 30,31,32 negative");
+  plt.addCommand("set xrange  [-10.5:10.5]");
+  plt.addCommand("set yrange  [-4.5:4.5]");
+  plt.addCommand("set xlabel \"Angle {/Symbol q}\"");
+  plt.addCommand("set ylabel \"Angular velocity {/Symbol w}\"");
+  plt.addCommand("set xtics pi");
+  //plt.addCommand("set format x '%.0P?'");  // like described below - doesn't work
+  plt.addCommand("set format x '%.0P{/Symbol p}'");
+  plt.setPixelSize(1000, 500); 
+  plt.plot();
+
+  // trying to get latex letters to work:
+  // http://www.gnuplot.info/files/tutorial.pdf
+  // https://tex.stackexchange.com/questions/119518/how-can-add-some-latex-eq-or-symbol-in-gnuplot
+  // https://stackoverflow.com/questions/28964500/math-in-axes-labels-for-gnuplot-epslatex-terminal-not-formatted-correctly
+
+  // or maybe just greek:
+  // https://sourceforge.net/p/gnuplot/discussion/5925/thread/bc8a65fe/
+  // we could use omega instead of \dot_{theta}
+
+  // tics at multiples of pi
+  // http://www.gnuplotting.org/tag/tics/  // ...it also says something about multiplots
+  // http://www.gnuplotting.org/set-your-tic-labels-to-use-pi-or-to-be-blank/
+  // set xtics ('-2?' -2*pi, '-?' -pi, 0, '?' pi, '2?' 2*pi)
+  // or
+  // set xtics pi
+  // set format x '%.0P?'
+
+  //GNUPlotter::plotVectorField2D(fx, fy, 51, -10., +10., 41, -4., +4.);
   // let axis ticks be at 0, pi, 2pi, etc., use \theta, \dot{\theta} for the axes
   // -later: add a trajectory ("field line") by solving the initial value problem for the ODE 
   //  system
   // -maybe try a black background (and invert the colormap)
+  // -maybe have a (simple) initial-value-solver available here
+
+  // https://www.youtube.com/watch?v=p_di4Zn4wz4
 
   int dummy = 0;
 }
 
 
 /*
+
+
+
 Ideas:
 -move high-level vector-field to demos - make a demo showing a positive charge at +1 and a negative
  charge at -1 using the physically correct law for the electric field - make another plot with two
