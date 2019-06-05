@@ -359,8 +359,11 @@ void curveInVectorFieldExperiment()  // rename to zedSquaredVectorField
 void addFieldLineData(GNUPlotter& plt,
   std::function<double(double, double)>& fx,
   std::function<double(double, double)>& fy,
-  double x0, double y0, double h, int numPoints)  // forward Euler solver params
+  double x0, double y0, double stepSize, int numPoints, int oversampling)  // forward Euler solver params
 {
+
+  double h = stepSize; // preliminary
+
   std::vector<double> x(numPoints), y(numPoints);
   x[0] = x0;
   y[0] = y0;
@@ -369,30 +372,36 @@ void addFieldLineData(GNUPlotter& plt,
     y[i] = y[i-1] + h * fy(x[i-1], y[i-1]);
   }
   plt.addDataArrays(numPoints, &x[0], &y[0]);
+  // maybe have a way to decimate the data for plotting - maybe have an additional 
+  // decimationFactor parameter - the idea is that the solver may need to use more steps than the
+  // plotter needs datapoints so that the computation is still accurate enough but we don't swamp
+  // the datafile withh too much data - or maybe have an oversampling parameter
 }
 void pendulumPhasePortrait()
 {
   // physical parameters:
-  double mu = 0.15; // damping constant
-  double g  = 1;   // gravitational pull/acceleration
-  double L  = 1;   // length of pendulum
+  double mu = 0.14815; // damping constant, 0.14815 shows a pretty sharp corner/turn at the saddle
+  double g  = 1;       // gravitational pull/acceleration
+  double L  = 1;       // length of pendulum
 
 
   std::function<double(double, double)> fx, fy; // vector field fx(x,y), fy(x,y)
   fx = []  (double x, double y) { return y; };
   fy = [&] (double x, double y) { return -mu*y - (g/L)*sin(x); };
-  //fy = [&] (double x, double y) { return -mu*y - (g/L)*sin(2*M_PI*x); }; 
 
 
   GNUPlotter plt;
 
+  // vector field arrows:
   plt.addDataVectorField2D(fx, fy, 51, -10., +10., 41, -4., +4.);
   plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
     // maybe have a function addGraphVectorField2D and/or let the addData function have a bool
     // parameter that lets the graph be added automatically
 
-  addFieldLineData(plt, fx, fy, -10.0, 4.0, 0.01, 7000);  // experimental
-  plt.addGraph("index 1 using 1:2 with lines notitle");
+  // trajectory:
+  addFieldLineData(plt, fx, fy, -10.0, 4.0, 0.01, 7000);
+  plt.setGraphColors("209050");                              // trajectory color
+  plt.addGraph("index 1 using 1:2 with lines lt 1 notitle"); // maybe draw a few more trajectories
 
 
   plt.addCommand("set palette rgbformulae 30,31,32 negative");
