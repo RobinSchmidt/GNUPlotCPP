@@ -944,51 +944,6 @@ void demoPendulumPhasePortrait()
 
 
 
-// maybe move to experiments:
-std::complex<double> rationalVectorField(std::complex<double> z)
-{
-  // Computes the value of a rational function
-  complex<double> i(0, 1);  // imaginary unit
-  return (z-1.) * (z+1.) * (z-i) * (z+i) / z;
-  // maybe try more interesting patterns of poles and zeros, try visualizing filter transfer 
-  // functions as vector fields
-}
-void demoVectorField()
-{
-  function<complex<double>(complex<double>)> f;
-  f = [] (complex<double> z) { return rationalVectorField(z); };
-  GNUPlotter::plotComplexVectorField(f, 31, -1.5, +1.5, 31, -1.5, +1.5, false);
-}
-
-std::complex<double> dipoleField(std::complex<double> z,
-  std::complex<double> cl = -1.0, std::complex<double> cr = +1.0)
-{
-  // Computes the field of a dipole with two charges at z = -1 and z = +1 with charge cl and cr
-  // respectively (cl, cr stand for for left and right charge)
-  // ...but not physically correct...
-
-  typedef std::complex<double> Complex;
-
-  Complex pl(-1.0, 0.0);     // position of left charge
-  Complex pr(+1.0, 0.0);     // position of right charge
-  double dl  = abs(z-pl);    // distance of z to left charge
-  double dr  = abs(z-pr);    // distance of z to righ charge
-
-  //double dl3 = dl*dl*dl;     // cubes of... 
-  //double dr3 = dr*dr*dr;     // ...the distances
-  //double dl2 = dl*dl;     // squares of... 
-  //double dr2 = dr*dr;     // ...the distances
-  // the physically correct law (using the cubes) doesn't look good (we need the cube because the
-  // distance appears also in the numerator (hidden in the non-normalized vector))
-  
-  return cl*(z-pl)/dl + cr*(z-pr)/dr; // or does it have to be pl-z ?
-}
-void demoDipole()
-{
-  function<complex<double>(complex<double>)> f;
-  f = [] (complex<double> z) { return dipoleField(z); };
-  GNUPlotter::plotComplexVectorField(f, 41, -2., +2.0, 21, -1.0, +1.0, false);
-}
 
 
 

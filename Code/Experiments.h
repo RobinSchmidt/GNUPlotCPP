@@ -12,3 +12,7 @@ void surfaceExperiment();
 void complexExperiment();
 void vectorFieldExperiment();
 void curveInVectorFieldExperiment();
+
+// under construction:
+void demoVectorField();
+void demoDipole();

@@ -39,8 +39,6 @@ void demoPendulumPhasePortrait();
 
 
 
-void demoVectorField();
-void demoDipole();
 
 
 
