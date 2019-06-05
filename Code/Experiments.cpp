@@ -361,40 +361,24 @@ void pendulumPhasePortrait() // move to Demos
   double mu = 0.15; // damping constant
   double g  = 1;    // gravitational pull/acceleration
   double L  = 1;    // length of pendulum
+  // see video by 3blue1brown video about this sort of plot:
+  // https://www.youtube.com/watch?v=p_di4Zn4wz4 
 
-
-  std::function<double(double, double)> fx, fy; // vector field fx(x,y), fy(x,y)
+  // two bivariate functions fx(x,y), fy(x,y) define the vector field:
+  std::function<double(double, double)> fx, fy; 
   fx = []  (double x, double y) { return y; };
   fy = [&] (double x, double y) { return -mu*y - (g/L)*sin(x); };
-  // https://www.youtube.com/watch?v=p_di4Zn4wz4 3blue1brown video about this sort of plot
 
-
-
+  // create plotter and add graphs:
   GNUPlotter plt;
+  plt.addVectorField2D(fx, fy, 51, -10., +10., 41, -4., +4.);  // vector field arrows
+  plt.addFieldLine2D(fx, fy, -9.9, 4.0, 0.1, 1000, 10);        // trajectory into right vortex
+  plt.addFieldLine2D(fx, fy, -4.0, 1.5, 0.1, 1000, 10);        // trajectory into middle vortex
+  plt.addFieldLine2D(fx, fy, 5.0, -3.0, 0.1, 1000, 10);        // trajectory into left vortex
 
-  // vector field arrows:
-  plt.addVectorField2D(fx, fy, 51, -10., +10., 41, -4., +4.);
-
-  //plt.addDataVectorField2D(fx, fy, 51, -10., +10., 41, -4., +4.);
-  //plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
-    // maybe have a function addGraphVectorField2D and/or let the addData function have a bool
-    // parameter that lets the graph be added automatically
-
-  // 3 trajectories:
-  plt.setGraphColors("209050");   // trajectory color
-  plt.addDataFieldLine2D(fx, fy, -9.9, 4.0, 0.1, 1000, 10);
-  plt.addGraph("index 1 using 1:2 with lines lt 1 notitle");
-  plt.addDataFieldLine2D(fx, fy, -4.0, 1.5, 0.1, 1000, 10);
-  plt.addGraph("index 2 using 1:2 with lines lt 1 notitle");
-  plt.addDataFieldLine2D(fx, fy, 5.0, -3.0, 0.1, 1000, 10);
-  plt.addGraph("index 3 using 1:2 with lines lt 1 notitle");
-    // try to get rid of the addGraph commands here, too - maybe have a function
-    // addGraphFieldLine2D ...check out, how GNUPlotter deals with the dataInfo member -  i think, 
-    // it's used only, if graphDescriptors is empty? if so, it should be cleanly possible to 
-    // combine addData and addGraph into a single function
-
-
-  plt.addCommand("set palette rgbformulae 30,31,32 negative");
+  // setup pltting options and plot:
+  plt.addCommand("set palette rgbformulae 30,31,32 negative"); // arrow color-map
+  plt.setGraphColors("209050");                                // trajectory color
   plt.addCommand("set xrange [-10.5:10.5]");
   plt.addCommand("set yrange [-4.5:4.5]");
   plt.addCommand("set xlabel \"Angle {/Symbol q}\"");
@@ -404,6 +388,7 @@ void pendulumPhasePortrait() // move to Demos
   plt.setPixelSize(1000, 500); 
   plt.plot();
 
+  // additional info:
   // greek and/or latex letters:
   // https://sourceforge.net/p/gnuplot/discussion/5925/thread/bc8a65fe/
   // http://www.gnuplot.info/files/tutorial.pdf
@@ -413,12 +398,10 @@ void pendulumPhasePortrait() // move to Demos
   // tics at multiples of pi:
   // http://www.gnuplotting.org/tag/tics/  // ...it also says something about multiplots
   // http://www.gnuplotting.org/set-your-tic-labels-to-use-pi-or-to-be-blank/
-
-
-  // -maybe try a black background (and invert the colormap)
-
-
 }
+
+
+
 
 
 /*

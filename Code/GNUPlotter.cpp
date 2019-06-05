@@ -75,13 +75,9 @@ void GNUPlotter::plotVectorField2D(const function<T(T, T)>& fx, const function<T
 {
   GNUPlotter p;
   p.addVectorField2D(fx, fy, Nx, xMin, xMax, Ny, yMin, yMax);
-
-  //p.addDataVectorField2D(fx, fy, Nx, xMin, xMax, Ny, yMin, yMax);
-  //p.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
-
-  //p.addCommand("set palette gray negative");
   p.addCommand("set palette rgbformulae 30,31,32 negative");
   p.plot();
+  // maybe try a black background (and invert the colormap)
 }
 template void GNUPlotter::plotVectorField2D(const function<int(int, int)>& fx, const function<int(int, int)>& fy, int Nx, int xMin, int xMax, int Ny, int yMin, int yMax);
 template void GNUPlotter::plotVectorField2D(const function<float(float, float)>& fx, const function<float(float, float)>& fy, int Nx, float xMin, float xMax, int Ny, float yMin, float yMax);
@@ -711,16 +707,11 @@ void GNUPlotter::addDataFieldLine2D(const std::function<T(T, T)>& fx, const std:
   decimate(&y[0], N, &y[0], oversampling);
   addDataArrays(numPoints, &x[0], &y[0]);
 }
-template void GNUPlotter::addDataFieldLine2D(const std::function<float(float, float)>& fx, const std::function<float(float, float)>& fy, float x0, float y0, float stepSize, int numPoints, int oversampling);
-template void GNUPlotter::addDataFieldLine2D(const std::function<double(double, double)>& fx, const std::function<double(double, double)>& fy, double x0, double y0, double stepSize, int numPoints, int oversampling);
-
 
 void GNUPlotter::addGraph(CSR descriptor)
 {
   graphDescriptors.push_back(descriptor);
 }
-
-
 
 // addData + addGraph:
 
@@ -729,12 +720,19 @@ void GNUPlotter::addVectorField2D(const function<T(T, T)>& fx, const function<T(
   int Nx, T xMin, T xMax, int Ny, T yMin, T yMax)
 {
   addDataVectorField2D(fx, fy, Nx, xMin, xMax, Ny, yMin, yMax);
-  //string idxStr = to_string(dataInfo.size());
   addGraph(string("index ") + to_string(dataInfo.size()-1) + 
     string(" using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle"));
 }
 
-
+template<class T>
+void GNUPlotter::addFieldLine2D(const std::function<T(T, T)>& fx, const std::function<T(T, T)>& fy,
+  T x0, T y0, T stepSize, int numPoints, int oversampling)
+{
+  addDataFieldLine2D(fx, fy, x0, y0, stepSize, numPoints, oversampling);
+  addGraph("index " + to_string(dataInfo.size()-1) + " using 1:2 with lines lt 1 notitle");
+}
+template void GNUPlotter::addFieldLine2D(const std::function<float(float, float)>& fx, const std::function<float(float, float)>& fy, float x0, float y0, float stepSize, int numPoints, int oversampling);
+template void GNUPlotter::addFieldLine2D(const std::function<double(double, double)>& fx, const std::function<double(double, double)>& fy, double x0, double y0, double stepSize, int numPoints, int oversampling);
 
 // inquiry:
 
