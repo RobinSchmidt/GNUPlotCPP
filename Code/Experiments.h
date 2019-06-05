@@ -11,7 +11,7 @@ void curveExperiment2D();
 void surfaceExperiment();
 void complexExperiment();
 void vectorFieldExperiment();
-void curveInVectorFieldExperiment();
+void zedSquaredVectorField();
 
 // under construction:
 void demoVectorField();

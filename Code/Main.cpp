@@ -42,7 +42,7 @@ int main(int argc, char** argv)
 
   // experimental plots - not yet finsihed:
 
-  testDipole();
+  //testDipole();
 
   //demoVectorField();
   //demoDipole();  // not so interesting - we should draw field lines, not the vector field
@@ -56,7 +56,7 @@ int main(int argc, char** argv)
   //surfaceExperiment();
   //complexExperiment();
   //vectorFieldExperiment();
-  //curveInVectorFieldExperiment();
+  zedSquaredVectorField();
 
 
   getchar();

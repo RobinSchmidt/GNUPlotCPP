@@ -170,100 +170,107 @@ void vectorFieldExperiment()
 // -maybe give the user the option to scale the arrow-lengths
 
 
+/** A class to wrap various functions related to visualizing the complex function f(z) = z^2.
+..maybe have similar classes for ZedCubed, ZedInverse or OneOverZed, ExpZed, SineZed, etc. */
 
-// maybe wrap this code into a class "VectorFieldZedSquared" ..or just ZedSquared...maybe have 
-// similar functions ZedCubed, ZedInverse or OneOverZed, ExpZed, SineZed, etc.
-
-// x-component of 1st solution to the first order ODE system x' = x^2 - y^2, y' = 2*x*y which can 
-// be obtained by wolfram alpha via:
-// DSolve[ {x'[t] == x[t]^2 - y[t]^2, y'[t] == 2 x[t] y[t]}, {x, y}, t] 
-// which gives two solutions
-double squareFieldX1(double t, double C1, double C2)
+class ZedSquared
 {
-  double k1 = exp(C1);   // e^C1
-  double k2 = k1*k1;     // e^(2 C1) = k1^2
-  double x  = -(k2 * (t-2*C2)) / (1+4*k2*C2*C2 + k2*t*t - 4*k2*t*C2);
-  return x;
-  // x = -(e^(2 C1) (t - 2 C2))/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2);
-}
-double squareFieldY1(double t, double C1, double C2)
-{
-  double k1 = exp(C1);   // e^C1
-  double k2 = k1*k1;     // e^(2 C1) = k1^2
-  double a  = 1+4*k2*C2*C2 - 4*k2*t*C2 + k2*t*t;
-  double b  = t - 2*C2;
-  double s  = k2-(4*k2*k2*b*b) / a*a;
-  double y  = (1./2) * (k1 + sqrt(max(0.0,s)));
-  return y;
-  // y = 1/2 (e^(C1) + sqrt(e^(2 C1) - (4 e^(4 C1) (t - 2 C2)^2)/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)^2))
-}
-void squareFieldParamLimits1(double c1, double c2, double* tMin, double* tMax)
-{
-  // Computes the limits between which the value under the square root in the above function
-  // s = k^2-(4*k^4*b*b) / a*a is nonnegative - this is the range, which the parameter t is allowed
-  // to traverse
-  // sage:
-  //  var("t a b k c2")
-  //  a = 1+4*k^2*c2^2 - 4*k^2*t*c2 + k^2*t*t
-  //  b = t - 2*c2;
-  //  s = k^2-(4*k^2*k^2*b*b) / a*a;
-  //  solve(s == 0, t)
-  // gives:
-  //  t == 1/2*(4*c2*k - 1)/k, t == 1/2*(4*c2*k + 1)/k
 
-  double k = exp(c1);
-  *tMin = (1./2)*(4*c2*k - 1)/k;   // ...simplify/optimize
-  *tMax = (1./2)*(4*c2*k + 1)/k;
-}
+public:
 
+  // x-component of 1st solution to the first order ODE system x' = x^2 - y^2, y' = 2*x*y which can 
+  // be obtained by wolfram alpha via:
+  // DSolve[ {x'[t] == x[t]^2 - y[t]^2, y'[t] == 2 x[t] y[t]}, {x, y}, t] 
+  // which gives two solutions
+  static double fieldX1(double t, double C1, double C2)
+  {
+    double k1 = exp(C1);   // e^C1
+    double k2 = k1*k1;     // e^(2 C1) = k1^2
+    double x  = -(k2 * (t-2*C2)) / (1+4*k2*C2*C2 + k2*t*t - 4*k2*t*C2);
+    return x;
+    // x = -(e^(2 C1) (t - 2 C2))/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2);
+  }
 
-// 2nd solution:
-double squareFieldX2(double t, double C1, double C2)
-{
-  double k1 = exp(C1);   // e^C1
-  double k2 = k1*k1;     // e^(2 C1) = k1^2
-  double x  = -(k2 * (t+2*C2)) / (1+4*k2*C2*C2 + k2*t*t + 4*k2*t*C2);
-  return x;
-  // x = -(e^(2 C1) (t + 2 C2))/(1 + e^(2 C1) t^2 + 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)
-}
-double squareFieldY2(double t, double C1, double C2)
-{
-  double k1 = exp(C1);   // e^C1
-  double k2 = k1*k1;     // e^(2 C1) = k1^2
-  double a  = 1+4*k2*C2*C2 + 4*k2*t*C2 + k2*t*t;
-  double b  = t + 2*C2;
-  double s  = k2-(4*k2*k2*b*b) / a*a;
-  double y  = (1./2) * (k1 - sqrt(max(0.0,s)));
-  return y;
-  // y = 1/2 (e^(C1) - sqrt(e^(2 C1) - (4 e^(4 C1) (t + 2 C2)^2)/(1 + e^(2 C1) t^2 + 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)^2))
-}
-// todo: refactor to avoid code duplication...maybe try to avoid recomputations - but to fully 
-// avoid them, we may need to be able to pass a vector-valued function to the plotter instead of 
-// two scalar valued functions (the computations for x and y have terms in common)
+  static double fieldY1(double t, double C1, double C2)
+  {
+    double k1 = exp(C1);   // e^C1
+    double k2 = k1*k1;     // e^(2 C1) = k1^2
+    double a  = 1+4*k2*C2*C2 - 4*k2*t*C2 + k2*t*t;
+    double b  = t - 2*C2;
+    double s  = k2-(4*k2*k2*b*b) / a*a;
+    double y  = (1./2) * (k1 + sqrt(max(0.0, s)));
+    return y;
+    // y = 1/2 (e^(C1) + sqrt(e^(2 C1) - (4 e^(4 C1) (t - 2 C2)^2)/(1 + e^(2 C1) t^2 - 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)^2))
+  }
 
-// maybe try to use natural parametrization (nach bogenlänge parametrisieren) - find a function to
-// apply to t to find s...or actually we need t as function of s
+  static void fieldParamLimits1(double c1, double c2, double* tMin, double* tMax)
+  {
+    // Computes the limits between which the value under the square root in the above function
+    // s = k^2-(4*k^4*b*b) / a*a is nonnegative - this is the range, which the parameter t is allowed
+    // to traverse
+    // sage:
+    //  var("t a b k c2")
+    //  a = 1+4*k^2*c2^2 - 4*k^2*t*c2 + k^2*t*t
+    //  b = t - 2*c2;
+    //  s = k^2-(4*k^2*k^2*b*b) / a*a;
+    //  solve(s == 0, t)
+    // gives:
+    //  t == 1/2*(4*c2*k - 1)/k, t == 1/2*(4*c2*k + 1)/k
 
-void squareFieldParamLimits2(double c1, double c2, double* tMin, double* tMax)
-{
-  // Computes the limits between which the value under the square root in the above function
-  // s = k^2-(4*k^4*b*b) / a*a is nonnegative - this is the range, which the parameter t is allowed
-  // to traverse
-  // sage:
-  //  var("t a b k c2")
-  //  a = 1 + 4*k^2*c2^2 + 4*k^2*c2*t + k^2*t^2
-  //  b = 2*c2 + t
-  //  s = k^2-(4*k^2*k^2*b*b) / a*a;
-  //  solve(s == 0, t)
-  // gives:
-  //  t == -1/2*(4*c2*k + 1)/k, t == -1/2*(4*c2*k - 1)/k
+    double k = exp(c1);
+    *tMin = (1./2)*(4*c2*k - 1)/k;   // ...simplify/optimize
+    *tMax = (1./2)*(4*c2*k + 1)/k;
+  }
 
-  double k = exp(c1);
-  *tMin = (-1./2)*(4*c2*k + 1)/k;   // ...simplify/optimize
-  *tMax = (-1./2)*(4*c2*k - 1)/k;
-}
+  // 2nd solution:
+  static double fieldX2(double t, double C1, double C2)
+  {
+    double k1 = exp(C1);   // e^C1
+    double k2 = k1*k1;     // e^(2 C1) = k1^2
+    double x  = -(k2 * (t+2*C2)) / (1+4*k2*C2*C2 + k2*t*t + 4*k2*t*C2);
+    return x;
+    // x = -(e^(2 C1) (t + 2 C2))/(1 + e^(2 C1) t^2 + 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)
+  }
 
-void addFieldLine(GNUPlotter& plt, double c1, bool flipY = false) 
+  static double fieldY2(double t, double C1, double C2)
+  {
+    double k1 = exp(C1);   // e^C1
+    double k2 = k1*k1;     // e^(2 C1) = k1^2
+    double a  = 1+4*k2*C2*C2 + 4*k2*t*C2 + k2*t*t;
+    double b  = t + 2*C2;
+    double s  = k2-(4*k2*k2*b*b) / a*a;
+    double y  = (1./2) * (k1 - sqrt(max(0.0, s)));
+    return y;
+    // y = 1/2 (e^(C1) - sqrt(e^(2 C1) - (4 e^(4 C1) (t + 2 C2)^2)/(1 + e^(2 C1) t^2 + 4 e^(2 C1) t C2 + 4 e^(2 C1) (C2)^2)^2))
+  }
+  // todo: refactor to avoid code duplication...maybe try to avoid recomputations - but to fully 
+  // avoid them, we may need to be able to pass a vector-valued function to the plotter instead of 
+  // two scalar valued functions (the computations for x and y have terms in common)
+
+  // maybe try to use natural parametrization (nach bogenlänge parametrisieren) - find a function to
+  // apply to t to find s...or actually we need t as function of s
+
+  static void fieldParamLimits2(double c1, double c2, double* tMin, double* tMax)
+  {
+    // Computes the limits between which the value under the square root in the above function
+    // s = k^2-(4*k^4*b*b) / a*a is nonnegative - this is the range, which the parameter t is allowed
+    // to traverse
+    // sage:
+    //  var("t a b k c2")
+    //  a = 1 + 4*k^2*c2^2 + 4*k^2*c2*t + k^2*t^2
+    //  b = 2*c2 + t
+    //  s = k^2-(4*k^2*k^2*b*b) / a*a;
+    //  solve(s == 0, t)
+    // gives:
+    //  t == -1/2*(4*c2*k + 1)/k, t == -1/2*(4*c2*k - 1)/k
+
+    double k = exp(c1);
+    *tMin = (-1./2)*(4*c2*k + 1)/k;   // ...simplify/optimize
+    *tMax = (-1./2)*(4*c2*k - 1)/k;
+  }
+
+};
+void addZedSquaredFieldLine(GNUPlotter& plt, double c1, bool flipY = false) 
 {
   // c1 controls the size of the loop that the field line draws, flipY lets the field line flipped
   // along the x-axis (i.e. the sign of y is flipped). somehow, we don't seem to get the lower 
@@ -291,24 +298,23 @@ void addFieldLine(GNUPlotter& plt, double c1, bool flipY = false)
 
   // add data and commands for the first half of the field line:
   s2 = to_string(2*numFieldLines+1);
-  squareFieldParamLimits1(c1, c2, &tMin, &tMax);
-  gx = [&] (double t) { return        squareFieldX1(t, c1, c2); };
-  gy = [&] (double t) { return sign * squareFieldY1(t, c1, c2); };
+  ZedSquared::fieldParamLimits1(c1, c2, &tMin, &tMax);
+  gx = [&] (double t) { return        ZedSquared::fieldX1(t, c1, c2); };
+  gy = [&] (double t) { return sign * ZedSquared::fieldY1(t, c1, c2); };
   plt.addDataCurve2D(gx, gy, numPoints, tMin, tMax);
   plt.addGraph(s1+s2+s3); 
 
   // add data and commands for the second half of the field line:
   s2 = to_string(2*numFieldLines+2);
-  squareFieldParamLimits2(c1, c2, &tMin, &tMax);
-  gx = [&] (double t) { return        squareFieldX2(t, c1, c2); };
-  gy = [&] (double t) { return sign * squareFieldY2(t, c1, c2); };
+  ZedSquared::fieldParamLimits2(c1, c2, &tMin, &tMax);
+  gx = [&] (double t) { return        ZedSquared::fieldX2(t, c1, c2); };
+  gy = [&] (double t) { return sign * ZedSquared::fieldY2(t, c1, c2); };
   plt.addDataCurve2D(gx, gy, numPoints, tMin, tMax);
   plt.addGraph(s1+s2+s3);
 
   numFieldLines++;
 }
-
-void curveInVectorFieldExperiment()  // rename to zedSquaredVectorField
+void zedSquaredVectorField()
 {
   // We plot the 2D vector field corresponding to the complex function f(z) = z^2 and also draw
   // curves that represents a field lines
@@ -332,8 +338,8 @@ void curveInVectorFieldExperiment()  // rename to zedSquaredVectorField
   double cMin = -3.0, cMax = 1.0, cStep = 0.5;
   double c = cMin;
   while(c <= cMax) {
-    addFieldLine(plt, c, false);
-    addFieldLine(plt, c, true);
+    addZedSquaredFieldLine(plt, c, false);
+    addZedSquaredFieldLine(plt, c, true);
     c += cStep;
   }
   // obtaining the field lines for the bottom halfplane by reflection is actually cheating - i 
