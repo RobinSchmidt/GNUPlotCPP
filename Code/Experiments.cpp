@@ -355,10 +355,25 @@ void curveInVectorFieldExperiment()  // rename to zedSquaredVectorField
 // also plot vector fields of rational functions
 
 
+// rename to addFieldLineData2D
+void addFieldLineData(GNUPlotter& plt,
+  std::function<double(double, double)>& fx,
+  std::function<double(double, double)>& fy,
+  double x0, double y0, double h, int numPoints)  // forward Euler solver params
+{
+  std::vector<double> x(numPoints), y(numPoints);
+  x[0] = x0;
+  y[0] = y0;
+  for(int i = 1; i < numPoints; i++) {
+    x[i] = x[i-1] + h * fx(x[i-1], y[i-1]);
+    y[i] = y[i-1] + h * fy(x[i-1], y[i-1]);
+  }
+  plt.addDataArrays(numPoints, &x[0], &y[0]);
+}
 void pendulumPhasePortrait()
 {
   // physical parameters:
-  double mu = 0.3; // damping constant
+  double mu = 0.15; // damping constant
   double g  = 1;   // gravitational pull/acceleration
   double L  = 1;   // length of pendulum
 
@@ -370,10 +385,16 @@ void pendulumPhasePortrait()
 
 
   GNUPlotter plt;
+
   plt.addDataVectorField2D(fx, fy, 51, -10., +10., 41, -4., +4.);
   plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
     // maybe have a function addGraphVectorField2D and/or let the addData function have a bool
     // parameter that lets the graph be added automatically
+
+  addFieldLineData(plt, fx, fy, -10.0, 4.0, 0.01, 7000);  // experimental
+  plt.addGraph("index 1 using 1:2 with lines notitle");
+
+
   plt.addCommand("set palette rgbformulae 30,31,32 negative");
   plt.addCommand("set xrange  [-10.5:10.5]");
   plt.addCommand("set yrange  [-4.5:4.5]");
