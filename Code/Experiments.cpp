@@ -358,7 +358,7 @@ void curveInVectorFieldExperiment()  // rename to zedSquaredVectorField
 void pendulumPhasePortrait() // move to Demos
 {
   // physical parameters:
-  double mu = 0.15; // damping constant, 0.14815 shows a sharp corner/turn at the saddle
+  double mu = 0.15; // damping constant
   double g  = 1;    // gravitational pull/acceleration
   double L  = 1;    // length of pendulum
 
@@ -366,13 +366,17 @@ void pendulumPhasePortrait() // move to Demos
   std::function<double(double, double)> fx, fy; // vector field fx(x,y), fy(x,y)
   fx = []  (double x, double y) { return y; };
   fy = [&] (double x, double y) { return -mu*y - (g/L)*sin(x); };
+  // https://www.youtube.com/watch?v=p_di4Zn4wz4 3blue1brown video about this sort of plot
+
 
 
   GNUPlotter plt;
 
   // vector field arrows:
-  plt.addDataVectorField2D(fx, fy, 51, -10., +10., 41, -4., +4.);
-  plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
+  plt.addVectorField2D(fx, fy, 51, -10., +10., 41, -4., +4.);
+
+  //plt.addDataVectorField2D(fx, fy, 51, -10., +10., 41, -4., +4.);
+  //plt.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
     // maybe have a function addGraphVectorField2D and/or let the addData function have a bool
     // parameter that lets the graph be added automatically
 
@@ -384,7 +388,10 @@ void pendulumPhasePortrait() // move to Demos
   plt.addGraph("index 2 using 1:2 with lines lt 1 notitle");
   plt.addDataFieldLine2D(fx, fy, 5.0, -3.0, 0.1, 1000, 10);
   plt.addGraph("index 3 using 1:2 with lines lt 1 notitle");
-    // try to get rid of the addGraph commands here, too
+    // try to get rid of the addGraph commands here, too - maybe have a function
+    // addGraphFieldLine2D ...check out, how GNUPlotter deals with the dataInfo member -  i think, 
+    // it's used only, if graphDescriptors is empty? if so, it should be cleanly possible to 
+    // combine addData and addGraph into a single function
 
 
   plt.addCommand("set palette rgbformulae 30,31,32 negative");
@@ -393,34 +400,24 @@ void pendulumPhasePortrait() // move to Demos
   plt.addCommand("set xlabel \"Angle {/Symbol q}\"");
   plt.addCommand("set ylabel \"Angular velocity {/Symbol w}\"");
   plt.addCommand("set xtics pi");
-  //plt.addCommand("set format x '%.0P?'");  // like described below - doesn't work
   plt.addCommand("set format x '%.0P{/Symbol p}'");
   plt.setPixelSize(1000, 500); 
   plt.plot();
 
-  // trying to get latex letters to work:
+  // greek and/or latex letters:
+  // https://sourceforge.net/p/gnuplot/discussion/5925/thread/bc8a65fe/
   // http://www.gnuplot.info/files/tutorial.pdf
   // https://tex.stackexchange.com/questions/119518/how-can-add-some-latex-eq-or-symbol-in-gnuplot
   // https://stackoverflow.com/questions/28964500/math-in-axes-labels-for-gnuplot-epslatex-terminal-not-formatted-correctly
 
-  // or maybe just greek:
-  // https://sourceforge.net/p/gnuplot/discussion/5925/thread/bc8a65fe/
-  // we could use omega instead of \dot_{theta}
-
-  // tics at multiples of pi
+  // tics at multiples of pi:
   // http://www.gnuplotting.org/tag/tics/  // ...it also says something about multiplots
   // http://www.gnuplotting.org/set-your-tic-labels-to-use-pi-or-to-be-blank/
-  // set xtics ('-2?' -2*pi, '-?' -pi, 0, '?' pi, '2?' 2*pi)
-  // or
-  // set xtics pi
-  // set format x '%.0P?'
 
 
   // -maybe try a black background (and invert the colormap)
 
-  // https://www.youtube.com/watch?v=p_di4Zn4wz4
 
-  int dummy = 0;
 }
 
 

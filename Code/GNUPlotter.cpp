@@ -74,8 +74,11 @@ void GNUPlotter::plotVectorField2D(const function<T(T, T)>& fx, const function<T
   int Nx, T xMin, T xMax, int Ny, T yMin, T yMax)
 {
   GNUPlotter p;
-  p.addDataVectorField2D(fx, fy, Nx, xMin, xMax, Ny, yMin, yMax);
-  p.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
+  p.addVectorField2D(fx, fy, Nx, xMin, xMax, Ny, yMin, yMax);
+
+  //p.addDataVectorField2D(fx, fy, Nx, xMin, xMax, Ny, yMin, yMax);
+  //p.addGraph("index 0 using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle");
+
   //p.addCommand("set palette gray negative");
   p.addCommand("set palette rgbformulae 30,31,32 negative");
   p.plot();
@@ -716,6 +719,22 @@ void GNUPlotter::addGraph(CSR descriptor)
 {
   graphDescriptors.push_back(descriptor);
 }
+
+
+
+// addData + addGraph:
+
+template <class T>
+void GNUPlotter::addVectorField2D(const function<T(T, T)>& fx, const function<T(T, T)>& fy,
+  int Nx, T xMin, T xMax, int Ny, T yMin, T yMax)
+{
+  addDataVectorField2D(fx, fy, Nx, xMin, xMax, Ny, yMin, yMax);
+  //string idxStr = to_string(dataInfo.size());
+  addGraph(string("index ") + to_string(dataInfo.size()-1) + 
+    string(" using 1:2:3:4:5 with vectors head filled size 0.08,15 ls 2 lc palette notitle"));
+}
+
+
 
 // inquiry:
 

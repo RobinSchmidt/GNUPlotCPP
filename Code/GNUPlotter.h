@@ -445,6 +445,23 @@ public:
   flexibility and generality in the use of this plotter class. */
   void addGraph(CSR descriptor);
 
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Combined addData + addGraph functions */
+
+
+  template<class T>
+  void addVectorField2D(const std::function<T(T, T)>& fx, const std::function<T(T, T)>& fy,
+    int Nx, T xMin, T xMax, int Ny, T yMin, T yMax);
+
+  //template<class T>
+  //void addDataFieldLine2D(const std::function<T(T, T)>& fx, const std::function<T(T, T)>& fy,
+  //  T x0, T y0, T stepSize, int numPoints, int oversampling = 1);
+
+
+
+
+
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
 
