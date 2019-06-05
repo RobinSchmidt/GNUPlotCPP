@@ -355,34 +355,12 @@ void curveInVectorFieldExperiment()  // rename to zedSquaredVectorField
 // also plot vector fields of rational functions
 
 
-// rename to addFieldLineData2D
-void addFieldLineData(GNUPlotter& plt,
-  std::function<double(double, double)>& fx,
-  std::function<double(double, double)>& fy,
-  double x0, double y0, double stepSize, int numPoints, int oversampling)  // forward Euler solver params
-{
-
-  double h = stepSize; // preliminary
-
-  std::vector<double> x(numPoints), y(numPoints);
-  x[0] = x0;
-  y[0] = y0;
-  for(int i = 1; i < numPoints; i++) {
-    x[i] = x[i-1] + h * fx(x[i-1], y[i-1]);
-    y[i] = y[i-1] + h * fy(x[i-1], y[i-1]);
-  }
-  plt.addDataArrays(numPoints, &x[0], &y[0]);
-  // maybe have a way to decimate the data for plotting - maybe have an additional 
-  // decimationFactor parameter - the idea is that the solver may need to use more steps than the
-  // plotter needs datapoints so that the computation is still accurate enough but we don't swamp
-  // the datafile withh too much data - or maybe have an oversampling parameter
-}
-void pendulumPhasePortrait()
+void pendulumPhasePortrait() // move to Demos
 {
   // physical parameters:
-  double mu = 0.14815; // damping constant, 0.14815 shows a pretty sharp corner/turn at the saddle
-  double g  = 1;       // gravitational pull/acceleration
-  double L  = 1;       // length of pendulum
+  double mu = 0.15; // damping constant, 0.14815 shows a sharp corner/turn at the saddle
+  double g  = 1;    // gravitational pull/acceleration
+  double L  = 1;    // length of pendulum
 
 
   std::function<double(double, double)> fx, fy; // vector field fx(x,y), fy(x,y)
@@ -398,15 +376,20 @@ void pendulumPhasePortrait()
     // maybe have a function addGraphVectorField2D and/or let the addData function have a bool
     // parameter that lets the graph be added automatically
 
-  // trajectory:
-  addFieldLineData(plt, fx, fy, -10.0, 4.0, 0.01, 7000);
-  plt.setGraphColors("209050");                              // trajectory color
-  plt.addGraph("index 1 using 1:2 with lines lt 1 notitle"); // maybe draw a few more trajectories
+  // 3 trajectories:
+  plt.setGraphColors("209050");   // trajectory color
+  plt.addDataFieldLine2D(fx, fy, -9.9, 4.0, 0.1, 1000, 10);
+  plt.addGraph("index 1 using 1:2 with lines lt 1 notitle");
+  plt.addDataFieldLine2D(fx, fy, -4.0, 1.5, 0.1, 1000, 10);
+  plt.addGraph("index 2 using 1:2 with lines lt 1 notitle");
+  plt.addDataFieldLine2D(fx, fy, 5.0, -3.0, 0.1, 1000, 10);
+  plt.addGraph("index 3 using 1:2 with lines lt 1 notitle");
+    // try to get rid of the addGraph commands here, too
 
 
   plt.addCommand("set palette rgbformulae 30,31,32 negative");
-  plt.addCommand("set xrange  [-10.5:10.5]");
-  plt.addCommand("set yrange  [-4.5:4.5]");
+  plt.addCommand("set xrange [-10.5:10.5]");
+  plt.addCommand("set yrange [-4.5:4.5]");
   plt.addCommand("set xlabel \"Angle {/Symbol q}\"");
   plt.addCommand("set ylabel \"Angular velocity {/Symbol w}\"");
   plt.addCommand("set xtics pi");
@@ -432,12 +415,8 @@ void pendulumPhasePortrait()
   // set xtics pi
   // set format x '%.0P?'
 
-  //GNUPlotter::plotVectorField2D(fx, fy, 51, -10., +10., 41, -4., +4.);
-  // let axis ticks be at 0, pi, 2pi, etc., use \theta, \dot{\theta} for the axes
-  // -later: add a trajectory ("field line") by solving the initial value problem for the ODE 
-  //  system
+
   // -maybe try a black background (and invert the colormap)
-  // -maybe have a (simple) initial-value-solver available here
 
   // https://www.youtube.com/watch?v=p_di4Zn4wz4
 

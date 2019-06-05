@@ -416,6 +416,18 @@ public:
   void addDataVectorField2D(const std::function<T(T, T)>& fx, const std::function<T(T, T)>& fy,
     int Nx, T xMin, T xMax, int Ny, T yMin, T yMax);
 
+  /** Adds a field line for a 2D vector field defined by the two bivariate functions fx and fy 
+  (which together define a 2D vector field) and a starting point x0, y0 (which define an initial 
+  condition). If x represents position and y velocity, the field line may also be inetrpreted as
+  a trajectory. The field-line/trajectory is obtained by numerically integrating the velocity field
+  using the forward Euler method with given step-size and number of steps. You may also set an 
+  oversampling factor to let the solve use a finer stepsize than used for the plot data (the 
+  effective step-size for the solver then becomes stepSize/oversampling, numPoints is the number of
+  data points in the plot). */
+  template<class T>
+  void addDataFieldLine2D(const std::function<T(T, T)>& fx, const std::function<T(T, T)>& fy,
+    T x0, T y0, T stepSize, int numPoints, int oversampling = 1);
+
 
 
   /** Adds a graph to the plot. You must pass a string that describes how the data (from the 
@@ -451,6 +463,12 @@ public:
   creating the array of values for a log scaled x-axis. */
   template <class T>
   static void rangeLogarithmic(T *x, int N, T min, T max);
+
+  /** Decimates an array x (of length Nx) by the given factor and writes the result into array y
+  (of length Nx/factor). Used to deal with oversampled data. */
+  template<class T>
+  static void decimate(T* x, int Nx, T* y, int factor);
+
 
   /** Initializes the command file. May be called by client code, if it wants to start with an 
   empty command file, i.e. a file that doesn't contain the default commands. */

@@ -691,7 +691,25 @@ void GNUPlotter::addDataVectorField2D(const function<T(T, T)>& fx, const functio
   // leave the shorter ones as is
 }
 
-
+template<class T>
+void GNUPlotter::addDataFieldLine2D(const std::function<T(T, T)>& fx, const std::function<T(T, T)>& fy,
+  T x0, T y0, T stepSize, int numPoints, int oversampling)
+{
+  int N = numPoints * oversampling;
+  T   h = stepSize  / oversampling;
+  std::vector<T> x(N), y(N);
+  x[0] = x0;
+  y[0] = y0;
+  for(int i = 1; i < N; i++) {
+    x[i] = x[i-1] + h * fx(x[i-1], y[i-1]);
+    y[i] = y[i-1] + h * fy(x[i-1], y[i-1]);
+  }
+  decimate(&x[0], N, &x[0], oversampling);
+  decimate(&y[0], N, &y[0], oversampling);
+  addDataArrays(numPoints, &x[0], &y[0]);
+}
+template void GNUPlotter::addDataFieldLine2D(const std::function<float(float, float)>& fx, const std::function<float(float, float)>& fy, float x0, float y0, float stepSize, int numPoints, int oversampling);
+template void GNUPlotter::addDataFieldLine2D(const std::function<double(double, double)>& fx, const std::function<double(double, double)>& fy, double x0, double y0, double stepSize, int numPoints, int oversampling);
 
 
 void GNUPlotter::addGraph(CSR descriptor)
@@ -725,6 +743,14 @@ void GNUPlotter::rangeLogarithmic(T *x, int N, T min, T max)
 }
 template void GNUPlotter::rangeLogarithmic(float *x, int N, float min, float max);
 template void GNUPlotter::rangeLogarithmic(double *x, int N, double min, double max);
+
+template <class T>
+void GNUPlotter::decimate(T* x, int Nx, T* y, int factor)
+{
+  int Ny = Nx / factor;
+  for(int i = 0; i < Ny; i++)
+    y[i] = x[i*factor];
+}
 
 void GNUPlotter::clearCommandFile()
 {
