@@ -35,6 +35,9 @@ void demoPow();
 void demoSincRadial();
 void demoSincRadialHeatMap();
 
+void demoPendulumPhasePortrait();
+
+
 
 void demoVectorField();
 void demoDipole();

@@ -12,4 +12,3 @@ void surfaceExperiment();
 void complexExperiment();
 void vectorFieldExperiment();
 void curveInVectorFieldExperiment();
-void pendulumPhasePortrait();

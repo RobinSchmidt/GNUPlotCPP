@@ -355,58 +355,9 @@ void curveInVectorFieldExperiment()  // rename to zedSquaredVectorField
 // also plot vector fields of rational functions
 
 
-void pendulumPhasePortrait() // move to Demos
-{
-  // physical parameters:
-  double mu = 0.15; // damping constant
-  double g  = 1;    // gravitational pull/acceleration
-  double L  = 1;    // length of pendulum
-  // see video by 3blue1brown video about this sort of plot:
-  // https://www.youtube.com/watch?v=p_di4Zn4wz4 
-
-  // two bivariate functions fx(x,y), fy(x,y) define the vector field:
-  std::function<double(double, double)> fx, fy; 
-  fx = []  (double x, double y) { return y; };
-  fy = [&] (double x, double y) { return -mu*y - (g/L)*sin(x); };
-
-  // create plotter and add graphs:
-  GNUPlotter plt;
-  plt.addVectorField2D(fx, fy, 51, -10., +10., 41, -4., +4.);  // vector field arrows
-  plt.addFieldLine2D(fx, fy, -9.9, 4.0, 0.1, 1000, 10);        // trajectory into right vortex
-  plt.addFieldLine2D(fx, fy, -4.0, 1.5, 0.1, 1000, 10);        // trajectory into middle vortex
-  plt.addFieldLine2D(fx, fy, 5.0, -3.0, 0.1, 1000, 10);        // trajectory into left vortex
-
-  // setup pltting options and plot:
-  plt.addCommand("set palette rgbformulae 30,31,32 negative"); // arrow color-map
-  plt.setGraphColors("209050");                                // trajectory color
-  plt.addCommand("set xrange [-10.5:10.5]");
-  plt.addCommand("set yrange [-4.5:4.5]");
-  plt.addCommand("set xlabel \"Angle {/Symbol q}\"");
-  plt.addCommand("set ylabel \"Angular velocity {/Symbol w}\"");
-  plt.addCommand("set xtics pi");
-  plt.addCommand("set format x '%.0P{/Symbol p}'");
-  plt.setPixelSize(1000, 500); 
-  plt.plot();
-
-  // additional info:
-  // greek and/or latex letters:
-  // https://sourceforge.net/p/gnuplot/discussion/5925/thread/bc8a65fe/
-  // http://www.gnuplot.info/files/tutorial.pdf
-  // https://tex.stackexchange.com/questions/119518/how-can-add-some-latex-eq-or-symbol-in-gnuplot
-  // https://stackoverflow.com/questions/28964500/math-in-axes-labels-for-gnuplot-epslatex-terminal-not-formatted-correctly
-
-  // tics at multiples of pi:
-  // http://www.gnuplotting.org/tag/tics/  // ...it also says something about multiplots
-  // http://www.gnuplotting.org/set-your-tic-labels-to-use-pi-or-to-be-blank/
-}
-
-
-
 
 
 /*
-
-
 
 Ideas:
 -move high-level vector-field to demos - make a demo showing a positive charge at +1 and a negative

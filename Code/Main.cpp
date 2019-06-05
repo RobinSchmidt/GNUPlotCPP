@@ -4,8 +4,6 @@
 
 int main(int argc, char** argv)
 {
-  /*
-
   //testMatrixWrite();
   //testLowLevelCalls();
 
@@ -23,7 +21,7 @@ int main(int argc, char** argv)
   demoSquare();
   demoMatrixData();
   demoLissajous();
-  demoLissajous3D();
+  demoLissajous3D();   // maybe make a trefoil knot instead
   demoHelix();
   //demoPhasor();
   demoTorus();
@@ -32,15 +30,18 @@ int main(int argc, char** argv)
   //demoPow(); // boring - remove
   demoSincRadial();
   demoSincRadialHeatMap();
-  */
-
-  //demoVectorField();
-  //demoDipole();  // not so interesting - we should draw field lines, not the vector field
-
+  demoPendulumPhasePortrait();
   // If you want to see, how they were done, jump into the implementations of these functions - 
   // there you will find commented code that should make it clear how the plotter class is supposed
   // to be used , so you can take these as examples and reference for using it for creating your 
-  // own plots:
+  // own plots.
+
+
+
+  // experimental plots - not yet finsihed:
+
+  //demoVectorField();
+  //demoDipole();  // not so interesting - we should draw field lines, not the vector field
 
   // these are just some tests for debugging:
   //testDataSetup();
@@ -52,7 +53,7 @@ int main(int argc, char** argv)
   //complexExperiment();
   //vectorFieldExperiment();
   //curveInVectorFieldExperiment();
-  pendulumPhasePortrait();
+
 
   getchar();
   return(EXIT_SUCCESS);
