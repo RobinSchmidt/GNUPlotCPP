@@ -369,7 +369,7 @@ void demoVectorField()
   GNUPlotter::plotComplexVectorField(f, 31, -1.5, +1.5, 31, -1.5, +1.5, false);
 }
 
-std::complex<double> dipoleField(std::complex<double> z,
+std::complex<double> complexDipoleField(std::complex<double> z,
   std::complex<double> cl = -1.0, std::complex<double> cr = +1.0)
 {
   // Computes the field of a dipole with two charges at z = -1 and z = +1 with charge cl and cr
@@ -392,16 +392,93 @@ std::complex<double> dipoleField(std::complex<double> z,
   
   return cl*(z-pl)/dl + cr*(z-pr)/dr; // or does it have to be pl-z ?
 }
-void demoDipole()
+void demoComplexDipole()
 {
   function<complex<double>(complex<double>)> f;
-  f = [] (complex<double> z) { return dipoleField(z); };
+  f = [] (complex<double> z) { return complexDipoleField(z); };
   GNUPlotter::plotComplexVectorField(f, 41, -2., +2.0, 21, -1.0, +1.0, false);
 }
+// maybe start with the equation for the potential, the field-lines should then go into the 
+// direction of the gradient - maybe this can be done automatically by computing numeric gradients
+// -> have a function addPotentialFieldLines2D
 
 
 
 
+class Charge2D  // not yet finished
+{
+
+public:
+
+  Charge2D(double charge, double x, double y) : _charge(charge), _x(x), _y(y) {}
+
+  /** Returns the potential at point (x,y) caused by this charge. */
+  double potentialAt(double x, double y)
+  {
+    double dx = x - _x;
+    double dy = y - _y;
+    return _charge  / (dx*dx + dy*dy);
+    // verify formula
+  }
+
+  /** Returns x-component of electric field at point (x,y) cause by this charge. */
+  double xFieldAt(double x, double y)
+  {
+    return 0;  // preliminary
+  }
+
+  /** Returns y-component of electric field at point (x,y) cause by this charge. */
+  double yFieldAt(double x, double y)
+  {
+    return 0;  // preliminary
+  }
+
+protected:
+
+  double _charge = 1; // value/amount/strength of the charge
+  double _x = 0;      // x-coordinate of the charge
+  double _y = 0;      // y-coordinate of the charge
+
+};
+
+void testDipole()
+{
+  // Place the two charges:
+  Charge2D c1(-1, -1, 0);   // negative unit charge at (x,y) = (-1,0)
+  Charge2D c2(+1, +1, 0);   // positive unit charge at (x,y) = (+1,0)
+
+  // Functions for potential and x,y components of electric field:
+  std::function<double(double, double)> P, Ex, Ey; 
+  P  = [&] (double x, double y) { return c1.potentialAt(x,y) + c2.potentialAt(x,y); };
+  Ex = [&] (double x, double y) { return c1.xFieldAt(   x,y) + c2.xFieldAt(   x,y); };
+  Ey = [&] (double x, double y) { return c1.yFieldAt(   x,y) + c2.yFieldAt(   x,y); };
+  // todo: instead of defining Ex, Ey explicitly/analytically, (optionally) use a numeric gradient
+  // of the potential
+
+
+
+  GNUPlotter plt;
+  /*
+  plt.addBiDirectionalFieldLine2D(Ex, Ey, 0, -2, stepSize, numPoints, oversampling);
+  plt.addBiDirectionalFieldLine2D(Ex, Ey, 0, -1, stepSize, numPoints, oversampling);
+  plt.addBiDirectionalFieldLine2D(Ex, Ey, 0,  0, stepSize, numPoints, oversampling);
+  plt.addBiDirectionalFieldLine2D(Ex, Ey, 0, +1, stepSize, numPoints, oversampling);
+  plt.addBiDirectionalFieldLine2D(Ex, Ey, 0, +2, stepSize, numPoints, oversampling);
+  // todo: use loop..maybe have a function addFieldLinesConstX that lets the y-value vary
+  */
+}
+
+// try to create a plot like the one at the bottom here:
+// http://www.feynmanlectures.caltech.edu/II_04.html
+// with field-lines and equipotential lines - ideally, we should just pass the function a potential
+// function, i.e. a scalar function of two variables
+// P = []  (double x, double y) { return chargePotential(-1, -1, 0) + chargePotential(+1, +1, 0); };
+// 1st input: charge, 2nd: x-coord, 3rd: y-coord
+// Ex = dP/dx, Ey = dP/dy (numeric derivatives)
+// plotPotentialField
+// subfunctions: addFieldLines, addEquipotentials
+// maybe for the equipotentials, we need a way to plot a curve defined by an implicit equation
+// f(x,y) = c
 
 
 

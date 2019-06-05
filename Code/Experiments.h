@@ -15,4 +15,6 @@ void curveInVectorFieldExperiment();
 
 // under construction:
 void demoVectorField();
-void demoDipole();
+void demoComplexDipole();
+
+void testDipole();

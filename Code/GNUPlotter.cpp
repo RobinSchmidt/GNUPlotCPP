@@ -707,6 +707,11 @@ void GNUPlotter::addDataFieldLine2D(const std::function<T(T, T)>& fx, const std:
   decimate(&y[0], N, &y[0], oversampling);
   addDataArrays(numPoints, &x[0], &y[0]);
 }
+// maybe factor out the code for the solver - separate it from addData - 
+// void solveInitialValueProblem(fx, fy, x0, y0, h, N, bool backward = false) ...the backward 
+// option is supposed to solve for negative time - this may be useful for drawing field-lines
+// bidirectionally, whose initial point is chosen in the middle of the line/trajectory - the 
+// equation becomes x[i] = x[i-1] + sign * h * fx(x[i-1], y[i-1]); and similar for y, sign =+-1
 
 void GNUPlotter::addGraph(CSR descriptor)
 {
