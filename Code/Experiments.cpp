@@ -416,36 +416,62 @@ class Charge2D  // not yet finished
 
 public:
 
-  Charge2D(double charge, double x, double y) : _charge(charge), _x(x), _y(y) {}
+  Charge2D(double charge, double x, double y) : c(charge), cx(x), cy(y) {}
 
   /** Returns the potential at point (x,y) caused by this charge. */
   double potentialAt(double x, double y)
   {
-    double dx = x - _x;
-    double dy = y - _y;
-    return _charge  / (dx*dx + dy*dy);
-    // verify formula
+    return c / getDistanceTo(x, y); // see formulas 4.23 and 6.8 in the feynman lectures
   }
 
-  /** Returns x-component of electric field at point (x,y) cause by this charge. */
+  /** Returns x-component of electric field at point (x,y) caused by this charge. */
   double xFieldAt(double x, double y)
   {
-    return 0;  // preliminary
+    double r = getDistanceTo(x, y);
+    return c*(x - cx) / (r*r*r);
   }
+  // should equal the x-component of negative gradient of the potential
+  // what if r == 0...the potential becomes infinite - but what about the field? there's no 
+  // meaningful direction, it could have
 
-  /** Returns y-component of electric field at point (x,y) cause by this charge. */
+
+  /** Returns y-component of electric field at point (x,y) caused by this charge. */
   double yFieldAt(double x, double y)
   {
-    return 0;  // preliminary
+    double r = getDistanceTo(x, y);
+    return c*(y - cy) / (r*r*r);
+  }
+
+  /** Returns the distance between the charge's position and the given point. */
+  double getDistanceTo(double x, double y)
+  {
+    double dx = x - cx;  // or should it be the other way around? do we want to point from x,y to
+    double dy = y - cy;  // the charge or vice versa?
+    double d  = sqrt(dx*dx + dy*dy);
+    //return d;
+    return max(d, 0.01);  // avoid singularities
   }
 
 protected:
 
-  double _charge = 1; // value/amount/strength of the charge
-  double _x = 0;      // x-coordinate of the charge
-  double _y = 0;      // y-coordinate of the charge
+  double c  = 1;   // value/amount/strength of the charge
+  double cx = 0;   // x-coordinate of the charge
+  double cy = 0;   // y-coordinate of the charge
 
 };
+
+/*
+Using sage to find the gradient of the potential gives this:
+
+var("x y cx cy c")
+P(x,y)  = c / sqrt((x-cx)^2 + (y-cy)^2)
+Ex(x,y) = diff(P(x,y), x) 
+Ey(x,y) = diff(P(x,y), y) 
+Ex, Ey
+
+Ex = c*(cx - x) / ((cx - x)^2 + (cy - y)^2)^(3/2)
+Ey = c*(cy - y) / ((cx - x)^2 + (cy - y)^2)^(3/2)
+*/
 
 void testDipole()
 {
@@ -459,14 +485,40 @@ void testDipole()
   Ex = [&] (double x, double y) { return c1.xFieldAt(   x,y) + c2.xFieldAt(   x,y); };
   Ey = [&] (double x, double y) { return c1.yFieldAt(   x,y) + c2.yFieldAt(   x,y); };
   // todo: instead of defining Ex, Ey explicitly/analytically, (optionally) use a numeric gradient
-  // of the potential
-
+  // of the potential - have a function numericPartialDerivative(func(x, y), x, y, eps)...is it
+  // possible to find a formula for the numeric derivative that avoids the precision loss due to
+  // subtracting two very similar numbers? 
 
 
   GNUPlotter plt;
+  plt.setGraphColors("209050");                                // field line color
+
+  //plt.addCommand("set palette rgbformulae 30,31,32 negative"); // arrow color-map - not good
+  plt.addVectorField2D(Ex, Ey, 31, -3., +3., 31, -3., +3.);  // vector field arrows
+
+  plt.setRange(-3, 3, -3, 3);
+
+  double stepSize  = 0.01;
+  int oversampling = 10;
+  int numPoints    = 500;
+  plt.addFieldLine2D(Ex, Ey, 0., -2.0,  0.03, 193, oversampling);
+  plt.addFieldLine2D(Ex, Ey, 0., -1.5,  0.01, 245, oversampling);
+  plt.addFieldLine2D(Ex, Ey, 0., -1.0,  0.01,  94, oversampling);
+  plt.addFieldLine2D(Ex, Ey, 0., -0.5,  0.01,  38, oversampling);
+  plt.addFieldLine2D(Ex, Ey, 0.,  0.0,  0.01,  25, oversampling);
+
+  plt.plot();
+  // ok - it's totally impractical to manually set the step-size and number of steps for each 
+  // field-line - we need an algorithm to automatically select the step-size maybe according to
+  // some specified accuracy criterion and/or some min-/max-distance for each step - also, the 
+  // number of steps should not be pre-determined - instead, maybe use a flexible criterion based
+  // on a callback - the solver should call
+  // a callback function bool fieldLineEnd(double x, double y)
+  // ...this stuff gets complicated - maybe it should be put into a subclass VectorFieldPlotter
+
+
   /*
-  plt.addBiDirectionalFieldLine2D(Ex, Ey, 0, -2, stepSize, numPoints, oversampling);
-  plt.addBiDirectionalFieldLine2D(Ex, Ey, 0, -1, stepSize, numPoints, oversampling);
+
   plt.addBiDirectionalFieldLine2D(Ex, Ey, 0,  0, stepSize, numPoints, oversampling);
   plt.addBiDirectionalFieldLine2D(Ex, Ey, 0, +1, stepSize, numPoints, oversampling);
   plt.addBiDirectionalFieldLine2D(Ex, Ey, 0, +2, stepSize, numPoints, oversampling);
