@@ -639,6 +639,22 @@ Field lines:
  representing the value? or maybe the transparency should represent the value? or both? ..or maybe
  cubes instead of spheres?
 
+idea to visualize a rank-2 tensor field in 2D (i.e. a 2x2 matrix-field defined in the xy-plane)
+-at each sample point, draw a small 2x2 square and color the 4 quadrants of that square according 
+ to a colormap
+-the size of squares may be such that when the sampling distances are dx, dy, a square centered at 
+ x,y may extend from x-dx/2 to x+dx/2 in the x-direction and from y-dy/2 to y+dy/2 in the 
+ y-direction - but we may artificially shrink these squares to have some margin between them
+-a constant tensor field given by the 2x2 identity matrix will result in diagonal stripes of 
+ high-value from top-left to bottom-right
+-maybe it can be done via the matrix dataset and image graphing functions (similar to heat-maps 
+ or spectrograms)
+-maybe several such patterns with different sampling intervals can be overlaid to convey coarse
+ and fine structure...maybe the coarse ones should be smoothed - or better: evaluated at an 
+ oversampled grid and accumulated
+ 
+-maybe try it with the Jacobian of f(z) = z^2 - the pattern should show symmetries due to the 
+ Cauchy-Riemann conditions, try also the metric tensor of polar coordinates
 
 
 

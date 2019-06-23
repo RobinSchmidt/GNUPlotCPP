@@ -68,10 +68,45 @@ class InitialValueSolver  // maybe rename to InitialValueStepper
 
 public:
 
+
+  /** Sets the number of dimensions that the ODE system has.  We treat non-autonomous systems 
+  uniformly with autonomous ones - you just add the identity function as first element to the 
+  function vector. So, if you have a non-autonomous system (i.e. your vector valued derivative 
+  computation function has an explicit time dependency), you should add one dimension and your 
+  derivative computation function should write the constant 1 into the first slot of the derivative
+  vector at each step. */
+  virtual void setNumDimensions(int newNumber)
+  {
+    numDimensions = newNumber;
+  }
+
   virtual void init(const std::vector<T>& initialState, T initialTime = 0) 
   { 
     x = initialState;
     t = initialTime;
+  }
+
+
+
+  /** Sets the size of steps to be taken. Not that if step size adaption is used, the value here
+  will only be used as initial value and may change over time. If you want to use the given step 
+  size as fixed step size, call setStepSizeAdaption(false). */
+  virtual void setStepSize(T newSize)
+  {
+    h = newSize;
+  }
+
+  /** Switches step size adaption on/off.  */
+  virtual void setStepSizeAdaption(bool shouldAdapt)
+  {
+    stepAdapt = shouldAdapt;
+  }
+
+  /** Sets the desired accuracy. Relevant only, when adaptive step size control is used. The step 
+  size will be updated on the fly according to an error estimate. */
+  virtual void setAccuracy(T newAccuracy)
+  {
+    accuracy = newAccuracy;
   }
 
 protected:
@@ -80,6 +115,10 @@ protected:
 
 
   T accuracy = 0.001;  // desired accuracy - determines step-sizes
+
+  bool stepAdapt = true;
+
+  int numDimensions = 1;
 
   // value and range for the "time" parameter:
   T t    = 0;
@@ -96,6 +135,7 @@ protected:
   int numSteps = 0;    // number of steps taken
 
   std::vector<T> tmp;  // to hold dx/dt (vector valued)
+
 
   std::function<void(const T*, T*)> deriv; 
   // function to compute the derivative: 
