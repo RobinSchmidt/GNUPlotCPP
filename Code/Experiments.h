@@ -68,25 +68,27 @@ class InitialValueSolver  // maybe rename to InitialValueStepper
 
 public:
 
+  //-----------------------------------------------------------------------------------------------
+  /** \name Setup */
 
-  /** Sets the number of dimensions that the ODE system has.  We treat non-autonomous systems 
-  uniformly with autonomous ones - you just add the identity function as first element to the 
-  function vector. So, if you have a non-autonomous system (i.e. your vector valued derivative 
-  computation function has an explicit time dependency), you should add one dimension and your 
-  derivative computation function should write the constant 1 into the first slot of the derivative
-  vector at each step. */
-  virtual void setNumDimensions(int newNumber)
+  /** This sets up the actual derivative computation function that defines you system of ordinary
+  differential equations. It should have two arguments which are pointers to arrays of a size
+  given by newNumDimensions. The first array is the input vector and the second is the output. The
+  two pointers may point to the same memory location - so the state update can be done in place. 
+  We treat non-autonomous systems uniformly with autonomous ones - you just add the identity 
+  function as first element to the function vector. So, if you have a non-autonomous system (i.e. 
+  your vector valued derivative computation function has an explicit time dependency), you should 
+  add one dimension and your derivative computation function should write the constant 1 into the 
+  first slot of the derivative vector at each step. This nicely generalizes to ODE systems with 
+  more than one independent variables. */
+  virtual void setDerivativeFunction(const std::function<void(const T*, T*)>& newFunction, 
+    int newNumDimensions)
   {
-    numDimensions = newNumber;
+    deriv = newFunction;
+    numDimensions = newNumDimensions;  // actually redundant with tmp.size()
+    yPrime.resize(numDimensions);
+    tmp.resize(numDimensions);
   }
-
-  virtual void init(const std::vector<T>& initialState, T initialTime = 0) 
-  { 
-    x = initialState;
-    t = initialTime;
-  }
-
-
 
   /** Sets the size of steps to be taken. Not that if step size adaption is used, the value here
   will only be used as initial value and may change over time. If you want to use the given step 
@@ -109,19 +111,61 @@ public:
     accuracy = newAccuracy;
   }
 
+  //-----------------------------------------------------------------------------------------------
+  /** \name Processing */
+
+  /*
+  virtual void init(const std::vector<T>& initialState, T initialTime = 0) 
+  { 
+    x = initialState;
+    t = initialTime;
+  }
+  */
+
+  /** Performs a forward Euler step: yOut = yIn + stepSize * yPrime. yOut may point to the same 
+  array as yIn for in-place update. This is the simplest numerical integration scheme for ODEs. */
+  virtual void stepEuler(const T* yIn, T* yOut)
+  {
+    deriv(yIn, &yPrime[0]);
+    for(int i = 0; i < numDimensions; i++)
+      yOut[i] = yIn[i] + h * yPrime[i];
+  }
+
+  /** Not yet finished */
+  virtual T stepEulerWithError(const T* yIn, T* yOut)
+  {
+    stepEuler(yIn, yOut);
+    return T(0);
+    // preliminary - todo: do an Euler step and a (possibly embedded) 2nd order step and use their 
+    // difference as error estimate
+  }
+
+  /** Not yet finished */
+  virtual void stepEulerAndAdaptStep(const T* yIn, T* yOut, T* error = nullptr)
+  {
+    //stepEulerWithError(yIn, &tmp[0], ..)
+  }
+
+
+  // todo: 
+  // -implement error estimation and stepsize control for Euler method
+  // -implement RK4 method with embedded 5th order method for error estimation
+
+
+
 protected:
 
-  std::vector<T> x;    // current state
+  //std::vector<T> x;    // current state
 
 
   T accuracy = 0.001;  // desired accuracy - determines step-sizes
 
   bool stepAdapt = true;
 
-  int numDimensions = 1;
+  int numDimensions = 1; // redundant with yPrime.size()
 
   // value and range for the "time" parameter:
-  T t    = 0;
+  //T t = 0;
   //T tMin = 0.0;
   //T tMax = 1.0;
 
@@ -130,14 +174,14 @@ protected:
   T hMin = 0.0;
   T hMax = std::numeric_limits<TScl>::infinity();
 
-  //int numDimensions
 
-  int numSteps = 0;    // number of steps taken
+  //int numSteps = 0;    // number of steps taken - probably shouldn't be done here
 
-  std::vector<T> tmp;  // to hold dx/dt (vector valued)
+  std::vector<T> yPrime;  // to hold dy/dt (vector valued)
+  std::vector<T> tmp;
 
 
-  std::function<void(const T*, T*)> deriv; 
+  std::function<void(const T*, T*)> deriv;
   // function to compute the derivative: 
   // 1st argument: current state vector (input)
   // 2nd argument: derivative at current state vector (output)
