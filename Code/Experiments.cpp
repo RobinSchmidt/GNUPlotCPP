@@ -395,15 +395,33 @@ void testLorenz()
   // Demonstrates drawing field-lines/trajectories of a Lorenz system, using the ODE solver.
   // https://en.wikipedia.org/wiki/Lorenz_system
 
-  int N = 1000;  // number of datapoints
+  int N = 2000;  // number of datapoints
 
-  std::vector<double> state(4);
-  std::vector<double> t(N), x(N), y(N), z(N);
+  std::vector<double> state(4);               // state vector: time and position in 3D space
+  std::vector<double> t(N), x(N), y(N), z(N); // arrays for recording the ODE outputs
   InitialValueSolver<double> solver;
   solver.setDerivativeFunction(&lorenzSystemDerivative, 4);
 
+  // initialize state:
+  state[0] = 0.0;  // time starts at zero
+  state[1] = 1.0; 
+  state[2] = 0.0; 
+  state[3] = 0.0; 
 
-  int dummy = 0;
+  // iterate state and record the outputs of the ODE solver in our arrays:
+  for(int n = 0; n < N; n++) {
+    t[n] = state[0];  // time
+    x[n] = state[1];
+    y[n] = state[2];
+    z[n] = state[3];
+    solver.stepEuler(&state[0], &state[0]); // in-place update of the state vector
+  }
+
+  // plot:
+  GNUPlotter plt;                             // create plotter object
+  plt.addDataArrays(N, &x[0], &y[0], &z[0]);  // pass the data to the plotter
+  plt.addCommand("set view 60,320");          // set up perspective
+  plt.plot3D();  
 }
 
 
