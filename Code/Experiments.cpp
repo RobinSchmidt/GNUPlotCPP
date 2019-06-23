@@ -420,7 +420,8 @@ void testLorenz()
   // plot:
   GNUPlotter plt;                             // create plotter object
   plt.addDataArrays(N, &x[0], &y[0], &z[0]);  // pass the data to the plotter
-  plt.addCommand("set view 60,320");          // set up perspective
+  //plt.addCommand("set view 15,330");          // set up perspective
+  plt.addCommand("set view 65,45");
   plt.plot3D();  
 }
 
