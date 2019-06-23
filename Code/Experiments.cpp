@@ -1,4 +1,5 @@
 #include "GNUPlotter.h"
+#include "Experiments.h"
 //#include <math.h>
 using namespace std;
 
@@ -375,6 +376,37 @@ void demoVectorField()
   GNUPlotter::plotComplexVectorField(f, 31, -1.5, +1.5, 31, -1.5, +1.5, false);
 }
 
+
+void lorenzSystemDerivative(const double *y, double *yp)
+{
+  // parameters:
+  double sigma = 10.0;
+  double rho   = 28.0;
+  double beta  = 8.0/3.0;
+
+  // compute derivative vector:
+  yp[0] = 1.0;                      // t' = 1 (time-axis: y[0] = t and yp[0] = y[0]' = t' = 1)
+  yp[1] = sigma * (y[2] - y[1]);    // x' = sigma * (y-x)
+  yp[2] = y[1]*(rho - y[3]) - y[2]; // y' = x * (rho-z) - y
+  yp[3] = y[1]*y[2] - beta * y[3];  // z' = x*y - beta*z
+}
+void testLorenz()
+{
+  // Demonstrates drawing field-lines/trajectories of a Lorenz system, using the ODE solver.
+  // https://en.wikipedia.org/wiki/Lorenz_system
+
+  int N = 1000;  // number of datapoints
+
+  std::vector<double> state(4);
+  std::vector<double> t(N), x(N), y(N), z(N);
+  InitialValueSolver<double> solver;
+  solver.setDerivativeFunction(&lorenzSystemDerivative, 4);
+
+
+  int dummy = 0;
+}
+
+
 std::complex<double> complexDipoleField(std::complex<double> z,
   std::complex<double> cl = -1.0, std::complex<double> cr = +1.0)
 {
@@ -657,7 +689,9 @@ idea to visualize a rank-2 tensor field in 2D (i.e. a 2x2 matrix-field defined i
  Cauchy-Riemann conditions, try also the metric tensor of polar coordinates
 
 
-
+-todo: draw a trefoil-knot, a mobius-strip and a trefoil-mobius-knot
+ -for a pramatrization of the mobius-strip, see here: https://www.youtube.com/watch?v=dz7y7mFLW3U
+ -for the mobius knot, replace the circle with the trefoil knot
 
 
 */

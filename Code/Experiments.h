@@ -21,6 +21,8 @@ void zedSquaredVectorField();
 
 // under construction:
 void demoVectorField();
+void testLorenz();
+
 void demoComplexDipole();
 
 void testDipole();
@@ -39,6 +41,8 @@ struct Vector2D
   T x, y;
 };
 // implement +,- operators, dot- and cross-product (to be written as v.dot(w), v.cross(w))
+
+
 
 /** Baseclass for generating all sorts of curves. The template parameter should be a 
 vector/point-like type such as Vector2D. Subclasses must implement the actual drawing algorithms, 
@@ -172,7 +176,7 @@ protected:
   // value and range for the time-step:
   T h    = 0.01;
   T hMin = 0.0;
-  T hMax = std::numeric_limits<TScl>::infinity();
+  T hMax = std::numeric_limits<T>::infinity();
 
 
   //int numSteps = 0;    // number of steps taken - probably shouldn't be done here
@@ -197,7 +201,7 @@ protected:
 
 
 template<class TScl, class TVec>  // scalar and vector types
-class FiledLineSolver : public CurveGenerator<TVec>
+class FiledLineGenerator : public CurveGenerator<TVec>
 {
 
 public:
