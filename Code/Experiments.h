@@ -21,6 +21,9 @@ void zedSquaredVectorField();
 
 // under construction:
 void demoVectorField();
+
+
+void testInitialValueSolver();
 void testLorenz();
 
 void demoComplexDipole();
@@ -146,9 +149,12 @@ public:
   }
 
   /** Under construction */
-  void stepEulerWithError(const T* yIn, T* yOut, T* err)
+  void stepMidpointWithError(const T* yIn, T* yOut, T* err)
   {
     stepMidpoint(yIn, yOut);
+
+    // the error estimate is pessimistic - we actually estimate the error of the euler step (by
+    // comparing it against the midpoint step, which is actually taken)
 
 
   }

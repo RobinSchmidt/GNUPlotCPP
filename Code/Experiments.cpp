@@ -377,6 +377,46 @@ void demoVectorField()
 }
 
 
+
+void testInitialValueSolver()
+{
+  // We test the initial value solver by throwing the simple differential equation y' = k*y at it
+  // and compare the produced results with the analytic result given by y(t) = exp(k*t). We also 
+  // compare the different accuracies obtained by different stepper methods (Euler, midpoint, etc.)
+
+  double k = -1.0;  // constant in y' = k*y
+  int N = 500;      // number of datapoints
+
+  double s[2];      // state
+  std::function<void (const double *y, double *yp)> f;
+  f = [&] (const double *y, double *yp) { 
+    yp[0] = 1.0;
+    yp[1] = k * y[1];
+  };
+  std::vector<double> t(N), y(N);
+  InitialValueSolver<double> solver;
+  solver.setDerivativeFunction(f, 2);
+
+  // initialize state:
+  s[0] = 0.0;  // time starts at zero
+  s[1] = 1.0;
+
+  // iterate state and record the outputs of the ODE solver in our arrays:
+  for(int n = 0; n < N; n++) {
+    t[n] = s[0];  // time
+    y[n] = s[1];
+    solver.stepEuler(&s[0], &s[0]); // in-place update of the state vector 
+    //solver.stepMidpoint(&state[0], &state[0]);
+  }
+
+
+
+  GNUPlotter plt;
+  plt.addDataArrays(N, &t[0], &y[0]);
+  plt.plot();
+}
+
+
 void lorenzSystemDerivative(const double *y, double *yp)
 {
   // parameters:
