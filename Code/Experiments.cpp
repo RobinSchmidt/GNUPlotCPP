@@ -512,7 +512,8 @@ void testLorenz()
   // plot:
   GNUPlotter plt;                             // create plotter object
   plt.addDataArrays(N, &x[0], &y[0], &z[0]);  // pass the data to the plotter
-  plt.addCommand("set view 65,45");
+  //plt.addCommand("set view 65,45");
+  plt.addCommand("set view 80,50");
   plt.plot3D();
 
   GNUPlotter plt2;
@@ -638,14 +639,51 @@ void testDipole()
   // subtracting two very similar numbers? 
 
 
+
   GNUPlotter plt;
-  plt.setGraphColors("209050");                                // field line color
+  //plt.setGraphColors("209050");                                // field line color
 
   //plt.addCommand("set palette rgbformulae 30,31,32 negative"); // arrow color-map - not good
-  plt.addVectorField2D(Ex, Ey, 31, -3., +3., 31, -3., +3.);  // vector field arrows
-
+  //plt.addVectorField2D(Ex, Ey, 31, -3., +3., 31, -3., +3.);  // vector field arrows
   plt.setRange(-3, 3, -3, 3);
 
+
+  // Define the field function (derivative of the field lines) for the ODE solver:
+  std::function<void (const double *y, double *yp)> Exy;
+  Exy = [&] (const double *y, double *yp) { 
+    yp[0] = 1.0;
+    yp[1] = Ex(y[1], y[2]); 
+    yp[2] = Ey(y[1], y[2]); 
+  };
+
+  // Set up the ODE solver:
+  int N = 100;  // we should probably use a stopping criterion when the line hits the charge..
+  typedef std::vector<double> Vec;
+  Vec s(3);              // state vector: time and position in 2D space
+  Vec t(N), x(N), y(N);  // arrays for recording the ODE outputs
+  InitialValueSolver<double> solver;
+  solver.setDerivativeFunction(Exy, 3);
+  solver.setAccuracy(0.005);
+
+  // Solve the ODE numerically (put this into loop and do it for various intital conditions):
+  s[0] = 0; s[1] = 0; s[2] = 1.0;   // initial conditions
+  for(int i = 0; i < N; i++) {
+    t[i] = s[0];  // not used for plot - maybe get rid..
+    x[i] = s[1];
+    y[i] = s[2];
+    solver.stepMidpointAndAdaptSize(&s[0], &s[0]);
+  }
+  plt.addDataArrays(N, &x[0], &y[0]);
+
+
+
+
+
+
+
+
+
+  /*
   double stepSize  = 0.01;
   int oversampling = 10;
   int numPoints    = 500;
@@ -654,6 +692,7 @@ void testDipole()
   plt.addFieldLine2D(Ex, Ey, 0., -1.0,  0.01,  94, oversampling);
   plt.addFieldLine2D(Ex, Ey, 0., -0.5,  0.01,  38, oversampling);
   plt.addFieldLine2D(Ex, Ey, 0.,  0.0,  0.01,  25, oversampling);
+  */
 
   plt.plot();
   // ok - it's totally impractical to manually set the step-size and number of steps for each 

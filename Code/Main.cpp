@@ -43,8 +43,8 @@ int main(int argc, char** argv)
   // experimental plots - not yet finsihed:
 
   //testInitialValueSolver();
-  testLorenz();
-  //testDipole();
+  //testLorenz();
+  testDipole();
 
   //demoVectorField();
   //demoDipole();  // not so interesting - we should draw field lines, not the vector field

@@ -164,8 +164,8 @@ public:
     // estimate error (this is where we still need yIn) and then write midpoint step result into
     // output:
     for(size_t i = 0; i < y.size(); i++) {
-      error[i]  = y[i] - (yIn[i] + k1[i]);  // error-estimate = midpoint-result - Euler-result
-      yOut[i] = y[i];                       // ..(k1 still contains the Euler step)
+      error[i] = y[i] - (yIn[i] + k1[i]);  // error-estimate = midpoint-result - Euler-result
+      yOut[i] = y[i];                      // ...(k1 still contains the Euler step)
     }
   }
 
