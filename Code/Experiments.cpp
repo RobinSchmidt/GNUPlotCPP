@@ -695,6 +695,16 @@ void testDipole()
   plt.setPixelSize(600, 600);
   plt.addCommand("set size square"); 
 
+
+
+  plt.addCommand("set object 1 circle at  1,0 size 0.12 fc rgb \"white\" fs solid 1.0 front"); 
+  plt.addCommand("set object 2 circle at  1,0 size 0.12 fc rgb \"black\" front"); 
+  plt.addCommand("set object 3 circle at -1,0 size 0.12 fc rgb \"white\" fs solid 1.0 front"); 
+  plt.addCommand("set object 4 circle at -1,0 size 0.12 fc rgb \"black\" front");
+  // todo: add plus and minus (if not available, create from rectangles or lines)
+
+
+
   plt.plot();
 
   // todo: 
@@ -702,6 +712,8 @@ void testDipole()
   // -add charges (circles with +,- drawn in)
   // -add equipotential (requires implicit equation solver and some additional stuff)
   //  -maybe keep one coordinate fixed (but how to choose it?) and use 1D bisection
+  //  -perhaps we should use angle and radius (from the charge) as the two coordinates - then we
+  //   would again choose equidistant angles
 }
 
 // try to create a plot like the one at the bottom here:
