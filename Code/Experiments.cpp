@@ -5,6 +5,20 @@ using namespace std;
 
 #define M_PI 3.14159265358979323846
 
+//std::vector<double>
+
+double maxError(const std::vector<double>& x, const std::vector<double>& y)
+{
+  // todo: assert that x and y have the same size
+  double maxErr = 0.0;
+  for(size_t i = 0; i < x.size(); i++)
+    if( fabs(x[i] - y[i]) > maxErr )
+      maxErr = fabs(x[i] - y[i]);
+  return maxErr;
+}
+
+
+
 //-------------------------------------------------------------------------------------------------
 // convenience functions for certain types of plots (eventually move to class GNUPlotter):
 
@@ -414,6 +428,13 @@ void testInitialValueSolver()
     tM[n] = s[0]; yM[n] = s[1]; solver.stepMidpoint(&s[0], &s[0]); }
 
   // compute the maximum error for each method:
+  double eE, eM;  
+  eE = maxError(yA, yE);  // Euler error
+  eM = maxError(yA, yM);  // midpoint error
+  // this works only for fixed stepsize!
+  // ..ok - yes - midpoint error is much less than Euler error, as it should be
+  // todo: try generalized Euler based on non-Newtonian calculus - with this, the Euler method 
+  // should produce exact results
 
 
   GNUPlotter plt;
