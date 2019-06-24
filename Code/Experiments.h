@@ -175,7 +175,11 @@ public:
   }
   // needs test
 
-  /** Needs test */
+  /** Performs a midpoint-rule step, estimates the error and reduces or increases the step size, 
+  depending on the size of the estimated error. The goal is to keep the estimated error always 
+  within a corridor given by c * accuracy <= error <= accuracy where c is currently set to 0.5
+  (todo: make c a user parameter). The caller may optionally pass a 3rd array into which the error
+  estimates may be written (it has to have the same size as yIn and yOut)  */
   void stepMidpointAndAdaptSize(const T* yIn, T* yOut, T* error = nullptr)
   {
     // repeat trial midpoint steps until the result is within the desired accuracy:
@@ -202,6 +206,9 @@ public:
   }
   // needs test
 
+  /** Checks, if all error estimates are <= the desired accuracy - returns false, if any of them
+  is above and true, if all are below (or equal). todo: allow for different accuracies for the 
+  different variables */
   bool isAccurateEnough(const T* error)
   {
     for(size_t i = 0; i < y.size(); i++)
@@ -210,12 +217,15 @@ public:
     return true;
   }
 
+  /** Checks, if all of the error estimates are too low, in which case the step-size may be 
+  increased. ...explain better */
   bool isTooAccurate(const T* error)
   {
     for(size_t i = 0; i < y.size(); i++)
-      if( abs(error[i]) < 0.5 * accuracy ) // factor 0.5 selected ad-hoc - maybe this has to be 
-        return false;                      // modified - see what NR says about this and make tests
+      if( abs(error[i]) > 0.5 * accuracy ) // todo: make the ad-hoc factor of 0.5 a user variable
+        return false;
     return true;
+    // or - even more flexible - let the user pass arrays of minAccuracy and maxAccuracy
   }
 
 
