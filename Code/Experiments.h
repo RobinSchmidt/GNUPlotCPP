@@ -150,7 +150,7 @@ public:
   }
 
   /** Under construction */
-  void stepMidpointWithError(const T* yIn, T* yOut, T* err)
+  void stepMidpointWithError(const T* yIn, T* yOut, T* error)
   {
     // write step result into temporary buffer, because we still need yIn, which would be 
     // overwritten in in-place usage (i.e. if yIn == yOut):
@@ -159,8 +159,8 @@ public:
     // estimate error (this is where we still need yIn) and then write midpoint step result into
     // output:
     for(size_t i = 0; i < y.size(); i++) {
-      err[i]  = y[i] - (yIn[i] + k1[i]);  // error-estimate = midpoint-result - Euler-result
-      yOut[i] = y[i];                     // ..(k1 still contains the Euler step)
+      error[i]  = y[i] - (yIn[i] + k1[i]);  // error-estimate = midpoint-result - Euler-result
+      yOut[i] = y[i];                       // ..(k1 still contains the Euler step)
     }
 
 
@@ -168,6 +168,47 @@ public:
     // comparing it against the midpoint step, which is actually taken)
   }
 
+  /** Needs test */
+  void stepMidpointAndAdaptSize(const T* yIn, T* yOut, T* error = nullptr)
+  {
+    // repeat trial midpoint steps until the result is within the desired accuracy:
+    while(true) { // todo: implement a safeguard against infinite loops
+      stepMidpointWithError(yIn, &y[0], &err[0]);
+      if(isAccurateEnough(&err[0]))
+        break;    // result is good enough - we accept this step
+      else
+        h *= 0.5; // decrease step-size and try again (factor 0.5 is chosen ad-hoc)
+    }
+
+    // increase step-size for *next* step, if appropriate:
+    if(isTooAccurate(&err[0]))
+      h *= 2.0;   // factor 2 ad-hoc
+
+    // copy step result into output:
+    for(size_t i = 0; i < y.size(); i++)
+      yOut[i] = y[i];
+
+    // copy error estimate into error output, if caller is interested in it:
+    if(error != nullptr)
+      for(size_t i = 0; i < err.size(); i++)
+        error[i] = err[i];
+  }
+
+  bool isAccurateEnough(const T* error)
+  {
+    for(size_t i = 0; i < y.size(); i++)
+      if( abs(error[i]) > accuracy )
+        return false;
+    return true;
+  }
+
+  bool isTooAccurate(const T* error)
+  {
+    for(size_t i = 0; i < y.size(); i++)
+      if( abs(error[i]) < 0.5 * accuracy ) // factor 0.5 selected ad-hoc - maybe this has to be 
+        return false;                      // modified - see what NR says about this and make tests
+    return true;
+  }
 
 
 
@@ -217,7 +258,9 @@ protected:
   std::vector<T> k1, k2, y; //, err;
 
   // stuff for stepsize control (factor out):
-  T accuracy = 0.001;  // desired accuracy - determines step-sizes
+  T accuracy = 0.001;  // desired accuracy - determines step-sizes - todo: have an array - allow
+                       // different accuracies for different variables
+
   bool stepAdapt = true; // may not be needed
   T hMin = 0.0;
   T hMax = std::numeric_limits<T>::infinity();
