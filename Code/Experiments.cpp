@@ -393,7 +393,7 @@ void testInitialValueSolver()
     yp[0] = 1.0;
     yp[1] = k * y[1];
   };
-  std::vector<double> t(N), y(N);
+  std::vector<double> tA(N), tE(N), tM(N), yA(N), yE(N), yM(N);
   InitialValueSolver<double> solver;
   solver.setDerivativeFunction(f, 2);
 
@@ -401,18 +401,19 @@ void testInitialValueSolver()
   s[0] = 0.0;  // time starts at zero
   s[1] = 1.0;
 
-  // iterate state and record the outputs of the ODE solver in our arrays:
-  for(int n = 0; n < N; n++) {
-    t[n] = s[0];  // time
-    y[n] = s[1];
-    solver.stepEuler(&s[0], &s[0]); // in-place update of the state vector 
-    //solver.stepMidpoint(&state[0], &state[0]);
-  }
+  // produce output via euler steps:
+  for(int n = 0; n < N; n++) { 
+    tE[n] = s[0]; yE[n] = s[1]; solver.stepEuler(&s[0], &s[0]); }
 
+  // ..via midpoint method:
+  s[0] = 0.0; s[1] = 1.0;
+  for(int n = 0; n < N; n++) { 
+    tM[n] = s[0]; yM[n] = s[1]; solver.stepMidpoint(&s[0], &s[0]); }
 
 
   GNUPlotter plt;
-  plt.addDataArrays(N, &t[0], &y[0]);
+  plt.addDataArrays(N, &tE[0], &yE[0]);
+  plt.addDataArrays(N, &tM[0], &yM[0]);
   plt.plot();
 }
 
