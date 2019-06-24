@@ -402,6 +402,7 @@ void testInitialValueSolver()
   double h =  0.1;  // step size
   int N = 50;       // number of datapoints
 
+  // create data-arrays and objects:
   double s[2];      // state
   std::function<void (const double *y, double *yp)> f;
   f = [&] (const double *y, double *yp) { 
@@ -422,7 +423,7 @@ void testInitialValueSolver()
   for(int n = 0; n < N; n++) { 
     tE[n] = s[0]; yE[n] = s[1]; solver.stepEuler(&s[0], &s[0]); }
 
-  // ...via midpoint method:
+  // produce output via midpoint method:
   s[0] = 0.0; s[1] = 1.0;
   for(int n = 0; n < N; n++) { 
     tM[n] = s[0]; yM[n] = s[1]; solver.stepMidpoint(&s[0], &s[0]); }

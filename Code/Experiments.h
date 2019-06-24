@@ -92,6 +92,7 @@ public:
     int numDimensions)
   {
     deriv = function;
+    y.resize(numDimensions);
     yPrime.resize(numDimensions);
     k1.resize(numDimensions); 
     k2.resize(numDimensions); 
@@ -131,7 +132,7 @@ public:
       yOut[i] = yIn[i] + h * yPrime[i];
   }
 
-  /** Under construction - needs test, if it is really more accurate */
+  /** Under construction - needs test, if it is really more accurate - ok - this seems to work */
   void stepMidpoint(const T* yIn, T* yOut)
   {
     deriv(yIn, &yPrime[0]);    // compute y'[yIn]
@@ -151,12 +152,20 @@ public:
   /** Under construction */
   void stepMidpointWithError(const T* yIn, T* yOut, T* err)
   {
-    stepMidpoint(yIn, yOut);
+    // write step result into temporary buffer, because we still need yIn, which would be 
+    // overwritten in in-place usage (i.e. if yIn == yOut):
+    stepMidpoint(yIn, &y[0]);
 
-    // the error estimate is pessimistic - we actually estimate the error of the euler step (by
+    // estimate error (this is where we still need yIn) and then write midpoint step result into
+    // output:
+    for(size_t i = 0; i < y.size(); i++) {
+      err[i]  = y[i] - (yIn[i] + k1[i]);  // error-estimate = midpoint-result - Euler-result
+      yOut[i] = y[i];                     // ..(k1 still contains the Euler step)
+    }
+
+
+    // the error estimate is pessimistic - we actually estimate the error of the Euler step (by
     // comparing it against the midpoint step, which is actually taken)
-
-
   }
 
 
@@ -205,7 +214,7 @@ protected:
   // client code must set up this function - this function is what determines the actual system of
   // differential equations
 
-  std::vector<T> k1, k2; //, y, err;
+  std::vector<T> k1, k2, y; //, err;
 
   // stuff for stepsize control (factor out):
   T accuracy = 0.001;  // desired accuracy - determines step-sizes
