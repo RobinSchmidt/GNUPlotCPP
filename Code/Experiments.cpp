@@ -622,24 +622,22 @@ Ex = c*(cx - x) / ((cx - x)^2 + (cy - y)^2)^(3/2)
 Ey = c*(cy - y) / ((cx - x)^2 + (cy - y)^2)^(3/2)
 */
 
-
-
 void addFieldLine(GNUPlotter& plt, InitialValueSolver<double>& slv, double x0, double y0, int N)
 {
+  static int numFieldLines = 0;     // quick and dirty counter - todo: make a class, use a member
   typedef std::vector<double> Vec;
-  Vec s(3);              // state vector: time and position in 2D space
-  Vec t(N), x(N), y(N);  // arrays for recording the ODE outputs
-
+  Vec s(3);                         // state vector: time and position in 2D space
+  Vec t(N), x(N), y(N);             // arrays for recording the ODE outputs
   s[0] = 0; s[1] = x0; s[2] = y0;   // initial conditions
   for(int i = 0; i < N; i++) {
-    t[i] = s[0];  // not used for plot - maybe get rid..
+    t[i] = s[0];                    // not used for plot - maybe get rid..
     x[i] = s[1];
     y[i] = s[2];
     slv.stepMidpointAndAdaptSize(&s[0], &s[0]);
   }
   plt.addDataArrays(N, &x[0], &y[0]);
-
-  // todo: plt.addGraph...
+  plt.addGraph("index " + to_string(numFieldLines) + " using 1:2 with lines lt 1 notitle"); 
+  numFieldLines++;
 }
 
 void testDipole()
@@ -682,7 +680,7 @@ void testDipole()
   solver.setDerivativeFunction(Exy, 3);
   solver.setAccuracy(0.005);
 
-  double yMin = -6.0, yMax = +6.0, yStep = 0.5;
+  double yMin = -6.0, yMax = +6.0, yStep = 0.25;
 
   // left half:
   double y = yMin;
@@ -702,6 +700,10 @@ void testDipole()
     y += yStep; 
   }
 
+  // todo: 
+  // -do left and right in single loop
+  // -add arrows
+  // -add charges (circles with +,- drwan in)
 
 
 
