@@ -415,6 +415,7 @@ void testLorenz()
     y[n] = state[2];
     z[n] = state[3];
     solver.stepEuler(&state[0], &state[0]); // in-place update of the state vector
+    //solver.stepMidpoint(&state[0], &state[0]);
   }
 
   // plot:
@@ -424,7 +425,8 @@ void testLorenz()
   plt.addCommand("set view 65,45");
   plt.plot3D();  
 }
-
+// todo: test if, midpoint is really more accurate than Euler with a system for which we know the 
+// analytic solution (maybe exponential or damped sinusoid)
 
 std::complex<double> complexDipoleField(std::complex<double> z,
   std::complex<double> cl = -1.0, std::complex<double> cr = +1.0)

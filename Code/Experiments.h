@@ -90,7 +90,9 @@ public:
   {
     deriv = function;
     yPrime.resize(numDimensions);
-    tmp.resize(numDimensions);
+    k1.resize(numDimensions); 
+    k2.resize(numDimensions); 
+    //tmp.resize(numDimensions);
   }
 
   /** Sets the size of steps to be taken. Not that if step size adaption is used, the value here
@@ -125,6 +127,34 @@ public:
     for(size_t i = 0; i < yPrime.size(); i++)
       yOut[i] = yIn[i] + h * yPrime[i];
   }
+
+  /** Under construction - needs test, if it is really more accurate */
+  void stepMidpoint(const T* yIn, T* yOut)
+  {
+    deriv(yIn, &yPrime[0]);    // compute y'[yIn]
+
+    for(size_t i = 0; i < yPrime.size(); i++) {
+      k1[i] = h * yPrime[i];
+      k2[i] = yIn[i] + 0.5 * k1[i]; // fill k2 with evaluation at the half-step
+    }
+
+    deriv(&k2[0], &yPrime[0]); // compute y' at midpoint yIn + (h/2) * y'[at yIn]
+
+    // do full step with y' computed at midpoint:
+    for(size_t i = 0; i < yPrime.size(); i++)
+      yOut[i] = yIn[i] + h * yPrime[i];
+  }
+
+  /** Under construction */
+  void stepEulerWithError(const T* yIn, T* yOut, T* err)
+  {
+    stepMidpoint(yIn, yOut);
+
+
+  }
+
+
+
 
   /** Not yet finished */
   virtual void stepRungeKutta(const T* yIn, T* yOut)
@@ -169,12 +199,14 @@ protected:
   // client code must set up this function - this function is what determines the actual system of
   // differential equations
 
+  std::vector<T> k1, k2; //, y, err;
+
   // stuff for stepsize control (factor out):
   T accuracy = 0.001;  // desired accuracy - determines step-sizes
   bool stepAdapt = true; // may not be needed
   T hMin = 0.0;
   T hMax = std::numeric_limits<T>::infinity();
-  std::vector<T> tmp;
+  //std::vector<T> tmp;
   // maybe factor out the step-size adaption - have a baseclass with fixed step-size
 };
 
