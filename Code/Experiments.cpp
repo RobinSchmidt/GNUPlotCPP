@@ -622,6 +622,26 @@ Ex = c*(cx - x) / ((cx - x)^2 + (cy - y)^2)^(3/2)
 Ey = c*(cy - y) / ((cx - x)^2 + (cy - y)^2)^(3/2)
 */
 
+
+
+void addFieldLine(GNUPlotter& plt, InitialValueSolver<double>& slv, double x0, double y0, int N)
+{
+  typedef std::vector<double> Vec;
+  Vec s(3);              // state vector: time and position in 2D space
+  Vec t(N), x(N), y(N);  // arrays for recording the ODE outputs
+
+  s[0] = 0; s[1] = x0; s[2] = y0;   // initial conditions
+  for(int i = 0; i < N; i++) {
+    t[i] = s[0];  // not used for plot - maybe get rid..
+    x[i] = s[1];
+    y[i] = s[2];
+    slv.stepMidpointAndAdaptSize(&s[0], &s[0]);
+  }
+  plt.addDataArrays(N, &x[0], &y[0]);
+
+  // todo: plt.addGraph...
+}
+
 void testDipole()
 {
   // Place the two charges:
@@ -658,13 +678,16 @@ void testDipole()
 
   // Set up the ODE solver:
   int N = 100;  // we should probably use a stopping criterion when the line hits the charge..
-  typedef std::vector<double> Vec;
-  Vec s(3);              // state vector: time and position in 2D space
-  Vec t(N), x(N), y(N);  // arrays for recording the ODE outputs
+  //typedef std::vector<double> Vec;
+  //Vec s(3);              // state vector: time and position in 2D space
+  //Vec t(N), x(N), y(N);  // arrays for recording the ODE outputs
   InitialValueSolver<double> solver;
   solver.setDerivativeFunction(Exy, 3);
   solver.setAccuracy(0.005);
 
+  addFieldLine(plt, solver, 0, 1, N);  // use loop over initial conditions
+
+  /*
   // Solve the ODE numerically (put this into loop and do it for various intital conditions):
   s[0] = 0; s[1] = 0; s[2] = 1.0;   // initial conditions
   for(int i = 0; i < N; i++) {
@@ -674,6 +697,7 @@ void testDipole()
     solver.stepMidpointAndAdaptSize(&s[0], &s[0]);
   }
   plt.addDataArrays(N, &x[0], &y[0]);
+  */
 
 
 
