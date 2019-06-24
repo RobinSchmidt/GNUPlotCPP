@@ -385,7 +385,8 @@ void testInitialValueSolver()
   // compare the different accuracies obtained by different stepper methods (Euler, midpoint, etc.)
 
   double k = -1.0;  // constant in y' = k*y
-  int N = 500;      // number of datapoints
+  double h =  0.1;  // step size
+  int N = 50;       // number of datapoints
 
   double s[2];      // state
   std::function<void (const double *y, double *yp)> f;
@@ -396,22 +397,27 @@ void testInitialValueSolver()
   std::vector<double> tA(N), tE(N), tM(N), yA(N), yE(N), yM(N);
   InitialValueSolver<double> solver;
   solver.setDerivativeFunction(f, 2);
+  solver.setStepSize(h);
 
-  // initialize state:
-  s[0] = 0.0;  // time starts at zero
-  s[1] = 1.0;
+  // produce analytic solution for reference:
+  for(int n = 0; n < N; n++) {
+    tA[n] = h*n;  yA[n] = exp(k*tA[n]); }
 
-  // produce output via euler steps:
+  // produce output via Euler steps:
+  s[0] = 0.0; s[1] = 1.0;
   for(int n = 0; n < N; n++) { 
     tE[n] = s[0]; yE[n] = s[1]; solver.stepEuler(&s[0], &s[0]); }
 
-  // ..via midpoint method:
+  // ...via midpoint method:
   s[0] = 0.0; s[1] = 1.0;
   for(int n = 0; n < N; n++) { 
     tM[n] = s[0]; yM[n] = s[1]; solver.stepMidpoint(&s[0], &s[0]); }
 
+  // compute the maximum error for each method:
+
 
   GNUPlotter plt;
+  plt.addDataArrays(N, &tA[0], &yA[0]);
   plt.addDataArrays(N, &tE[0], &yE[0]);
   plt.addDataArrays(N, &tM[0], &yM[0]);
   plt.plot();
