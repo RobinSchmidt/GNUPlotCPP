@@ -678,9 +678,9 @@ void testDipole()
   int N = 120;  // we should probably use a stopping criterion when the line hits the charge..
   InitialValueSolver<double> solver;
   solver.setDerivativeFunction(Exy, 3);
-  solver.setAccuracy(0.005);
+  solver.setAccuracy(0.002);
 
-  int numAngles = 30;
+  int numAngles = 40;
   double radius = 0.05;
   for(int i = 0; i < numAngles; i++)
   {
@@ -695,44 +695,13 @@ void testDipole()
   plt.setPixelSize(600, 600);
   plt.addCommand("set size square"); 
 
-  /*
-  double yMin = -6.0, yMax = +6.0, yStep = 0.25;
-
-  // left half:
-  double y = yMin;
-  solver.setStepSize(0.01);
-  while(y <= yMax) 
-  { 
-    addFieldLine(plt, solver, 0, y, N); 
-    y += yStep; 
-  }
-  // right half:
-  y = yMin;
-  solver.setStepSize(-0.01);
-  while(y <= yMax) 
-  { 
-    addFieldLine(plt, solver, 0, y, N); 
-    y += yStep; 
-  }
-  */
-
-
-
-  // todo: 
-  // -do left and right in single loop
-  // -add arrows
-  // -add charges (circles with +,- drawn in)
-  // -maybe let the field-lines start at angles equally distributed around one of the charges
-  //  -that reflects the constant radial density better 
-  //  -it's not natural to have the field lines equally spaced on the y-axis
-  //  -but the circle should be small - if it's too large, it's not natural either - the field
-  //   lines are denser in the "inside" half of a larger circle
-
-
   plt.plot();
 
-
-
+  // todo: 
+  // -add arrows
+  // -add charges (circles with +,- drawn in)
+  // -add equipotential (requires implicit equation solver and some additional stuff)
+  //  -maybe keep one coordinate fixed (but how to choose it?) and use 1D bisection
 }
 
 // try to create a plot like the one at the bottom here:
