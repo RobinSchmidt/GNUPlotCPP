@@ -466,10 +466,15 @@ void testLorenz()
 
   int N = 2000;  // number of datapoints
 
-  std::vector<double> state(4);               // state vector: time and position in 3D space
-  std::vector<double> t(N), x(N), y(N), z(N); // arrays for recording the ODE outputs
+  typedef std::vector<double> Vec;
+  Vec state(4);                   // state vector: time and position in 3D space
+  Vec error(4);                   // error estimates for all variables
+  Vec t(N), x(N), y(N), z(N);     // arrays for recording the ODE outputs
+  Vec et(N), ex(N), ey(N), ez(N); // error estimates
+
   InitialValueSolver<double> solver;
   solver.setDerivativeFunction(&lorenzSystemDerivative, 4);
+  solver.setAccuracy(0.2);
 
   // initialize state:
   state[0] = 0.0;  // time starts at zero
@@ -479,23 +484,38 @@ void testLorenz()
 
   // iterate state and record the outputs of the ODE solver in our arrays:
   for(int n = 0; n < N; n++) {
+
     t[n] = state[0];  // time
     x[n] = state[1];
     y[n] = state[2];
     z[n] = state[3];
-    solver.stepEuler(&state[0], &state[0]); // in-place update of the state vector
+
+    et[n] = error[0];
+    ex[n] = error[1];
+    ey[n] = error[2];
+    ez[n] = error[3];
+
+    //solver.stepEuler(&state[0], &state[0]); // in-place update of the state vector
     //solver.stepMidpoint(&state[0], &state[0]);
+    solver.stepMidpointAndAdaptSize(&state[0], &state[0], &error[0]);
   }
 
   // plot:
   GNUPlotter plt;                             // create plotter object
   plt.addDataArrays(N, &x[0], &y[0], &z[0]);  // pass the data to the plotter
-  //plt.addCommand("set view 15,330");          // set up perspective
   plt.addCommand("set view 65,45");
-  plt.plot3D();  
+  plt.plot3D();
+
+  GNUPlotter plt2;
+  //plt2.addDataArrays(N, &t[0], &x[0], &y[0], &z[0]);
+  plt2.addDataArrays(N, &t[0], &et[0], &ex[0], &ey[0], &ez[0]);
+  plt2.plot();
+  
+  // todo: maybe plot the step-size as function of time - if it's too erratic, we may have to 
+  // change some parameters in the code (the constant that decides when the stepsize gets 
+  // increased - or let the user set min- and max-accuracies
 }
-// todo: test if, midpoint is really more accurate than Euler with a system for which we know the 
-// analytic solution (maybe exponential or damped sinusoid)
+
 
 std::complex<double> complexDipoleField(std::complex<double> z,
   std::complex<double> cl = -1.0, std::complex<double> cr = +1.0)

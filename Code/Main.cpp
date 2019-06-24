@@ -42,8 +42,8 @@ int main(int argc, char** argv)
 
   // experimental plots - not yet finsihed:
 
-  testInitialValueSolver();
-  //testLorenz();
+  //testInitialValueSolver();
+  testLorenz();
   //testDipole();
 
   //demoVectorField();

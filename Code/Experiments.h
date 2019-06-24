@@ -94,6 +94,7 @@ public:
     deriv = function;
     y.resize(numDimensions);
     yPrime.resize(numDimensions);
+    err.resize(numDimensions);
     k1.resize(numDimensions); 
     k2.resize(numDimensions); 
     //tmp.resize(numDimensions);
@@ -105,12 +106,6 @@ public:
   virtual void setStepSize(T newSize)
   {
     h = newSize;
-  }
-
-  /** Switches step size adaption on/off.  */
-  virtual void setStepSizeAdaption(bool shouldAdapt)
-  {
-    stepAdapt = shouldAdapt;
   }
 
   /** Sets the desired accuracy. Relevant only, when adaptive step size control is used. The step 
@@ -173,7 +168,6 @@ public:
       yOut[i] = y[i];                       // ..(k1 still contains the Euler step)
     }
   }
-  // needs test
 
   /** Performs a midpoint-rule step, estimates the error and reduces or increases the step size, 
   depending on the size of the estimated error. The goal is to keep the estimated error always 
@@ -204,7 +198,6 @@ public:
       for(size_t i = 0; i < err.size(); i++)
         error[i] = err[i];
   }
-  // needs test
 
   /** Checks, if all error estimates are <= the desired accuracy - returns false, if any of them
   is above and true, if all are below (or equal). todo: allow for different accuracies for the 
@@ -229,40 +222,6 @@ public:
   }
 
 
-
-  /** Not yet finished */
-  virtual void stepRungeKutta(const T* yIn, T* yOut)
-  {
-    deriv(yIn, &yPrime[0]);
-    // ...
-  }
-
-
-
-
-  /** Not yet finished */
-  virtual T stepEulerWithError(const T* yIn, T* yOut)
-  {
-    stepEuler(yIn, yOut);
-    return T(0);
-    // preliminary - todo: do an Euler step and a (possibly embedded) 2nd order step and use their 
-    // difference as error estimate
-  }
-
-  /** Not yet finished */
-  virtual void stepEulerAndAdaptStep(const T* yIn, T* yOut, T* error = nullptr)
-  {
-    //stepEulerWithError(yIn, &tmp[0], ..)
-  }
-
-
-  // todo:
-  // -implement simple RK4 (without stepsize control)
-  // -implement error estimation and stepsize control for Euler method
-  // -implement RK4 method with embedded 5th order method for error estimation
-
-
-
 protected:
 
   T h = 0.01;                               // integration step size
@@ -273,13 +232,13 @@ protected:
   // client code must set up this function - this function is what determines the actual system of
   // differential equations
 
-  std::vector<T> k1, k2, y; //, err;
+  std::vector<T> k1, k2, y, err; //;
 
   // stuff for stepsize control (factor out):
   T accuracy = 0.001;  // desired accuracy - determines step-sizes - todo: have an array - allow
                        // different accuracies for different variables
 
-  bool stepAdapt = true; // may not be needed
+  //bool stepAdapt = true; // may not be needed
   T hMin = 0.0;
   T hMax = std::numeric_limits<T>::infinity();
   //std::vector<T> tmp;
