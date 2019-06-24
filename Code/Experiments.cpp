@@ -680,6 +680,7 @@ void testDipole()
   solver.setDerivativeFunction(Exy, 3);
   solver.setAccuracy(0.002);
 
+  // add the field lines to the plot:
   int numAngles = 40;
   double radius = 0.05;
   for(int i = 0; i < numAngles; i++)
@@ -692,24 +693,25 @@ void testDipole()
     solver.setStepSize(-0.01);
     addFieldLine(plt, solver, x0 - 1, y0, N);
   }
-  plt.setPixelSize(600, 600);
-  plt.addCommand("set size square"); 
 
-
-
+  // draw circles for the charges:
   plt.addCommand("set object 1 circle at  1,0 size 0.12 fc rgb \"white\" fs solid 1.0 front"); 
   plt.addCommand("set object 2 circle at  1,0 size 0.12 fc rgb \"black\" front"); 
   plt.addCommand("set object 3 circle at -1,0 size 0.12 fc rgb \"white\" fs solid 1.0 front"); 
   plt.addCommand("set object 4 circle at -1,0 size 0.12 fc rgb \"black\" front");
-  // todo: add plus and minus (if not available, create from rectangles or lines)
+
+  // draw plus and minus onto the charges:
+  plt.addCommand("set arrow 1 from -0.95,0 to -1.05,0 nohead lw 2 fc rgb \"black\" front");
+  plt.addCommand("set arrow 2 from 0.95,0 to 1.05,0 nohead lw 2 fc rgb \"black\" front");
+  plt.addCommand("set arrow 3 from 1,-0.05 to 1,0.05 nohead lw 2 fc rgb \"black\" front");
+  // ...the plus looks a bit asymmetric - why?
 
 
-
+  plt.setPixelSize(600, 600);
+  plt.addCommand("set size square"); 
   plt.plot();
 
   // todo: 
-  // -add arrows
-  // -add charges (circles with +,- drawn in)
   // -add equipotential (requires implicit equation solver and some additional stuff)
   //  -maybe keep one coordinate fixed (but how to choose it?) and use 1D bisection
   //  -perhaps we should use angle and radius (from the charge) as the two coordinates - then we
