@@ -177,7 +177,8 @@ public:
   void stepMidpointAndAdaptSize(const T* yIn, T* yOut, T* error = nullptr)
   {
     // repeat trial midpoint steps until the result is within the desired accuracy:
-    while(true) { // todo: implement a safeguard against infinite loops
+    while(true) { 
+      // todo: implement a safeguard against infinite loops - maybe based on the hMin setting
       stepMidpointWithError(yIn, &y[0], &err[0]);
       if(isAccurateEnough(&err[0]))
         break;    // result is good enough - we accept this step
@@ -232,16 +233,16 @@ protected:
   // client code must set up this function - this function is what determines the actual system of
   // differential equations
 
-  std::vector<T> k1, k2, y, err; //;
+  std::vector<T> k1, k2, y, err;
 
   // stuff for stepsize control (factor out):
-  T accuracy = 0.001;  // desired accuracy - determines step-sizes - todo: have an array - allow
-                       // different accuracies for different variables
+  T accuracy = 0.001;  // desired accuracy - determines step-sizes 
+  // todo: have an array - allow different accuracies for different variables - also maybe let the
+  // user set up min and max errors (instead of just taking minError = 0.5 * maxError)
 
-  //bool stepAdapt = true; // may not be needed
   T hMin = 0.0;
   T hMax = std::numeric_limits<T>::infinity();
-  //std::vector<T> tmp;
+
   // maybe factor out the step-size adaption - have a baseclass with fixed step-size
 };
 

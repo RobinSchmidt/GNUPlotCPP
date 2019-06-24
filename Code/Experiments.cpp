@@ -17,7 +17,14 @@ double maxError(const std::vector<double>& x, const std::vector<double>& y)
   return maxErr;
 }
 
-
+std::vector<double> diff(const std::vector<double>& x)
+{
+  std::vector<double> d(x.size());
+  for(int i = 0; i < x.size()-1; i++)
+    d[i] = x[i+1] - x[i];
+  d[d.size()-1] = 0;
+  return d;
+}
 
 //-------------------------------------------------------------------------------------------------
 // convenience functions for certain types of plots (eventually move to class GNUPlotter):
@@ -500,6 +507,8 @@ void testLorenz()
     solver.stepMidpointAndAdaptSize(&state[0], &state[0], &error[0]);
   }
 
+  Vec dt = diff(t); // the step-sizes taken
+
   // plot:
   GNUPlotter plt;                             // create plotter object
   plt.addDataArrays(N, &x[0], &y[0], &z[0]);  // pass the data to the plotter
@@ -507,13 +516,10 @@ void testLorenz()
   plt.plot3D();
 
   GNUPlotter plt2;
-  //plt2.addDataArrays(N, &t[0], &x[0], &y[0], &z[0]);
-  plt2.addDataArrays(N, &t[0], &et[0], &ex[0], &ey[0], &ez[0]);
+  plt2.addDataArrays(N, &t[0], &x[0], &y[0], &z[0]);              // coordinates
+  //plt2.addDataArrays(N, &t[0], &et[0], &ex[0], &ey[0], &ez[0]); // error estimates
+  //plt2.addDataArrays(N, &t[0], &dt[0]);                         // step-sizes
   plt2.plot();
-  
-  // todo: maybe plot the step-size as function of time - if it's too erratic, we may have to 
-  // change some parameters in the code (the constant that decides when the stepsize gets 
-  // increased - or let the user set min- and max-accuracies
 }
 
 
