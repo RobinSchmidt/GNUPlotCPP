@@ -677,28 +677,30 @@ void testDipole()
   };
 
   // Set up the ODE solver:
-  int N = 100;  // we should probably use a stopping criterion when the line hits the charge..
-  //typedef std::vector<double> Vec;
-  //Vec s(3);              // state vector: time and position in 2D space
-  //Vec t(N), x(N), y(N);  // arrays for recording the ODE outputs
+  int N = 120;  // we should probably use a stopping criterion when the line hits the charge..
   InitialValueSolver<double> solver;
   solver.setDerivativeFunction(Exy, 3);
   solver.setAccuracy(0.005);
 
-  addFieldLine(plt, solver, 0, 1, N);  // use loop over initial conditions
+  double yMin = -6.0, yMax = +6.0, yStep = 0.5;
 
-  /*
-  // Solve the ODE numerically (put this into loop and do it for various intital conditions):
-  s[0] = 0; s[1] = 0; s[2] = 1.0;   // initial conditions
-  for(int i = 0; i < N; i++) {
-    t[i] = s[0];  // not used for plot - maybe get rid..
-    x[i] = s[1];
-    y[i] = s[2];
-    solver.stepMidpointAndAdaptSize(&s[0], &s[0]);
+  // left half:
+  double y = yMin;
+  solver.setStepSize(0.01);
+  while(y <= yMax) 
+  { 
+    addFieldLine(plt, solver, 0, y, N); 
+    y += yStep; 
   }
-  plt.addDataArrays(N, &x[0], &y[0]);
-  */
 
+  // right half:
+  y = yMin;
+  solver.setStepSize(-0.01);
+  while(y <= yMax) 
+  { 
+    addFieldLine(plt, solver, 0, y, N); 
+    y += yStep; 
+  }
 
 
 
