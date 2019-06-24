@@ -680,6 +680,22 @@ void testDipole()
   solver.setDerivativeFunction(Exy, 3);
   solver.setAccuracy(0.005);
 
+  int numAngles = 30;
+  double radius = 0.05;
+  for(int i = 0; i < numAngles; i++)
+  {
+    double angle = i * 2 * M_PI / numAngles;
+    double x0 = radius * cos(angle);
+    double y0 = radius * sin(angle);
+    solver.setStepSize( 0.01);
+    addFieldLine(plt, solver, x0 + 1, y0, N);
+    solver.setStepSize(-0.01);
+    addFieldLine(plt, solver, x0 - 1, y0, N);
+  }
+  plt.setPixelSize(600, 600);
+  plt.addCommand("set size square"); 
+
+  /*
   double yMin = -6.0, yMax = +6.0, yStep = 0.25;
 
   // left half:
@@ -690,7 +706,6 @@ void testDipole()
     addFieldLine(plt, solver, 0, y, N); 
     y += yStep; 
   }
-
   // right half:
   y = yMin;
   solver.setStepSize(-0.01);
@@ -699,46 +714,25 @@ void testDipole()
     addFieldLine(plt, solver, 0, y, N); 
     y += yStep; 
   }
+  */
+
+
 
   // todo: 
   // -do left and right in single loop
   // -add arrows
-  // -add charges (circles with +,- drwan in)
+  // -add charges (circles with +,- drawn in)
+  // -maybe let the field-lines start at angles equally distributed around one of the charges
+  //  -that reflects the constant radial density better 
+  //  -it's not natural to have the field lines equally spaced on the y-axis
+  //  -but the circle should be small - if it's too large, it's not natural either - the field
+  //   lines are denser in the "inside" half of a larger circle
 
-
-
-
-
-
-
-  /*
-  double stepSize  = 0.01;
-  int oversampling = 10;
-  int numPoints    = 500;
-  plt.addFieldLine2D(Ex, Ey, 0., -2.0,  0.03, 193, oversampling);
-  plt.addFieldLine2D(Ex, Ey, 0., -1.5,  0.01, 245, oversampling);
-  plt.addFieldLine2D(Ex, Ey, 0., -1.0,  0.01,  94, oversampling);
-  plt.addFieldLine2D(Ex, Ey, 0., -0.5,  0.01,  38, oversampling);
-  plt.addFieldLine2D(Ex, Ey, 0.,  0.0,  0.01,  25, oversampling);
-  */
 
   plt.plot();
-  // ok - it's totally impractical to manually set the step-size and number of steps for each 
-  // field-line - we need an algorithm to automatically select the step-size maybe according to
-  // some specified accuracy criterion and/or some min-/max-distance for each step - also, the 
-  // number of steps should not be pre-determined - instead, maybe use a flexible criterion based
-  // on a callback - the solver should call
-  // a callback function bool fieldLineEnd(double x, double y)
-  // ...this stuff gets complicated - maybe it should be put into a subclass VectorFieldPlotter
 
 
-  /*
 
-  plt.addBiDirectionalFieldLine2D(Ex, Ey, 0,  0, stepSize, numPoints, oversampling);
-  plt.addBiDirectionalFieldLine2D(Ex, Ey, 0, +1, stepSize, numPoints, oversampling);
-  plt.addBiDirectionalFieldLine2D(Ex, Ey, 0, +2, stepSize, numPoints, oversampling);
-  // todo: use loop..maybe have a function addFieldLinesConstX that lets the y-value vary
-  */
 }
 
 // try to create a plot like the one at the bottom here:
