@@ -70,7 +70,7 @@ public:
 equations. */
 
 template<class T>  // T is a scalar type (double or float)
-class InitialValueSolver  // maybe rename to InitialValueStepper
+class InitialValueSolver  // move into a file MathTools.h
 {
 
 public:
@@ -100,20 +100,15 @@ public:
     //tmp.resize(numDimensions);
   }
 
-  /** Sets the size of steps to be taken. Not that if step size adaption is used, the value here
+  /** Sets the size of steps to be taken. Note that if step size adaption is used, the value here
   will only be used as initial value and may change over time. If you want to use the given step 
-  size as fixed step size, call setStepSizeAdaption(false). */
-  virtual void setStepSize(T newSize)
-  {
-    h = newSize;
-  }
+  size as fixed step size, don't use stepMidpointAndAdaptSize - use stepEuler or stepMidpoint 
+  instead. */
+  virtual void setStepSize(T newSize) { h = newSize; }
 
   /** Sets the desired accuracy. Relevant only, when adaptive step size control is used. The step 
   size will be updated on the fly according to an error estimate. */
-  virtual void setAccuracy(T newAccuracy)
-  {
-    accuracy = newAccuracy;
-  }
+  virtual void setAccuracy(T newAccuracy) { accuracy = newAccuracy; }
 
   //-----------------------------------------------------------------------------------------------
   /** \name Processing */
@@ -121,7 +116,7 @@ public:
   /** Performs a forward Euler step: yOut = yIn + stepSize * yPrime where yPrime is evaluated at
   yIn. yOut may point to the same  array as yIn for in-place update. This is the simplest numerical 
   integration scheme for ODEs. */
-  virtual void stepEuler(const T* yIn, T* yOut)
+  void stepEuler(const T* yIn, T* yOut)
   {
     deriv(yIn, &yPrime[0]);
     for(size_t i = 0; i < yPrime.size(); i++)

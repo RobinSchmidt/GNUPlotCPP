@@ -26,6 +26,26 @@ std::vector<double> diff(const std::vector<double>& x)
   return d;
 }
 
+template<class T>
+T findRoot(const std::function<T(T)>& f, T xL, T xR, T y = T(0))
+{
+  static const int maxNumIterations = 60; // should be enough for double-precision
+  T tol = std::numeric_limits<T>::epsilon();
+  T fL  = f(xL) - y;
+  T xM, fM;
+  for(int i = 1; i <= maxNumIterations; i++) {
+    xM = T(0.5)*(xL+xR);
+    fM = f(xM) - y;
+    if(fM == 0 || xR-xL <= fabs(xM*tol))
+      return xM;
+    if(fL*fM > 0) { xL = xM; fL = fM; }
+    else          { xR = xM;          }
+  }
+  //rsError("findRoot failed to converge");
+  return xM;
+}
+
+
 //-------------------------------------------------------------------------------------------------
 // convenience functions for certain types of plots (eventually move to class GNUPlotter):
 
@@ -694,6 +714,44 @@ void testDipole()
     addFieldLine(plt, solver, x0 - 1, y0, N);
   }
 
+  // draw equipotentials - under construction:
+  //std::vector<double> potentials = { 1,2,3,4,5 };
+  double angle = 0.2;
+  double pot = 1.0; // the potential for the equipotential line that we want to draw
+
+  // Define potential as function of angle and radius:
+  std::function<double (double r, double a)> Pra;
+  Pra = [&] (double r, double a) { 
+    double x = r * cos(a) + 1;  // +1 because we measure from the right charge
+    double y = r * sin(a);
+    return P(x, y);
+  };
+  // actually, we need it to be a function of the radius alone - the angle is supposed to be a 
+  // fixed constant from the point of view of this function..
+
+
+
+  double test;
+  test = Pra(0.5, 0.5*M_PI );
+  test = Pra(1.0, 0.5*M_PI );
+  test = Pra(2.0, 0.5*M_PI );
+  test = Pra(3.0, 0.5*M_PI );
+  test = Pra(4.0, 0.5*M_PI );
+
+
+  numAngles = 100;
+  for(int i = 0; i < numAngles; i++)
+  {
+    angle = i * 2 * M_PI / numAngles;
+    // to compute the radius that belongs to the given angle, we need a 1D root-finder and we
+    // need to give it the function that computes the potential as function of the radius (measured
+    // from the right charge) for the given, fixed angle 
+
+    //radius = findRoot(Pr, 0.0, 10.0, pot); 
+  }
+
+
+
   // draw circles for the charges:
   plt.addCommand("set object 1 circle at  1,0 size 0.12 fc rgb \"white\" fs solid 1.0 front"); 
   plt.addCommand("set object 2 circle at  1,0 size 0.12 fc rgb \"black\" front"); 
@@ -712,7 +770,7 @@ void testDipole()
   plt.plot();
 
   // todo: 
-  // -add equipotential (requires implicit equation solver and some additional stuff)
+  // -add equipotentials (requires implicit equation solver and some additional stuff)
   //  -maybe keep one coordinate fixed (but how to choose it?) and use 1D bisection
   //  -perhaps we should use angle and radius (from the charge) as the two coordinates - then we
   //   would again choose equidistant angles
