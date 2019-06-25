@@ -678,7 +678,7 @@ void addRadialEquipotential(GNUPlotter& plt,
     y[i] = radius * sin(angle) + y0;
   }
   plt.addDataArrays(numAngles, &x[0], &y[0]);
-  plt.addGraph("index " + to_string(graphIndex) + " using 1:2 with lines lt 1 notitle"); 
+  plt.addGraph("index " + to_string(graphIndex) + " using 1:2 with lines lt 2 notitle"); 
 }
 
 
@@ -702,6 +702,8 @@ void testDipole()
 
   GNUPlotter plt;
   //plt.setGraphColors("209050");                                // field line color
+  //plt.setGraphColors("000080", "800000");
+  plt.setGraphColors("000000", "b0b0b0");
 
   //plt.addCommand("set palette rgbformulae 30,31,32 negative"); // arrow color-map - not good
   //plt.addVectorField2D(Ex, Ey, 31, -3., +3., 31, -3., +3.);  // vector field arrows
@@ -739,30 +741,38 @@ void testDipole()
     graphIndex++;
   }
 
-  // draw equipotentials - under construction:
-  //std::vector<double> potentials = { 1,2,3,4,5 };
+  // draw equipotentials:
   double angle = 0.0;
   double pot = 1./1; // the potential for the equipotential line that we want to draw
 
   // Define potential as function of radius - then angle is taken from our local variable here:
-  std::function<double (double r, double angle)> Pra;
-  Pra = [&] (double r, double angle) { 
+  std::function<double (double r, double angle)> Pra1, Pra2;
+  Pra1 = [&] (double r, double angle) { 
     double x = r * cos(angle) + 1;  // +1 because we measure from the right charge
     double y = r * sin(angle);
     return P(x, y);
   };
+  Pra2 = [&] (double r, double angle) 
+  { 
+    double x = r * cos(angle) - 1; 
+    double y = r * sin(angle);   
+    return P(x, y);
+  };
 
-  // make a loop:
-  addRadialEquipotential(plt, Pra, 3./1, 1.0, 0.0, 100, graphIndex); graphIndex++;
-  addRadialEquipotential(plt, Pra, 2./1, 1.0, 0.0, 100, graphIndex); graphIndex++;
-  addRadialEquipotential(plt, Pra, 1./1, 1.0, 0.0, 100, graphIndex); graphIndex++;
-  addRadialEquipotential(plt, Pra, 1./2, 1.0, 0.0, 100, graphIndex); graphIndex++;
-  addRadialEquipotential(plt, Pra, 1./3, 1.0, 0.0, 100, graphIndex); graphIndex++;
-  addRadialEquipotential(plt, Pra, 1./4, 1.0, 0.0, 100, graphIndex); graphIndex++;
-  addRadialEquipotential(plt, Pra, 1./5, 1.0, 0.0, 100, graphIndex); graphIndex++;
-  addRadialEquipotential(plt, Pra, 1./6, 1.0, 0.0, 100, graphIndex); graphIndex++;
-  addRadialEquipotential(plt, Pra, 1./7, 1.0, 0.0, 100, graphIndex); graphIndex++;
-  // the spacing looks wrong
+
+  int maxPot = 20;
+  for(int i = 1; i <= maxPot; i++) {
+    addRadialEquipotential(plt, Pra1,  1./i,  1.0, 0.0, 100, graphIndex); 
+    graphIndex++;
+    addRadialEquipotential(plt, Pra2, -1./i, -1.0, 0.0, 100, graphIndex); 
+    graphIndex++;
+  }
+
+  // todo: draw equipotentials first
+  
+
+
+
 
 
   /*
