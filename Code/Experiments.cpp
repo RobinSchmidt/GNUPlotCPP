@@ -659,6 +659,29 @@ void addFieldLine(GNUPlotter& plt, InitialValueSolver<double>& slv, double x0, d
   plt.addGraph("index " + to_string(graphIndex) + " using 1:2 with lines lt 1 notitle"); 
 }
 
+void addRadialEquipotential(GNUPlotter& plt, 
+  const std::function<double (double r, double a)>& Pra, 
+  double pot, double x0, double y0, 
+  int numAngles, int graphIndex)
+{
+  double angle;
+  std::function<double (double r)> Pr;
+  Pr = [&] (double r) { return Pra(r, angle); };
+
+
+  std::vector<double> x(numAngles), y(numAngles);
+  for(int i = 0; i < numAngles; i++)
+  {
+    angle = i * 2 * M_PI / (numAngles-1);
+    double radius = findRoot(Pr, 0.0, 10.0, pot); // the 10 here should be a use parameter, maybe the 0 too
+    x[i] = radius * cos(angle) + x0;
+    y[i] = radius * sin(angle) + y0;
+  }
+  plt.addDataArrays(numAngles, &x[0], &y[0]);
+  plt.addGraph("index " + to_string(graphIndex) + " using 1:2 with lines lt 1 notitle"); 
+}
+
+
 void testDipole()
 {
   // Place the two charges:
@@ -719,35 +742,46 @@ void testDipole()
   // draw equipotentials - under construction:
   //std::vector<double> potentials = { 1,2,3,4,5 };
   double angle = 0.0;
-  double pot = 1./6; // the potential for the equipotential line that we want to draw
+  double pot = 1./1; // the potential for the equipotential line that we want to draw
 
-  // Define potential as function of angle and radius:
-  std::function<double (double r)> Pr;
-  Pr = [&] (double r) { 
+  // Define potential as function of radius - then angle is taken from our local variable here:
+  std::function<double (double r, double angle)> Pra;
+  Pra = [&] (double r, double angle) { 
     double x = r * cos(angle) + 1;  // +1 because we measure from the right charge
     double y = r * sin(angle);
     return P(x, y);
   };
-  // actually, we need it to be a function of the radius alone - the angle is supposed to be a 
-  // fixed constant from the point of view of this function..
+
+  // make a loop:
+  addRadialEquipotential(plt, Pra, 3./1, 1.0, 0.0, 100, graphIndex); graphIndex++;
+  addRadialEquipotential(plt, Pra, 2./1, 1.0, 0.0, 100, graphIndex); graphIndex++;
+  addRadialEquipotential(plt, Pra, 1./1, 1.0, 0.0, 100, graphIndex); graphIndex++;
+  addRadialEquipotential(plt, Pra, 1./2, 1.0, 0.0, 100, graphIndex); graphIndex++;
+  addRadialEquipotential(plt, Pra, 1./3, 1.0, 0.0, 100, graphIndex); graphIndex++;
+  addRadialEquipotential(plt, Pra, 1./4, 1.0, 0.0, 100, graphIndex); graphIndex++;
+  addRadialEquipotential(plt, Pra, 1./5, 1.0, 0.0, 100, graphIndex); graphIndex++;
+  addRadialEquipotential(plt, Pra, 1./6, 1.0, 0.0, 100, graphIndex); graphIndex++;
+  addRadialEquipotential(plt, Pra, 1./7, 1.0, 0.0, 100, graphIndex); graphIndex++;
+  // the spacing looks wrong
 
 
+  /*
   numAngles = 100;
+
+  // factor out:
   std::vector<double> x(numAngles), y(numAngles);
   for(int i = 0; i < numAngles; i++)
   {
-    angle = i * 2 * M_PI / (numAngles-1);
-    // to compute the radius that belongs to the given angle, we need a 1D root-finder and we
-    // need to give it the function that computes the potential as function of the radius (measured
-    // from the right charge) for the given, fixed angle 
-
+    angle  = i * 2 * M_PI / (numAngles-1);
     radius = findRoot(Pr, 0.0, 10.0, pot);
-
     x[i] = radius * cos(angle) + 1;
     y[i] = radius * sin(angle);
   }
   plt.addDataArrays(numAngles, &x[0], &y[0]);
   plt.addGraph("index " + to_string(graphIndex) + " using 1:2 with lines lt 1 notitle"); 
+  graphIndex++;
+  */
+  
 
 
 
