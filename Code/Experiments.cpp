@@ -642,9 +642,9 @@ Ex = c*(cx - x) / ((cx - x)^2 + (cy - y)^2)^(3/2)
 Ey = c*(cy - y) / ((cx - x)^2 + (cy - y)^2)^(3/2)
 */
 
-void addFieldLine(GNUPlotter& plt, InitialValueSolver<double>& slv, double x0, double y0, int N)
+void addFieldLine(GNUPlotter& plt, InitialValueSolver<double>& slv, double x0, double y0, int N,
+  int graphIndex)
 {
-  static int numFieldLines = 0;     // quick and dirty counter - todo: make a class, use a member
   typedef std::vector<double> Vec;
   Vec s(3);                         // state vector: time and position in 2D space
   Vec t(N), x(N), y(N);             // arrays for recording the ODE outputs
@@ -656,8 +656,7 @@ void addFieldLine(GNUPlotter& plt, InitialValueSolver<double>& slv, double x0, d
     slv.stepMidpointAndAdaptSize(&s[0], &s[0]);
   }
   plt.addDataArrays(N, &x[0], &y[0]);
-  plt.addGraph("index " + to_string(numFieldLines) + " using 1:2 with lines lt 1 notitle"); 
-  numFieldLines++;
+  plt.addGraph("index " + to_string(graphIndex) + " using 1:2 with lines lt 1 notitle"); 
 }
 
 void testDipole()
@@ -701,6 +700,7 @@ void testDipole()
   solver.setAccuracy(0.002);
 
   // add the field lines to the plot:
+  int graphIndex = 0;
   int numAngles = 40;
   double radius = 0.05;
   for(int i = 0; i < numAngles; i++)
@@ -709,46 +709,45 @@ void testDipole()
     double x0 = radius * cos(angle);
     double y0 = radius * sin(angle);
     solver.setStepSize( 0.01);
-    addFieldLine(plt, solver, x0 + 1, y0, N);
+    addFieldLine(plt, solver, x0 + 1, y0, N, graphIndex);
+    graphIndex++;
     solver.setStepSize(-0.01);
-    addFieldLine(plt, solver, x0 - 1, y0, N);
+    addFieldLine(plt, solver, x0 - 1, y0, N, graphIndex);
+    graphIndex++;
   }
 
   // draw equipotentials - under construction:
   //std::vector<double> potentials = { 1,2,3,4,5 };
-  double angle = 0.2;
-  double pot = 1.0; // the potential for the equipotential line that we want to draw
+  double angle = 0.0;
+  double pot = 1./6; // the potential for the equipotential line that we want to draw
 
   // Define potential as function of angle and radius:
-  std::function<double (double r, double a)> Pra;
-  Pra = [&] (double r, double a) { 
-    double x = r * cos(a) + 1;  // +1 because we measure from the right charge
-    double y = r * sin(a);
+  std::function<double (double r)> Pr;
+  Pr = [&] (double r) { 
+    double x = r * cos(angle) + 1;  // +1 because we measure from the right charge
+    double y = r * sin(angle);
     return P(x, y);
   };
   // actually, we need it to be a function of the radius alone - the angle is supposed to be a 
   // fixed constant from the point of view of this function..
 
 
-
-  double test;
-  test = Pra(0.5, 0.5*M_PI );
-  test = Pra(1.0, 0.5*M_PI );
-  test = Pra(2.0, 0.5*M_PI );
-  test = Pra(3.0, 0.5*M_PI );
-  test = Pra(4.0, 0.5*M_PI );
-
-
   numAngles = 100;
+  std::vector<double> x(numAngles), y(numAngles);
   for(int i = 0; i < numAngles; i++)
   {
-    angle = i * 2 * M_PI / numAngles;
+    angle = i * 2 * M_PI / (numAngles-1);
     // to compute the radius that belongs to the given angle, we need a 1D root-finder and we
     // need to give it the function that computes the potential as function of the radius (measured
     // from the right charge) for the given, fixed angle 
 
-    //radius = findRoot(Pr, 0.0, 10.0, pot); 
+    radius = findRoot(Pr, 0.0, 10.0, pot);
+
+    x[i] = radius * cos(angle) + 1;
+    y[i] = radius * sin(angle);
   }
+  plt.addDataArrays(numAngles, &x[0], &y[0]);
+  plt.addGraph("index " + to_string(graphIndex) + " using 1:2 with lines lt 1 notitle"); 
 
 
 
