@@ -25,6 +25,9 @@
     <ClCompile Include="..\..\Code\Experiments.cpp">
       <Filter>Code</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Code\MathTools.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Code\Demos.h">
@@ -37,6 +40,9 @@
       <Filter>Code</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Code\Experiments.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Code\MathTools.h">
       <Filter>Code</Filter>
     </ClInclude>
   </ItemGroup>

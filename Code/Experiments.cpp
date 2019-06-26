@@ -1,5 +1,7 @@
 #include "GNUPlotter.h"
 #include "Experiments.h"
+#include "MathTools.h"
+
 //#include <math.h>
 using namespace std;
 
@@ -25,26 +27,6 @@ std::vector<double> diff(const std::vector<double>& x)
   d[d.size()-1] = 0;
   return d;
 }
-
-template<class T>
-T findRoot(const std::function<T(T)>& f, T xL, T xR, T y = T(0))
-{
-  static const int maxNumIterations = 60; // should be enough for double-precision
-  T tol = std::numeric_limits<T>::epsilon();
-  T fL  = f(xL) - y;
-  T xM, fM;
-  for(int i = 1; i <= maxNumIterations; i++) {
-    xM = T(0.5)*(xL+xR);
-    fM = f(xM) - y;
-    if(fM == 0 || xR-xL <= fabs(xM*tol))
-      return xM;
-    if(fL*fM > 0) { xL = xM; fL = fM; }
-    else          { xR = xM;          }
-  }
-  //rsError("findRoot failed to converge");
-  return xM;
-}
-
 
 //-------------------------------------------------------------------------------------------------
 // convenience functions for certain types of plots (eventually move to class GNUPlotter):

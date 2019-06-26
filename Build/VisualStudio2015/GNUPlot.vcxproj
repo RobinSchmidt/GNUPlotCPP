@@ -122,12 +122,14 @@
     <ClCompile Include="..\..\Code\Experiments.cpp" />
     <ClCompile Include="..\..\Code\GNUPlotter.cpp" />
     <ClCompile Include="..\..\Code\Main.cpp" />
+    <ClCompile Include="..\..\Code\MathTools.cpp" />
     <ClCompile Include="..\..\Code\Tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Code\Demos.h" />
     <ClInclude Include="..\..\Code\Experiments.h" />
     <ClInclude Include="..\..\Code\GNUPlotter.h" />
+    <ClInclude Include="..\..\Code\MathTools.h" />
     <ClInclude Include="..\..\Code\Tests.h" />
   </ItemGroup>
   <ItemGroup>
