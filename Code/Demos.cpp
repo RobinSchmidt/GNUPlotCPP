@@ -1,4 +1,5 @@
 #include "Demos.h"
+#include "MathTools.h"
 //#include <complex> // may be removed, if it will be included in GNUPlotter.h someday
 #define M_PI 3.14159265358979323846
 
@@ -939,6 +940,229 @@ void demoPendulumPhasePortrait()
   // http://www.gnuplotting.org/tag/tics/  // ...it also says something about multiplots
   // http://www.gnuplotting.org/set-your-tic-labels-to-use-pi-or-to-be-blank/
 }
+
+
+class Charge2D // maybe move to MathTools.h ..or make a file Physics.h
+{
+
+public:
+
+  Charge2D(double charge, double x, double y) : c(charge), cx(x), cy(y) {}
+
+  /** Returns the potential at point (x,y) caused by this charge. */
+  double potentialAt(double x, double y)
+  {
+    return c / getDistanceTo(x, y); // see formulas 4.23 and 6.8 in the feynman lectures
+  }
+
+  /** Returns x-component of electric field at point (x,y) caused by this charge. */
+  double xFieldAt(double x, double y)
+  {
+    double r = getDistanceTo(x, y);
+    return c*(x - cx) / (r*r*r);
+  }
+  // should equal the x-component of negative gradient of the potential
+  // what if r == 0...the potential becomes infinite - but what about the field? there's no 
+  // meaningful direction, it could have
+
+
+  /** Returns y-component of electric field at point (x,y) caused by this charge. */
+  double yFieldAt(double x, double y)
+  {
+    double r = getDistanceTo(x, y);
+    return c*(y - cy) / (r*r*r);
+  }
+
+  /** Returns the distance between the charge's position and the given point. */
+  double getDistanceTo(double x, double y)
+  {
+    double dx = x - cx;  // or should it be the other way around? do we want to point from x,y to
+    double dy = y - cy;  // the charge or vice versa?
+    double d  = sqrt(dx*dx + dy*dy);
+    //return d;
+    return max(d, 0.01);  // avoid singularities
+  }
+
+protected:
+
+  double c  = 1;   // value/amount/strength of the charge
+  double cx = 0;   // x-coordinate of the charge
+  double cy = 0;   // y-coordinate of the charge
+
+};
+
+/*
+Using sage to find the gradient of the potential gives this:
+
+var("x y cx cy c")
+P(x,y)  = c / sqrt((x-cx)^2 + (y-cy)^2)
+Ex(x,y) = diff(P(x,y), x) 
+Ey(x,y) = diff(P(x,y), y) 
+Ex, Ey
+
+Ex = c*(cx - x) / ((cx - x)^2 + (cy - y)^2)^(3/2)
+Ey = c*(cy - y) / ((cx - x)^2 + (cy - y)^2)^(3/2)
+*/
+
+void addFieldLine(GNUPlotter& plt, InitialValueSolver<double>& slv, double x0, double y0, int N,
+  int graphIndex)
+{
+  typedef std::vector<double> Vec;
+  Vec s(3);                         // state vector: time and position in 2D space
+  Vec t(N), x(N), y(N);             // arrays for recording the ODE outputs
+  s[0] = 0; s[1] = x0; s[2] = y0;   // initial conditions
+  for(int i = 0; i < N; i++) {
+    t[i] = s[0];                    // not used for plot - maybe get rid..
+    x[i] = s[1];
+    y[i] = s[2];
+    slv.stepMidpointAndAdaptSize(&s[0], &s[0]);
+  }
+  plt.addDataArrays(N, &x[0], &y[0]);
+  plt.addGraph("index " + to_string(graphIndex) + " using 1:2 with lines lt 1 lw 1.5 notitle"); 
+}
+
+void addRadialEquipotential(GNUPlotter& plt, 
+  const std::function<double (double r, double a)>& Pra, 
+  double pot, double x0, double y0, 
+  int numAngles, int graphIndex)
+{
+  double angle;
+  std::function<double (double r)> Pr;
+  Pr = [&] (double r) { return Pra(r, angle); };
+
+
+  std::vector<double> x(numAngles), y(numAngles);
+  for(int i = 0; i < numAngles; i++)
+  {
+    angle = i * 2 * M_PI / (numAngles-1);
+    double radius = findRoot(Pr, 0.0, 10.0, pot); // the 10 here should be a use parameter, maybe the 0 too
+    x[i] = radius * cos(angle) + x0;
+    y[i] = radius * sin(angle) + y0;
+  }
+  plt.addDataArrays(numAngles, &x[0], &y[0]);
+  plt.addGraph("index " + to_string(graphIndex) + " using 1:2 with lines lt 2 lw 1 notitle"); 
+}
+// sweeps out an equipotential line around a given "center" point x0, y0 (it doesn't have to be at
+// the center, just somewhere inside the equipotential. You should pass a function Pra that 
+// computes the potential P as function of the radius r and angle a (measured from the center-point
+// x0, y0). It works by using a bunch of fixed angles and computing the associated radius (which 
+// becomes, for fixed angle, a 1D root-finding problem), such that the potential has the given 
+// value at that combination of radius and angle
+
+void demoDipole()
+{
+  // We create aplot of electric field lines and equipotential lines of two equal and opposite 
+  // charges, similar to the plot at the bottom here:
+  // http://www.feynmanlectures.caltech.edu/II_04.html
+
+  // Place the two charges:
+  Charge2D c1(-1, -1, 0);   // negative unit charge at (x,y) = (-1,0)
+  Charge2D c2(+1, +1, 0);   // positive unit charge at (x,y) = (+1,0)
+
+  // Define functions for potential and x,y components of electric field:
+  std::function<double(double, double)> P, Ex, Ey; 
+  P  = [&] (double x, double y) { return c1.potentialAt(x,y) + c2.potentialAt(x,y); };
+  Ex = [&] (double x, double y) { return c1.xFieldAt(   x,y) + c2.xFieldAt(   x,y); };
+  Ey = [&] (double x, double y) { return c1.yFieldAt(   x,y) + c2.yFieldAt(   x,y); };
+  // todo: instead of defining Ex, Ey explicitly/analytically, (optionally) use a numeric gradient
+  // of the potential - have a function numericPartialDerivative(func(x, y), x, y, eps)...is it
+  // possible to find a formula for the numeric derivative that avoids the precision loss due to
+  // subtracting two very similar numbers? 
+  // Ideally, we would like to have a convenience function into which we just feed the potential
+  // function P and from that, it creates equipotentials and field-lines all by itself (generating
+  // the field-lines by numeric differentiation)
+
+
+  GNUPlotter plt;
+  plt.setTitle("Electric field lines and equipotentials of two equal and opposite charges"); 
+  plt.setGraphColors("000000", "b0b0b0");  // colors for field lines and equipotentials
+  plt.setRange(-3, 3, -3, 3);
+  plt.setPixelSize(600, 640);
+  plt.addCommand("set size square"); 
+  int graphIndex = 0;
+
+
+  // Draw equipotentials:
+
+  // Define potential as function of radius measured from the right and left charge:
+  std::function<double (double r, double angle)> Pra1, Pra2;
+  Pra1 = [&] (double r, double angle) { 
+    double x = r * cos(angle) + 1;  // +1 because we measure from the right charge
+    double y = r * sin(angle);
+    return P(x, y);
+  };
+  Pra2 = [&] (double r, double angle) 
+  { 
+    double x = r * cos(angle) - 1;  // -1 because we measure from the left charge
+    double y = r * sin(angle);   
+    return P(x, y);
+  };
+  // draw equipotentials at 1./i and -1./ where i = 1./maxPot:
+  int maxPot = 20;
+  for(int i = 1; i <= maxPot; i++) {
+    addRadialEquipotential(plt, Pra1,  1./i,  1.0, 0.0, 100, graphIndex); 
+    graphIndex++;
+    addRadialEquipotential(plt, Pra2, -1./i, -1.0, 0.0, 100, graphIndex); 
+    graphIndex++;
+  }
+
+
+  // Draw field lines:
+
+  // Define the field function (derivative of the field lines) for the ODE solver:
+  std::function<void (const double *y, double *yp)> Exy;
+  Exy = [&] (const double *y, double *yp) { 
+    yp[0] = 1.0;
+    yp[1] = Ex(y[1], y[2]); 
+    yp[2] = Ey(y[1], y[2]); 
+  };
+
+  // Set up the ODE solver:
+  int N = 120;  // we should probably use a stopping criterion when the line hits the charge..
+  InitialValueSolver<double> solver;
+  solver.setDerivativeFunction(Exy, 3);
+  solver.setAccuracy(0.002);
+
+  // add the field lines to the plot:
+  int numAngles = 40;
+  double radius = 0.05;
+  for(int i = 0; i < numAngles; i++)
+  {
+    double angle = i * 2 * M_PI / numAngles;
+    double x0 = radius * cos(angle);
+    double y0 = radius * sin(angle);
+    solver.setStepSize( 0.01);
+    addFieldLine(plt, solver, x0 + 1, y0, N, graphIndex);
+    graphIndex++;
+    solver.setStepSize(-0.01);
+    addFieldLine(plt, solver, x0 - 1, y0, N, graphIndex);
+    graphIndex++;
+  }
+
+
+  // draw circles for the charges:
+  plt.addCommand("set object 1 circle at  1,0 size 0.12 fc rgb \"white\" fs solid 1.0 front"); 
+  plt.addCommand("set object 2 circle at  1,0 size 0.12 fc rgb \"black\" front"); 
+  plt.addCommand("set object 3 circle at -1,0 size 0.12 fc rgb \"white\" fs solid 1.0 front"); 
+  plt.addCommand("set object 4 circle at -1,0 size 0.12 fc rgb \"black\" front");
+
+  // draw plus and minus onto the charges:
+  plt.addCommand("set arrow 1 from -0.95,0 to -1.05,0 nohead lw 2 fc rgb \"black\" front");
+  plt.addCommand("set arrow 2 from 0.95,0 to 1.05,0 nohead lw 2 fc rgb \"black\" front");
+  plt.addCommand("set arrow 3 from 1,-0.05 to 1,0.05 nohead lw 2 fc rgb \"black\" front");
+  // ...the plus looks a bit asymmetric - why?
+
+
+  plt.plot();
+
+  // todo: maybe use a colormap to indicate the potential - use something similar to the heat-map
+  // drawing - maybe with a bipolar colormap (blue -> gray -> red) - we need to pass a bivariate
+  // function and use the matrix format - addDataBivariateFunction needs to change to take a
+  // std::function
+}
+
+
+
 
 
 

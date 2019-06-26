@@ -37,6 +37,8 @@ void demoSincRadialHeatMap();
 
 void demoPendulumPhasePortrait();
 
+void demoDipole();
+
 
 
 

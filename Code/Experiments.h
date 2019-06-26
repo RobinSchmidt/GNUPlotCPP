@@ -23,7 +23,7 @@ void testLorenz();
 
 void demoComplexDipole();
 
-void testDipole();
+
 
 
 
