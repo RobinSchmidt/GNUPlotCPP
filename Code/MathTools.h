@@ -1,9 +1,10 @@
 #pragma once
 
-/** This files contains some mathematical tools that are required for producing certain types of 
+/** This file contains some mathematical tools that are required for producing certain types of 
 plots, such as a simple ODE solver (for plotting field-lines of vector fields), etc. */
 
-
+/** Finds the solution ("root") x of the equation f(x) = y where the solution is assumed to be in 
+between xL and xR. It implements the bisection algorithm. */
 template<class T>
 T findRoot(const std::function<T(T)>& f, T xL, T xR, T y = T(0))
 {
@@ -28,7 +29,7 @@ T findRoot(const std::function<T(T)>& f, T xL, T xR, T y = T(0))
 /** Class for solving an initial value problem for a system of first-order ordinary differential 
 equations. */
 
-template<class T>  // T is a scalar type (double or float)
+template<class T>  // T is a scalar real number type (double or float)
 class InitialValueSolver
 {
 
