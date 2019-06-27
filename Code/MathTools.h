@@ -57,7 +57,6 @@ public:
     err.resize(numDimensions);
     k1.resize(numDimensions); 
     k2.resize(numDimensions); 
-    //tmp.resize(numDimensions);
   }
 
   /** Sets the size of steps to be taken. Note that if step size adaption is used, the value here
@@ -74,7 +73,7 @@ public:
   /** \name Processing */
 
   /** Performs a forward Euler step: yOut = yIn + stepSize * yPrime where yPrime is evaluated at
-  yIn. yOut may point to the same  array as yIn for in-place update. This is the simplest numerical 
+  yIn. yOut may point to the same array as yIn for in-place update. This is the simplest numerical 
   integration scheme for ODEs. */
   void stepEuler(const T* yIn, T* yOut)
   {

@@ -7,7 +7,7 @@ int main(int argc, char** argv)
   //testMatrixWrite();
   //testLowLevelCalls();
 
-  
+
   // Here are a couple of functions that demonstrate the use of the plotter. Whenever you close the
   // GNUPlot window, the currently running demo function will return and the next demo is launched:
   demoArrayPlot();
@@ -24,7 +24,8 @@ int main(int argc, char** argv)
   demoLissajous();
   demoLissajous3D();   // maybe make a trefoil knot instead
   demoHelix();
-  //demoPhasor();
+  demoPhasor();
+  demoLorenz();
   demoTorus();
   demoHenneberg();
   demoGaussianBivariate();
@@ -34,18 +35,16 @@ int main(int argc, char** argv)
   demoPendulumPhasePortrait();
   demoDipole();
 
+
   // If you want to see, how they were done, jump into the implementations of these functions - 
   // there you will find commented code that should make it clear how the plotter class is supposed
-  // to be used , so you can take these as examples and reference for using it for creating your 
+  // to be used, so you can take these as examples and reference for using it for creating your 
   // own plots.
   
-
-
 
   // experimental plots - not yet finsihed:
 
   //testInitialValueSolver();
-  //testLorenz();
 
   //demoVectorField();
   //demoDipole();  // not so interesting - we should draw field lines, not the vector field

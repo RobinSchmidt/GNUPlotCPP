@@ -455,75 +455,9 @@ void testInitialValueSolver()
 }
 
 
-void lorenzSystemDerivative(const double *y, double *yp)
-{
-  // parameters:
-  double sigma = 10.0;
-  double rho   = 28.0;
-  double beta  = 8.0/3.0;
 
-  // compute derivative vector:
-  yp[0] = 1.0;                      // t' = 1 (time-axis: y[0] = t and yp[0] = y[0]' = t' = 1)
-  yp[1] = sigma * (y[2] - y[1]);    // x' = sigma * (y-x)
-  yp[2] = y[1]*(rho - y[3]) - y[2]; // y' = x * (rho-z) - y
-  yp[3] = y[1]*y[2] - beta * y[3];  // z' = x*y - beta*z
-}
-void testLorenz()
-{
-  // Demonstrates drawing field-lines/trajectories of a Lorenz system, using the ODE solver.
-  // https://en.wikipedia.org/wiki/Lorenz_system
 
-  int N = 2000;  // number of datapoints
 
-  typedef std::vector<double> Vec;
-  Vec state(4);                   // state vector: time and position in 3D space
-  Vec error(4);                   // error estimates for all variables
-  Vec t(N), x(N), y(N), z(N);     // arrays for recording the ODE outputs
-  Vec et(N), ex(N), ey(N), ez(N); // error estimates
-
-  InitialValueSolver<double> solver;
-  solver.setDerivativeFunction(&lorenzSystemDerivative, 4);
-  solver.setAccuracy(0.2);
-
-  // initialize state:
-  state[0] = 0.0;  // time starts at zero
-  state[1] = 1.0; 
-  state[2] = 0.0; 
-  state[3] = 0.0; 
-
-  // iterate state and record the outputs of the ODE solver in our arrays:
-  for(int n = 0; n < N; n++) {
-
-    t[n] = state[0];  // time
-    x[n] = state[1];
-    y[n] = state[2];
-    z[n] = state[3];
-
-    et[n] = error[0];
-    ex[n] = error[1];
-    ey[n] = error[2];
-    ez[n] = error[3];
-
-    //solver.stepEuler(&state[0], &state[0]); // in-place update of the state vector
-    //solver.stepMidpoint(&state[0], &state[0]);
-    solver.stepMidpointAndAdaptSize(&state[0], &state[0], &error[0]);
-  }
-
-  Vec dt = diff(t); // the step-sizes taken
-
-  // plot:
-  GNUPlotter plt;                             // create plotter object
-  plt.addDataArrays(N, &x[0], &y[0], &z[0]);  // pass the data to the plotter
-  //plt.addCommand("set view 65,45");
-  plt.addCommand("set view 80,50");
-  plt.plot3D();
-
-  GNUPlotter plt2;
-  plt2.addDataArrays(N, &t[0], &x[0], &y[0], &z[0]);              // coordinates
-  //plt2.addDataArrays(N, &t[0], &et[0], &ex[0], &ey[0], &ez[0]); // error estimates
-  //plt2.addDataArrays(N, &t[0], &dt[0]);                         // step-sizes
-  plt2.plot();
-}
 
 
 std::complex<double> complexDipoleField(std::complex<double> z,

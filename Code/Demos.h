@@ -26,7 +26,8 @@ void demoMatrixData();
 void demoLissajous();
 void demoLissajous3D();
 void demoHelix();  
-void demoPhasor(); 
+void demoPhasor();
+void demoLorenz();
 
 void demoTorus();
 void demoHenneberg();

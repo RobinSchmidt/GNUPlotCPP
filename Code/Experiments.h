@@ -17,10 +17,7 @@ void zedSquaredVectorField();
 // under construction:
 void demoVectorField();
 
-
 void testInitialValueSolver();
-void testLorenz();
-
 void demoComplexDipole();
 
 
