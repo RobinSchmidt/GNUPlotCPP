@@ -3,6 +3,8 @@
 #include "MathTools.h"
 
 //#include <math.h>
+#include <random>
+
 using namespace std;
 
 #define M_PI 3.14159265358979323846
@@ -493,6 +495,28 @@ void demoComplexDipole()
 // direction of the gradient - maybe this can be done automatically by computing numeric gradients
 // -> have a function addPotentialFieldLines2D
 
+void testHistogram()
+{
+
+  const int N = 10000;  // number of experiments
+
+  std::default_random_engine generator;
+  std::normal_distribution<double> distribution(5.0,2.0);
+
+  int p[10] = {};  // make the 10 a parameter to pick (numBins)
+
+  for(int i = 0; i < N; i++) 
+  {
+    double number = distribution(generator);
+    if((number>=0.0)&&(number<10.0)) 
+      ++p[int(number)];
+  }
+
+
+ 
+  int dummy = 0;
+}
+// http://www.cplusplus.com/reference/random/normal_distribution/
 
 
 /*

@@ -20,6 +20,8 @@ void demoVectorField();
 void testInitialValueSolver();
 void demoComplexDipole();
 
+void testHistogram();
+
 
 
 
