@@ -499,24 +499,61 @@ void testHistogram()
 {
 
   const int N = 10000;  // number of experiments
+  const int numBins = 20;
 
   std::default_random_engine generator;
-  std::normal_distribution<double> distribution(5.0,2.0);
+  std::normal_distribution<double> distribution(10.0,2.0);
 
-  int p[10] = {};  // make the 10 a parameter to pick (numBins)
+
+  double x[numBins];
+  GNUPlotter::rangeLinear(x, numBins, 0.0, (double)(numBins-1));
+
+  double p[numBins] = {};  // this holds the number of elements per bin
 
   for(int i = 0; i < N; i++) 
   {
     double number = distribution(generator);
-    if((number>=0.0)&&(number<10.0)) 
-      ++p[int(number)];
+    if((number >= 0.0) && (number < numBins)) {
+      // figure out, into which bin this number belongs:
+      int bin = int(number); 
+      // maybe use rounding or more sophisticated ways for defining bins - maybe by min/max values
+
+
+      p[bin] += 1.0;
+    }
   }
 
 
+  GNUPlotter plt;
+  plt.addDataArrays(numBins, x, p);
+  //plt.addGraph("index 0 using 1:2 with lines ls 1 notitle");
+  plt.addCommand("set boxwidth 0.75");
+  plt.addGraph("index 0 using 1:2 with boxes fs solid 0.50 notitle");
+  //plt.addGraph("index 0 using 1:2 with boxes fs solid fc rgb \"#ffff00\" notitle");
+  plt.plot();
+  // todo: 
+  // -fill boxes with color (maybe semitransparent?)
+  //  http://gnuplot.sourceforge.net/demo/fillstyle.html
+  // -maybe use non-equidistant bin boundaries to 
+  // make it more interesting (denser toward the center)....but then we may have to normalize the
+  // heights by the widths ...or something - otherwise the narrower bins are too short
+
+
+  // todo:
+  // make a histogram with 3 datasets and plot them as red, green and blue bars - ues different
+  // means and variances for each dataset
+  //....maybe, for audio, such histograms can be used for raw sample amplitude values (use colors
+  // for the channels) - useful for analyzing the behavior of noise generators - maybe have a 
+  // function plotHistogram(N, T* data, int numBins, T minX, T maxX) ...and/or
+  // plotMultiHistogram(T minX, T maxX, int numBins, int numDataPoints, T* data1, T* data2, ...)
+  // and maybe have versions that let teh user define the bins-limits explicitly as arrays
  
   int dummy = 0;
 }
 // http://www.cplusplus.com/reference/random/normal_distribution/
+// https://stackoverflow.com/questions/2471884/histogram-using-gnuplot
+// http://gnuplot.sourceforge.net/demo/histograms.html
+// http://gnuplot.sourceforge.net/docs_4.2/node249.html
 
 
 /*
