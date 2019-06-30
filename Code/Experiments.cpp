@@ -495,8 +495,76 @@ void demoComplexDipole()
 // direction of the gradient - maybe this can be done automatically by computing numeric gradients
 // -> have a function addPotentialFieldLines2D
 
+//
+template<class T>
+int findBin(T x, int numBinEdges, T* binEdges) // numBinEdges == numBins+1
+{
+  // x is out of range (to the right):
+  if(x > binEdges[numBinEdges-1] )
+    return numBinEdges;
+
+  // return the bin index or -1, if x is out of range to the left:
+  int i = -1;
+  while( i <= numBinEdges-2 && x >= binEdges[i+1] )
+    i++;
+  return i;
+}
+
+bool testFindBin() // unit test for the findBin function
+{
+  int binEdges[5] = { 2,3,5,6,8 };
+  int numBins  = 4;
+  int numEdges = numBins+1;
+  bool r = true;
+  r &= findBin(1, numEdges, binEdges) == -1; // x too low
+  r &= findBin(2, numEdges, binEdges) ==  0;
+  r &= findBin(3, numEdges, binEdges) ==  1;
+  r &= findBin(4, numEdges, binEdges) ==  1;
+  r &= findBin(5, numEdges, binEdges) ==  2;
+  r &= findBin(6, numEdges, binEdges) ==  3;
+  r &= findBin(7, numEdges, binEdges) ==  3;
+  r &= findBin(8, numEdges, binEdges) ==  4; 
+  r &= findBin(9, numEdges, binEdges) == numEdges;// x too high
+  return r;
+}
+
+template<class T>
+void plotHistogram(int numDataPoints, T* data, int numBins, T* binEdges, bool relative = true)
+{
+  std::vector<T> p(numBins); // "probability"
+
+  for(int i = 0; i < numDataPoints; i++) {
+    int bin = findBin(data[i], numBins, binEdges);
+    p[bin] += 1; // todo: allow for a weight, i.e. p[bin] += weights[i]
+  }
+
+  // optionally normalize:
+  if(relative)
+    for(int i = 0; i < numBins; i++)
+      p[i] /= numDataPoints;  // or, in general, divide by sum-of-weights
+
+
+
+  GNUPlotter plt;
+  //plt.addDataArrays(numBins, x, p);
+  //plt.addCommand("set boxwidth 0.75");
+  //plt.addGraph("index 0 using 1:2 with boxes fs solid lc rgb \"#a00000ff\" notitle"); // 1st channel is alpha
+  //plt.plot();
+
+}
+// move to GNUPlotter
+// see here for inspiration for signature and features:
+// https://matplotlib.org/3.1.0/api/_as_gen/matplotlib.pyplot.hist.html
+// https://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram.html#numpy.histogram
+
+// matplotlib's behavior is:
+// if bins is: [1, 2, 3, 4], then the first bin is [1, 2) (including 1, but excluding 2) and the 
+// second [2, 3). The last bin, however, is [3, 4], which includes 4.
+// ...it's probably a good idea to mimic this behavior
+
 void testHistogram()
 {
+  testFindBin();
 
   const int N = 10000;  // number of experiments
   const int numBins = 20;
@@ -517,19 +585,25 @@ void testHistogram()
       // figure out, into which bin this number belongs:
       int bin = int(number); 
       // maybe use rounding or more sophisticated ways for defining bins - maybe by min/max values
+      // maybe have a function findBin(T* value, T* binLimits, T* numBins) that implements binary
+      // search
 
 
       p[bin] += 1.0;
     }
   }
 
+  // normalize p by dividing by N - plot the relative numbers of occurences
+  for(int i = 0; i < numBins; i++)
+    p[i] /= N;
+
 
   GNUPlotter plt;
+  plt.setRange(0.0, 20.0, 0.0, 0.2);
   plt.addDataArrays(numBins, x, p);
-  //plt.addGraph("index 0 using 1:2 with lines ls 1 notitle");
   plt.addCommand("set boxwidth 0.75");
-  plt.addGraph("index 0 using 1:2 with boxes fs solid 0.50 notitle");
-  //plt.addGraph("index 0 using 1:2 with boxes fs solid fc rgb \"#ffff00\" notitle");
+  //plt.addGraph("index 0 using 1:2 with boxes fs solid 0.50 notitle");
+  plt.addGraph("index 0 using 1:2 with boxes fs solid lc rgb \"#a00000ff\" notitle"); // 1st channel is alpha
   plt.plot();
   // todo: 
   // -fill boxes with color (maybe semitransparent?)
@@ -537,6 +611,8 @@ void testHistogram()
   // -maybe use non-equidistant bin boundaries to 
   // make it more interesting (denser toward the center)....but then we may have to normalize the
   // heights by the widths ...or something - otherwise the narrower bins are too short
+  // the boxes are centered at the given x-values - to plot multiple histograms in one plot, we
+  // need to offset the boxes for each dataset
 
 
   // todo:
