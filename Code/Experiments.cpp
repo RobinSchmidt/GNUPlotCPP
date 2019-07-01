@@ -529,13 +529,16 @@ bool testFindBin() // unit test for the findBin function
 }
 
 template<class T>
-void plotHistogram(int numDataPoints, T* data, int numBins, T* binEdges, bool relative = true)
+void plotHistogram(int numDataPoints, T* data, int numBinEdges, T* binEdges, bool relative = true)
 {
+  int numBins = numBinEdges-1;
   std::vector<T> p(numBins); // "probability"
 
   for(int i = 0; i < numDataPoints; i++) {
-    int bin = findBin(data[i], numBins, binEdges);
-    p[bin] += 1; // todo: allow for a weight, i.e. p[bin] += weights[i]
+    int bin = findBin(data[i], numBinEdges, binEdges);
+
+    if(bin >= 0 && bin < numBins) 
+      p[bin] += 1; // todo: allow for a weight, i.e. p[bin] += weights[i]
   }
 
   // optionally normalize:
@@ -543,19 +546,19 @@ void plotHistogram(int numDataPoints, T* data, int numBins, T* binEdges, bool re
     for(int i = 0; i < numBins; i++)
       p[i] /= numDataPoints;  // or, in general, divide by sum-of-weights
 
-
-
   GNUPlotter plt;
   //plt.addDataArrays(numBins, x, p);
   //plt.addCommand("set boxwidth 0.75");
   //plt.addGraph("index 0 using 1:2 with boxes fs solid lc rgb \"#a00000ff\" notitle"); // 1st channel is alpha
   //plt.plot();
-
 }
 // move to GNUPlotter
 // see here for inspiration for signature and features:
 // https://matplotlib.org/3.1.0/api/_as_gen/matplotlib.pyplot.hist.html
 // https://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram.html#numpy.histogram
+
+
+
 
 // matplotlib's behavior is:
 // if bins is: [1, 2, 3, 4], then the first bin is [1, 2) (including 1, but excluding 2) and the 
@@ -631,6 +634,19 @@ void testHistogram()
 // http://gnuplot.sourceforge.net/demo/histograms.html
 // http://gnuplot.sourceforge.net/docs_4.2/node249.html
 
+
+void testMoebiusStrip()
+{
+  int N = 1; // number of half-turns, 1: classical Moebius, even: orientable, odd: non-orientable
+  double L = 0.25;
+  std::function<double (double u, double v)> fx, fy, fz;
+  fx = [&](double t, double p) { return (1+t*cos(N*p/2))*cos(p); };
+  fy = [&](double t, double p) { return (1+t*cos(N*p/2))*sin(p); };
+  fz = [&](double t, double p) { return    t*sin(N*p/2); };
+
+  GNUPlotter::plotSurface(fx, fy, fz, 5, -L, L, 50, 0., 2.*M_PI);
+}
+// todo: try to make a Moebius trefoil knot
 
 /*
 

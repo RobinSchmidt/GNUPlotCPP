@@ -62,7 +62,8 @@ int main(int argc, char** argv)
   //vectorFieldExperiment();
   //zedSquaredVectorField();
 
-  testHistogram();
+  //testHistogram();
+  testMoebiusStrip();
 
 
   getchar();
