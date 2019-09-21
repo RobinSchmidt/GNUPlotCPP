@@ -390,9 +390,21 @@ public:
     int Nu, T uMin, T uMax, int Nv, T vMin, T vMax);
 
 
+  template <class T>
+  void addDataBivariateFunction(int Nx, int Ny, T *x, T *y, const std::function<T(T, T)>& f);
 
   template <class T>
-  void addDataBivariateFunction(int Nx, int Ny, T *x, T *y,  T (*f)(T,T));
+  void addDataBivariateFunction(int Nx, int Ny, T *x, T *y, T (*f)(T,T));
+
+
+
+
+
+
+  template <class T>
+  void addDataBivariateFunction(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax, 
+    const std::function<T(T, T)>& f);
+
 
   template <class T>
   void addDataBivariateFunction(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax, T (*f)(T, T));

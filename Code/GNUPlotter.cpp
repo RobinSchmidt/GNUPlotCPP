@@ -625,7 +625,9 @@ void GNUPlotter::addDataSurface(
 }
 
 template <class T>
-void GNUPlotter::addDataBivariateFunction(int Nx, int Ny, T *x, T *y, T (*f)(T, T))
+void GNUPlotter::addDataBivariateFunction(int Nx, int Ny, T *x, T *y, 
+  const std::function<T(T, T)>& f)
+
 {
   int i, j;
   T **z = new T*[Nx];
@@ -643,8 +645,14 @@ void GNUPlotter::addDataBivariateFunction(int Nx, int Ny, T *x, T *y, T (*f)(T, 
 }
 
 template <class T>
+void GNUPlotter::addDataBivariateFunction(int Nx, int Ny, T *x, T *y, T (*f)(T, T))
+{
+  addDataBivariateFunction(Nx, Ny, x, y, std::function<T(T, T)>(f));
+}
+
+template <class T>
 void GNUPlotter::addDataBivariateFunction(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax,
-  T (*f)(T, T))
+  const std::function<T(T, T)>& f)
 {
   T *x = new T[Nx];
   T *y = new T[Ny];
@@ -653,6 +661,13 @@ void GNUPlotter::addDataBivariateFunction(int Nx, T xMin, T xMax, int Ny, T yMin
   addDataBivariateFunction(Nx, Ny, x, y, f);
   delete[] x;
   delete[] y;
+}
+
+template <class T>
+void GNUPlotter::addDataBivariateFunction(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax,
+  T (*f)(T, T))
+{
+  addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, std::function<T(T, T)>(f));
 }
 
 template <class T>

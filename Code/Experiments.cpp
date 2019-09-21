@@ -79,7 +79,90 @@ void plotComplexVectorField(const function<complex<T>(complex<T>)>& f,
 // https://mathematica.stackexchange.com/questions/4244/visualizing-a-complex-vector-field-near-poles
 // iirc, Visual Complex Analysis says soemthing about this - look up
 
+// idea for visualizing a complex function:
+// -if we pick a fixed radius r and let the angle p sweep through the range -pi..pi for the input 
+//  z, we obtain a curve w = f(z) for that given p
+// -if we draw these curves for a bunch of values of r, we get a 3-dimensional shape
+// -we could use color to indicate the derivative (speed) of the curve traversal
+// -of course, we could also use imaginary and real part instead of radius and angle but the latter
+//  is attractive because the angle has a naturally finite range
 
+template<class T>
+void plotComplexPolarCurve(const function<complex<T>(complex<T>)>& f, T r, int N)
+{
+  std::vector<T> x(N), y(N);
+  T p, dp = 2*M_PI/(N-1);
+  complex<T> z, w;
+  for(int i = 0; i < N; i++) {
+    p = -M_PI + i * dp;
+    z = std::polar(r, p);
+    w = f(z);
+    x[i] = w.real();
+    y[i] = w.imag();
+  }
+  GNUPlotter::plot(N, &x[0], &y[0]);
+}
+
+// maybe draw a 3D curve and continuously increase r (input) and z (output coordinate)
+template<class T>
+void plotComplexCurve3D(const function<complex<T>(complex<T>)>& f,
+  int N, T rMin, T rMax, T pMin, T pMax)
+{
+  //int N = Nr * Np;  // number of datapoints
+
+  std::vector<T> x(N), y(N), z(N);
+  T dp = (pMax-pMin)/(N-1);
+  T dr = (rMax-rMin)/(N-1);
+  complex<T> v, w;  // w = f(v) where v,w are complex numbers
+  T r, p;
+  for(int i = 0; i < N; i++) {
+    p = pMin + i * dp;
+    r = rMin + i * dr;
+    v = std::polar(r, p);  // input to function
+    w = f(v);              // output of function
+    x[i] = w.real();
+    y[i] = w.imag();
+    z[i] = r;
+  }
+
+  //GNUPlotter::plot(N, &x[0], &y[0]);
+
+  GNUPlotter plt;
+  plt.addDataArrays(N, &x[0], &y[0], &z[0]);
+  plt.plot3D();
+
+  // todo: factor out a function that takes arrays for r and p instead of generating the grid on 
+  // the fly inside the loop - allows custom grids
+
+  // maybe indicate the phase of the input by the color of the line segment
+}
+
+// other idea: make a regular plot of the "landscape" of the absolute value but use hue as 
+// indicator for the phase (brightness should be used by the renderer for lighting)
+// ...maybe this is too sophisticated for gnuplot? maybe try in python with matplotlib or manim?
+
+// see also here:
+// https://www.johndcook.com/blog/2017/11/09/visualizing-complex-functions/
+// https://www.amazon.de/Visual-Complex-Functions-Introduction-Portraits/dp/3034801793
+// https://www.codeproject.com/Articles/80641/Visualizing-Complex-Functions
+// https://www.wolfram.com/language/12/complex-visualization/
+// https://www.pacifict.com/ComplexFunctions.html
+
+// move to GNUPlotter:
+template<class T>
+void plotComplexFunctionReIm(const function<complex<T>(complex<T>)>& f,
+  int Nr, T rMin, T rMax, int Ni, T iMin, T iMax)
+{
+  std::function<T(T, T)> fr, fi;
+  fr = [&] (T re, T im) { return real(f(complex<T>(re, im))); };
+  fi = [&] (T re, T im) { return imag(f(complex<T>(re, im))); };
+  GNUPlotter plt;
+  plt.addDataBivariateFunction(Nr, rMin, rMax, Ni, iMin, iMax, fr);
+  plt.addDataBivariateFunction(Nr, rMin, rMax, Ni, iMin, iMax, fi);
+  plt.plot3D();
+
+  // maybe plot level lines
+}
 
 
 //-------------------------------------------------------------------------------------------------
@@ -126,7 +209,7 @@ void surfaceExperiment()
   GNUPlotter::plotSurface(fx, fy, fz, Nu, uMin, uMax, Nv, vMin, vMax);
 }
 
-void complexExperiment()
+void complexExperiment() // rename
 {
   // Set up range and umber of sampling points for real and imaginary part:
   double rMin = -3; double rMax = +3; int Nr = 31;
@@ -167,6 +250,28 @@ void complexExperiment()
   // todo: try other ways to visualize a complex function - for example by showing, how grid-lines
   // are mapped (real, imag, radial, angular)
   // how about drawing curves in the z-plane (domain) and their image curves in the w-plane (range)
+}
+
+void complexCurve()
+{
+  function<complex<double>(complex<double>)> f;
+  f = [] (complex<double> z) { return z*z; };
+  //f = [] (complex<double> z) { return z*z*z; };
+  //f = [] (complex<double> z) { return 1./z; };
+  //f = [] (complex<double> z) { return exp(z); };
+
+
+  //plotComplexPolarCurve(f, 2.5, 100);
+  plotComplexCurve3D(f, 1000, 0.0, 3.0, 0.0, 4*M_PI);
+}
+
+void complexReIm()
+{
+  function<complex<double>(complex<double>)> f;
+  f = [] (complex<double> z) { return z*z + 1.; };
+  int N = 21;    // number of samples
+  double r = 2;  // range from -r to +r (for both re and im)
+  plotComplexFunctionReIm(f, N, -r, r, N, -r, r);
 }
 
 

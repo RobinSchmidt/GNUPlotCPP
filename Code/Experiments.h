@@ -11,6 +11,8 @@ code here may be messy - it's not supposed to be looked at by users of GNUPlotCP
 void curveExperiment2D();
 void surfaceExperiment();
 void complexExperiment();
+void complexCurve();
+void complexReIm();
 void vectorFieldExperiment();
 void zedSquaredVectorField();
 

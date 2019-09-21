@@ -59,11 +59,13 @@ int main(int argc, char** argv)
   //curveExperiment2D();
   //surfaceExperiment();
   //complexExperiment();
+  //complexCurve();
+  complexReIm();
   //vectorFieldExperiment();
   //zedSquaredVectorField();
 
   //testHistogram();
-  testMoebiusStrip();
+  //testMoebiusStrip();
 
 
   getchar();
