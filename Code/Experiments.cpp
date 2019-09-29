@@ -753,6 +753,101 @@ void testMoebiusStrip()
 }
 // todo: try to make a Moebius trefoil knot
 
+template<class T>
+void allocateMatrix(T**& A, int N, int M)
+{
+  A = new T*[N];
+  for(int i = 0; i < N; i++)
+    A[i] = new T[M];
+}
+
+template<class T>
+void freeMatrix(T**& A, int N, int M)
+{
+  for(int i = 0; i < N; i++)
+    delete[] A[i];
+  delete[] A;
+}
+
+
+void testSchroedinger()
+{
+  static const int numSpaceSamples = 30;
+  static const int numTimeSamples  = 30;
+  static const int timeOversample  = 100;
+  static const int spaceOversample = 100;
+
+  double xMax = 1.0;
+  double tMax = 1.0;
+
+  // arrays for plotting:
+  double *t = new double[numTimeSamples];   // time axis for plot
+  double *x = new double[numSpaceSamples];
+  double **zr; allocateMatrix(zr, numTimeSamples, numSpaceSamples); // real part
+  double **zi; allocateMatrix(zi, numTimeSamples, numSpaceSamples);
+
+  // arrays for the (oversampled) computations:
+  int Nt = numTimeSamples * timeOversample;
+  int Nx = numSpaceSamples * spaceOversample;
+  //double **Z; allocateMatrix(Z, Nt, Nx);  // function of space and time
+
+
+  typedef std::complex<double> Complex;
+  Complex** Psi;  allocateMatrix( Psi, Nt, Nx);  // wave-function (of space and time)
+  Complex** dPsi; allocateMatrix(dPsi, Nt, Nx);  // derivative of wave function
+
+  // initialize wave-function - give it an initial shape in space:
+  int ti, xi;  // temporal and spatial loop indices
+  for(int xi = 0; xi < Nt; xi++)
+    Psi[0][xi] = 0.0;  // 1st index is time index, 2nd is space index
+  Psi[0][Nt/2] = 1;   // a spike in the middle - maybe do something more interesting later
+
+  // solve Schroedinger equation numerically by forward Euler method in time and central 
+  // differences in space:
+  double dt = tMax / Nt;
+  double dx = xMax / Nx;
+
+  Complex i(0,1);  // imaginary unit
+  double hBar = 1;
+  double m    = 1;  // mass
+  Complex k = (i*hBar)/(2*m);  // scaler for spatial derivative to get time deriavtive
+
+  for(ti = 1; ti < Nt; ti++)  // ti: time index
+  {
+    // compute second spatial derivative of wave function Psi by central differences:
+
+    // todo: treat Psi[ti][0]
+    for(xi = 1; xi < Nx-1; xi++)
+    {
+      Complex PsiAv  = 0.5 * (Psi[ti][xi-1] + Psi[ti][xi+1]); // average of neighbours
+      Complex PsiCrv = Psi[ti][xi] - PsiAv; // 2nd derivative as difference from neighbour average
+      // ..nnnah - look up a proper formula for 2nd derivative via central difference
+
+      // copute time derivative and update wave function:
+      dPsi[ti][xi] = k * PsiCrv;
+      Psi[ti][xi]  = Psi[ti-1][xi] + dPsi[ti][xi];
+    }
+    // todo: treat Psi[ti][Nx-1]
+    // ...maybe we should treat the ends cyclically?
+
+  }
+
+  // from the oversampled computation result, obtain the result for plotting by downsampling:
+  //...
+
+
+  // plot:
+
+
+  // clean up:
+  delete[] t;
+  delete[] x;
+  freeMatrix(zr, numTimeSamples, numSpaceSamples);
+  freeMatrix(zi, numTimeSamples, numSpaceSamples);
+  freeMatrix( Psi, Nt, Nx);
+  freeMatrix(dPsi, Nt, Nx);
+}
+
 /*
 
 Ideas:

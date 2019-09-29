@@ -25,6 +25,8 @@ void demoComplexDipole();
 void testHistogram();
 void testMoebiusStrip();
 
+void testSchroedinger();
+
 
 
 
