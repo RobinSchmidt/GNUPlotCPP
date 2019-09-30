@@ -796,16 +796,19 @@ void testSchroedinger()
   // doesn't work yet - the numerical solver explodes - maybe the equation is wrong or the solver
   // messes up - maybe try an example with the regular wave equation to figure out a working solver
   // scheme, then apply it to the schroedinger equation
+  // i think, it's the numreical solver - there are growing osillations at both ends - i think, 
+  // it's unstable ...hmm - it seems to depend on the seetings of mass, spatial and temporal 
+  // oversampling, etc - the current settings seem to work.
 
   static const int numSpaceSamples = 40;
   static const int numTimeSamples  = 40;
-  static const int timeOversample  = 10;  // time step should be smaleer than space step
-  static const int spaceOversample = 4;
+  static const int timeOversample  = 100;  // time step should be smaleer than space step
+  static const int spaceOversample = 1;
 
   double xMax = 1.0;
   double tMax = 1.0;
   double hBar = 1;
-  double m    = 1;  // mass
+  double m    = 20;  // mass
 
 
   // allocate arrays for plotting:
@@ -815,6 +818,7 @@ void testSchroedinger()
   GNUPlotter::rangeLinear(x, numSpaceSamples, 0.0, 1.0);
   double **zr; allocateMatrix(zr, numTimeSamples, numSpaceSamples); // real part
   double **zi; allocateMatrix(zi, numTimeSamples, numSpaceSamples);
+  double **za; allocateMatrix(za, numTimeSamples, numSpaceSamples);
 
   // arrays for the (oversampled) computations:
   int Nt = numTimeSamples * timeOversample;
@@ -832,7 +836,7 @@ void testSchroedinger()
 
   // a gaussian bump in the center:
   double mu = 0.5;
-  double sigma = 0.03;
+  double sigma = 0.1;
   for(int xi = 0; xi < Nx; xi++)
   {
     double x = double(xi) / (Nx-1);
@@ -855,31 +859,49 @@ void testSchroedinger()
     for(xi = 0; xi < Nx; xi++)
       Psi_xx[xi] = (Psi[ti-1][wrap(xi-1,Nx)] + Psi[ti-1][wrap(xi+1,Nx)] - 2.*Psi[ti-1][xi])/(dx*dx);
 
-
-    //plotComplexArrayReIm(Psi[0], Nx);
+    //// no wrap
+    //for(xi = 1; xi < Nx-1; xi++)
+    //  Psi_xx[xi] = (Psi[ti-1][wrap(xi-1,Nx)] + Psi[ti-1][wrap(xi+1,Nx)] - 2.*Psi[ti-1][xi])/(dx*dx);
 
     // compute time derivative and update wave function:
     for(xi = 0; xi < Nx; xi++) {
-      dPsi[ti][xi] = dt * k*Psi_xx[xi];
-      Psi[ti][xi]  = Psi[ti-1][xi] + dPsi[ti][xi];
+      dPsi[ti][xi] = k*Psi_xx[xi];  // Eq 9.4 in Susskind  ..maybe we should put it in sloe ti-1
+      Psi[ti][xi]  = Psi[ti-1][xi] + 1 * dt * dPsi[ti][xi];
+    }
+    //Psi[ti][0] = Psi[ti][1]; // test
+
+
+
+    if(ti % (timeOversample/1) == 0)
+    {
+      //plotComplexArrayReIm(&Psi_xx[0], Nx);  // 2nd spatial derivative
+      //plotComplexArrayReIm(dPsi[ti],   Nx);  // update
+      //plotComplexArrayReIm(Psi[ti],    Nx);
     }
   }
+
+  //plotComplexArrayReIm(Psi[Nt-1], Nx);
 
   // from the oversampled computation result, obtain the result for plotting by downsampling:
   for(ti = 0; ti < numTimeSamples; ti++) {
     for(xi = 0; xi < numSpaceSamples; xi++) {
       zr[ti][xi] = Psi[ti*timeOversample][xi*spaceOversample].real();
-      zi[ti][xi] = Psi[ti*timeOversample][xi*spaceOversample].imag(); }}
+      zi[ti][xi] = Psi[ti*timeOversample][xi*spaceOversample].imag(); 
+      za[ti][xi] = abs(Psi[ti*timeOversample][xi*spaceOversample]);}}
 
   // plot:
   GNUPlotter plt;
+  plt.addCommand("set view 50,260"); // todo: add member function setView to GNUPlotter
   plt.plotSurface(numTimeSamples, numSpaceSamples, t, x, zr);
+  //plt.plotSurface(numTimeSamples, numSpaceSamples, t, x, zi);
+  //plt.plotSurface(numTimeSamples, numSpaceSamples, t, x, za);
 
   // clean up:
   delete[] t;
   delete[] x;
   freeMatrix(zr, numTimeSamples, numSpaceSamples);
   freeMatrix(zi, numTimeSamples, numSpaceSamples);
+  freeMatrix(za, numTimeSamples, numSpaceSamples);
   freeMatrix( Psi, Nt, Nx);
   freeMatrix(dPsi, Nt, Nx);
 }
