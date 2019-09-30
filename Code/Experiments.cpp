@@ -800,15 +800,15 @@ void testSchroedinger()
   // it's unstable ...hmm - it seems to depend on the seetings of mass, spatial and temporal 
   // oversampling, etc - the current settings seem to work.
 
-  static const int numSpaceSamples = 40;
-  static const int numTimeSamples  = 40;
+  static const int numSpaceSamples = 81;
+  static const int numTimeSamples  = 81;
   static const int timeOversample  = 100;  // time step should be smaleer than space step
   static const int spaceOversample = 1;
 
   double xMax = 1.0;
   double tMax = 1.0;
   double hBar = 1;
-  double m    = 20;  // mass
+  double m    = 70;  // mass
 
 
   // allocate arrays for plotting:
@@ -836,7 +836,7 @@ void testSchroedinger()
 
   // a gaussian bump in the center:
   double mu = 0.5;
-  double sigma = 0.1;
+  double sigma = 0.05;
   for(int xi = 0; xi < Nx; xi++)
   {
     double x = double(xi) / (Nx-1);
@@ -859,9 +859,9 @@ void testSchroedinger()
     for(xi = 0; xi < Nx; xi++)
       Psi_xx[xi] = (Psi[ti-1][wrap(xi-1,Nx)] + Psi[ti-1][wrap(xi+1,Nx)] - 2.*Psi[ti-1][xi])/(dx*dx);
 
-    //// no wrap
-    //for(xi = 1; xi < Nx-1; xi++)
-    //  Psi_xx[xi] = (Psi[ti-1][wrap(xi-1,Nx)] + Psi[ti-1][wrap(xi+1,Nx)] - 2.*Psi[ti-1][xi])/(dx*dx);
+    // no wrap
+    for(xi = 1; xi < Nx-1; xi++)
+      Psi_xx[xi] = (Psi[ti-1][wrap(xi-1,Nx)] + Psi[ti-1][wrap(xi+1,Nx)] - 2.*Psi[ti-1][xi])/(dx*dx);
 
     // compute time derivative and update wave function:
     for(xi = 0; xi < Nx; xi++) {
@@ -891,10 +891,24 @@ void testSchroedinger()
 
   // plot:
   GNUPlotter plt;
-  plt.addCommand("set view 50,260"); // todo: add member function setView to GNUPlotter
-  plt.plotSurface(numTimeSamples, numSpaceSamples, t, x, zr);
+  //plt.addCommand("set view 50,260"); // todo: add member function setView to GNUPlotter
+  //plt.plotSurface(numTimeSamples, numSpaceSamples, t, x, zr);
   //plt.plotSurface(numTimeSamples, numSpaceSamples, t, x, zi);
   //plt.plotSurface(numTimeSamples, numSpaceSamples, t, x, za);
+
+
+  plt.addDataMatrix(numTimeSamples, numSpaceSamples, t, x, zr);
+  plt.setPixelSize(450, 400);
+  plt.addCommand("set size square");                      // set aspect ratio to 1:1
+  plt.addGraph("i 0 nonuniform matrix w image notitle");   
+  //plt.addCommand("set palette color");                  // this is used by default
+  //plt.addCommand("set palette color negative");         // reversed colors
+  plt.addCommand("set palette gray");                   // maximum is white
+  //plt.addCommand("set palette gray negative");          // maximum is black
+  //plt.addCommand("set palette rgbformulae 30,31,32");     // colors printable as grayscale
+
+  plt.plot();
+
 
   // clean up:
   delete[] t;
