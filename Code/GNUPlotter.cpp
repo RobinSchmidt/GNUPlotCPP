@@ -189,6 +189,9 @@ void GNUPlotter::plotSurface(int Nx, int Ny, T *x, T *y, T **z)
   addDataMatrix(Nx, Ny, x, y, z);
   plot3D();
 }
+template void GNUPlotter::plotSurface(int Nx, int Ny, int *x, int *y, int **z);
+template void GNUPlotter::plotSurface(int Nx, int Ny, float *x, float *y, float **z);
+template void GNUPlotter::plotSurface(int Nx, int Ny, double *x, double *y, double **z);
 
 template <class T>
 void GNUPlotter::plotBivariateFunction(int Nx, int Ny, T *x, T *y, T (*f)(T, T))
