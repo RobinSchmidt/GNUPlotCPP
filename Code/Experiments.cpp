@@ -164,6 +164,20 @@ void plotComplexFunctionReIm(const function<complex<T>(complex<T>)>& f,
   // maybe plot level lines
 }
 
+template<class T>
+void plotComplexArrayReIm(complex<T>* z, int N)
+{
+  std::vector<T> re(N), im(N);
+  for(int i = 0; i < N; i++) {
+    re[i] = z[i].real();
+    im[i] = z[i].imag();
+  }
+  GNUPlotter plt;
+  plt.addDataArrays(N, &re[0]);
+  plt.addDataArrays(N, &im[0]);
+  plt.plot();
+}
+
 
 //-------------------------------------------------------------------------------------------------
 // actual experiments:
@@ -769,75 +783,97 @@ void freeMatrix(T**& A, int N, int M)
   delete[] A;
 }
 
+// for a positive modulus m, this returns the mathematically proper x mod m
+int wrap(int x, int m)
+{
+  while(x <  0) x += m;
+  while(x >= m) x -= m;
+  return x;
+}
 
 void testSchroedinger()
 {
-  static const int numSpaceSamples = 30;
-  static const int numTimeSamples  = 30;
-  static const int timeOversample  = 100;
-  static const int spaceOversample = 100;
+  // doesn't work yet - the numerical solver explodes - maybe the equation is wrong or the solver
+  // messes up - maybe try an example with the regular wave equation to figure out a working solver
+  // scheme, then apply it to the schroedinger equation
+
+  static const int numSpaceSamples = 40;
+  static const int numTimeSamples  = 40;
+  static const int timeOversample  = 10;  // time step should be smaleer than space step
+  static const int spaceOversample = 4;
 
   double xMax = 1.0;
   double tMax = 1.0;
+  double hBar = 1;
+  double m    = 1;  // mass
 
-  // arrays for plotting:
+
+  // allocate arrays for plotting:
   double *t = new double[numTimeSamples];   // time axis for plot
   double *x = new double[numSpaceSamples];
+  GNUPlotter::rangeLinear(t, numTimeSamples,  0.0, 1.0);
+  GNUPlotter::rangeLinear(x, numSpaceSamples, 0.0, 1.0);
   double **zr; allocateMatrix(zr, numTimeSamples, numSpaceSamples); // real part
   double **zi; allocateMatrix(zi, numTimeSamples, numSpaceSamples);
 
   // arrays for the (oversampled) computations:
   int Nt = numTimeSamples * timeOversample;
   int Nx = numSpaceSamples * spaceOversample;
-  //double **Z; allocateMatrix(Z, Nt, Nx);  // function of space and time
-
-
   typedef std::complex<double> Complex;
   Complex** Psi;  allocateMatrix( Psi, Nt, Nx);  // wave-function (of space and time)
   Complex** dPsi; allocateMatrix(dPsi, Nt, Nx);  // derivative of wave function
+  std::vector<Complex> Psi_xx(Nx);               // for 2nd spatial derivative per iteration
+
 
   // initialize wave-function - give it an initial shape in space:
   int ti, xi;  // temporal and spatial loop indices
   for(int xi = 0; xi < Nt; xi++)
     Psi[0][xi] = 0.0;  // 1st index is time index, 2nd is space index
-  Psi[0][Nt/2] = 1;   // a spike in the middle - maybe do something more interesting later
+
+  // a gaussian bump in the center:
+  double mu = 0.5;
+  double sigma = 0.03;
+  for(int xi = 0; xi < Nx; xi++)
+  {
+    double x = double(xi) / (Nx-1);
+    double gauss = exp(-(x-mu)*(x-mu) / (sigma*sigma));
+    Psi[0][xi] = gauss;
+  }
+
+  //plotComplexArrayReIm(Psi[0], Nx);
 
   // solve Schroedinger equation numerically by forward Euler method in time and central 
   // differences in space:
-  double dt = tMax / Nt;
-  double dx = xMax / Nx;
-
-  Complex i(0,1);  // imaginary unit
-  double hBar = 1;
-  double m    = 1;  // mass
+  Complex i(0,1);              // imaginary unit
   Complex k = (i*hBar)/(2*m);  // scaler for spatial derivative to get time deriavtive
-
-  for(ti = 1; ti < Nt; ti++)  // ti: time index
+  double dt = tMax / (Nt-1);   // temporaly sampling interval
+  double dx = xMax / (Nx-1);   // spatial sampling interval
+  for(ti = 1; ti < Nt; ti++)   // ti: time index
   {
-    // compute second spatial derivative of wave function Psi by central differences:
+    // compute second spatial derivative of wave function Psi by central differences (treating the
+    // ends cyclically):
+    for(xi = 0; xi < Nx; xi++)
+      Psi_xx[xi] = (Psi[ti-1][wrap(xi-1,Nx)] + Psi[ti-1][wrap(xi+1,Nx)] - 2.*Psi[ti-1][xi])/(dx*dx);
 
-    // todo: treat Psi[ti][0]
-    for(xi = 1; xi < Nx-1; xi++)
-    {
-      Complex PsiAv  = 0.5 * (Psi[ti][xi-1] + Psi[ti][xi+1]); // average of neighbours
-      Complex PsiCrv = Psi[ti][xi] - PsiAv; // 2nd derivative as difference from neighbour average
-      // ..nnnah - look up a proper formula for 2nd derivative via central difference
 
-      // copute time derivative and update wave function:
-      dPsi[ti][xi] = k * PsiCrv;
+    //plotComplexArrayReIm(Psi[0], Nx);
+
+    // compute time derivative and update wave function:
+    for(xi = 0; xi < Nx; xi++) {
+      dPsi[ti][xi] = dt * k*Psi_xx[xi];
       Psi[ti][xi]  = Psi[ti-1][xi] + dPsi[ti][xi];
     }
-    // todo: treat Psi[ti][Nx-1]
-    // ...maybe we should treat the ends cyclically?
-
   }
 
   // from the oversampled computation result, obtain the result for plotting by downsampling:
-  //...
-
+  for(ti = 0; ti < numTimeSamples; ti++) {
+    for(xi = 0; xi < numSpaceSamples; xi++) {
+      zr[ti][xi] = Psi[ti*timeOversample][xi*spaceOversample].real();
+      zi[ti][xi] = Psi[ti*timeOversample][xi*spaceOversample].imag(); }}
 
   // plot:
-
+  GNUPlotter plt;
+  plt.plotSurface(numTimeSamples, numSpaceSamples, t, x, zr);
 
   // clean up:
   delete[] t;

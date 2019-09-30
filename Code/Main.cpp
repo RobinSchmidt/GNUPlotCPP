@@ -60,13 +60,13 @@ int main(int argc, char** argv)
   //surfaceExperiment();
   //complexExperiment();
   //complexCurve();
-  complexReIm();
+  //complexReIm();
   //vectorFieldExperiment();
   //zedSquaredVectorField();
 
   //testHistogram();
   //testMoebiusStrip();
-
+  testSchroedinger();
 
   getchar();
   return(EXIT_SUCCESS);
