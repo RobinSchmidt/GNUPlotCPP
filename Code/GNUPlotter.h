@@ -315,9 +315,9 @@ public:
   example, the 1st array could contain the x-axis values and subsequent arrays could be values of
   a bunch of functions of x, like: c0=x, c1=f(x), c2=g(x), etc. */
   template <class T>
-  void addDataArrays(int N, T *c0, T *c1 = nullptr, T *c2 = nullptr, T *c3 = nullptr, 
-    T *c4 = nullptr, T *c5 = nullptr, T *c6 = nullptr, T *c7 = nullptr, T *c8 = nullptr, 
-    T *c9 = nullptr);
+  void addDataArrays(int N, const T *c0, const T *c1 = nullptr, const T *c2 = nullptr, 
+    const T *c3 = nullptr, const T *c4 = nullptr, const T *c5 = nullptr, const T *c6 = nullptr, 
+    const T *c7 = nullptr, const T *c8 = nullptr, const T *c9 = nullptr);
 
   /** Adds data from univariate functions. */
   template <class T>

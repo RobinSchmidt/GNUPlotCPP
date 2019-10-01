@@ -473,11 +473,11 @@ template void GNUPlotter::addDataArrays(int N, float *x, int M, float **y);
 template void GNUPlotter::addDataArrays(int N, double *x, int M, double **y);
 
 template <class T>
-void GNUPlotter::addDataArrays(int N, T *c0, T *c1, T *c2, T *c3, T *c4, T *c5, T *c6, T *c7,
-  T *c8, T *c9)
+void GNUPlotter::addDataArrays(int N, const T *c0, const T *c1, const T *c2, const T *c3, 
+  const T *c4, const T *c5, const T *c6, const T *c7, const T *c8, const T *c9)
 {
-  vector<T*> v = collectLeadingNonNullArguments(c0, c1, c2, c3, c4, c5, c6, c7, c8, c9);
-  T* a[10];
+  const vector<const T*> v = collectLeadingNonNullArguments(c0, c1, c2, c3, c4, c5, c6, c7, c8, c9);
+  const T* a[10];
   for(size_t i = 0; i < v.size(); i++)
     a[i] = v[i];
   addData(N, (int) v.size(), a);
