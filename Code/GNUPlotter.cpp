@@ -1013,8 +1013,8 @@ string GNUPlotter::nullValue(string)
 }
 
 template<class T>
-vector<T> GNUPlotter::collectLeadingNonNullArguments(T a0, T a1, T a2, T a3, T a4, T a5, T a6,
-  T a7, T a8, T a9)
+vector<T> GNUPlotter::collectLeadingNonNullArguments(const T a0, const T a1, const T a2, 
+  const T a3, const T a4, const T a5, const T a6, const T a7, const T a8, const T a9)
 {
   T null = nullValue(a0);
   vector<T> v;
@@ -1040,8 +1040,8 @@ void GNUPlotter::append(vector<T>& v, const vector<T>& appendix)
 }
 
 template<class T>
-vector<vector<T>> GNUPlotter::wrapIntoVectors(int N, T *a0, T *a1, T *a2, T *a3, T *a4, T *a5,
-  T *a6, T *a7, T *a8, T *a9)
+vector<vector<T>> GNUPlotter::wrapIntoVectors(int N, const T *a0, const T *a1, const T *a2, 
+  const T *a3, const T *a4, const T *a5, const T *a6, const T *a7, const T *a8, const T *a9)
 {
   vector<T*> pointers = collectLeadingNonNullArguments(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
   vector<vector<T>> v;

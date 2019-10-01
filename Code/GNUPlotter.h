@@ -515,15 +515,15 @@ public:
   static std::string nullValue(std::string);
 
   template<class T>
-  static std::vector<T> collectLeadingNonNullArguments(T a0, T a1, T a2, T a3, T a4, T a5, T a6, 
-    T a7, T a8, T a9);
+  static std::vector<T> collectLeadingNonNullArguments(const T a0, const T a1, const T a2, 
+    const T a3, const T a4, const T a5, const T a6, const T a7, const T a8, const T a9);
 
   template<class T>
   static void append(std::vector<T>& v, const std::vector<T>& appendix);
 
   template<class T>
-  static std::vector<std::vector<T>> wrapIntoVectors(int N, T *a0, T *a1, T *a2, T *a3, T *a4, 
-    T *a5, T *a6, T *a7, T *a8, T *a9);
+  static std::vector<std::vector<T>> wrapIntoVectors(int N, const T *a0, const T *a1, const T *a2, 
+    const T *a3, const T *a4, const T *a5, const T *a6, const T *a7, const T *a8, const T *a9);
 
   static void addToStringVector(std::vector<std::string>& v, CSR s0, CSR s1, CSR s2, CSR s3, CSR s4, 
     CSR s5, CSR s6, CSR s7, CSR s8, CSR s9);
