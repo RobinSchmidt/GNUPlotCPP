@@ -515,7 +515,7 @@ public:
   static std::string nullValue(std::string);
 
   template<class T>
-  static std::vector<T> collectLeadingNonNullArguments(const T a0, const T a1, const T a2, 
+  static const std::vector<T> collectLeadingNonNullArguments(const T a0, const T a1, const T a2, 
     const T a3, const T a4, const T a5, const T a6, const T a7, const T a8, const T a9);
 
   template<class T>
