@@ -58,8 +58,9 @@ public:
   /** Convenience function to allow plotting without having client code instantiate a plotter 
   object, set it up, etc. */
   template <class T>
-  inline static void plot(int N, T *x, T *y1, T *y2 = nullptr, T *y3 = nullptr, T *y4 = nullptr,
-    T *y5 = nullptr, T *y6 = nullptr, T *y7 = nullptr, T *y8 = nullptr, T *y9 = nullptr)
+  inline static void plot(int N, const T *x, const T *y1, const T *y2 = nullptr, 
+    const T *y3 = nullptr, const T *y4 = nullptr, const T *y5 = nullptr, const T *y6 = nullptr, 
+    const T *y7 = nullptr, const T *y8 = nullptr, const T *y9 = nullptr)
   {
     GNUPlotter plt;
     plt.addDataArrays(N, x, y1, y2, y3, y4, y5, y6, y7, y8, y9);
@@ -292,6 +293,7 @@ public:
   line. */
   template <class T>
   void addData(int numBlocks, int *blockLengths, int numColumns, T **data);
+  // try to make data pointer const
 
   /** Adds the dataset given in the matrix "data" to our datafile. The 1st index is the column, the
   2nd index is the row in our datafile. This means, each row of the datafile will represent one 
