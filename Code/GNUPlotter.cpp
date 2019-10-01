@@ -129,16 +129,16 @@ void GNUPlotter::plot3D()
 }
 
 template <class T>
-void GNUPlotter::plotFunctionTables(int N, T *x, T *y1, T *y2, T *y3, T *y4, T *y5, T *y6, T *y7,
-  T *y8, T *y9)
+void GNUPlotter::plotFunctionTables(int N, const T *x, const T *y1, const T *y2, const T *y3, 
+  const T *y4, const T *y5, const T *y6, const T *y7, const T *y8, const T *y9)
 {
   addDataArrays(N, x, y1, y2, y3, y4, y5, y6, y7, y8, y9);
   plot();
 }
 
 template <class T>
-void GNUPlotter::plotArrays(int N, T *y1, T *y2, T *y3, T *y4, T *y5, T *y6, T *y7, T *y8,
-  T *y9)
+void GNUPlotter::plotArrays(int N, const T *y1, const T *y2, const T *y3, const T *y4, 
+  const T *y5, const T *y6, const T *y7, const T *y8, const T *y9)
 {
   T *x = new T[N];
   rangeLinear(x, N, T(0), T(N-1));
@@ -146,12 +146,14 @@ void GNUPlotter::plotArrays(int N, T *y1, T *y2, T *y3, T *y4, T *y5, T *y6, T *
   delete[] x;
 }
 // explicit instantiations for double, float and int:
-template void GNUPlotter::plotArrays(int N, double *y1, double *y2, double *y3, double *y4,
-  double *y5, double *y6, double *y7, double *y8, double *y9);
-template void GNUPlotter::plotArrays(int N, float *y1, float *y2, float *y3, float *y4, float *y5,
-  float *y6, float *y7, float *y8, float *y9);
-template void GNUPlotter::plotArrays(int N, int *y1, int *y2, int *y3, int *y4, int *y5,
-  int *y6, int *y7, int *y8, int *y9);
+template void GNUPlotter::plotArrays(int N, const double *y1, const double *y2, const double *y3, 
+  const double *y4, const double *y5, const double *y6, const double *y7, const double *y8, 
+  const double *y9);
+template void GNUPlotter::plotArrays(int N, const float *y1, const float *y2, const float *y3, 
+  const float *y4, const float *y5, const float *y6, const float *y7, const float *y8, 
+  const float *y9);
+template void GNUPlotter::plotArrays(int N, const int *y1, const int *y2, const int *y3, 
+  const int *y4, const int *y5, const int *y6, const int *y7, const int *y8, const int *y9);
 
 template <class T>
 void GNUPlotter::plotFunctions(int N, T *x, T (*f0)(T), T (*f1)(T), T (*f2)(T), T (*f3)(T),

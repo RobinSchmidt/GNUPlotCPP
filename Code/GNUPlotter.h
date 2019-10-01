@@ -122,13 +122,15 @@ public:
 
   /** Plots the function values in the arrays y1, y2, ... against an abscissa given by the array x. */
   template <class T>
-  void plotFunctionTables(int N, T *x, T *y1, T *y2 = nullptr, T *y3 = nullptr, T *y4 = nullptr, 
-    T *y5 = nullptr, T *y6 = nullptr, T *y7 = nullptr, T *y8 = nullptr, T *y9 = nullptr);
+  void plotFunctionTables(int N, const T *x, const T *y1, const T *y2 = nullptr, 
+    const T *y3 = nullptr, const T *y4 = nullptr, const T *y5 = nullptr, const T *y6 = nullptr, 
+    const T *y7 = nullptr, const T *y8 = nullptr, const T *y9 = nullptr);
 
   /** Plots the values in the arrays y1, y2, ... against an abscissa given by the array index. */
   template <class T>
-  void plotArrays(int N, T *y1, T *y2 = nullptr, T *y3 = nullptr, T *y4 = nullptr, T *y5 = nullptr,
-    T *y6 = nullptr, T *y7 = nullptr, T *y8 = nullptr, T *y9 = nullptr);
+  void plotArrays(int N, const T *y1, const T *y2 = nullptr, const T *y3 = nullptr, 
+    const T *y4 = nullptr, const T *y5 = nullptr, const T *y6 = nullptr, const T *y7 = nullptr, 
+    const T *y8 = nullptr, const T *y9 = nullptr);
 
   /** Plots univariate functions. For example, assume you have an array of 100 x-values and you 
   want to plot the sine, cosine and tangent values of these x-values, using the x-array as 
