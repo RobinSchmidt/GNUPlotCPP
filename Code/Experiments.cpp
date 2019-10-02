@@ -799,17 +799,40 @@ void testSchroedinger()
   // i think, it's the numreical solver - there are growing osillations at both ends - i think, 
   // it's unstable ...hmm - it seems to depend on the seetings of mass, spatial and temporal 
   // oversampling, etc - the current settings seem to work.
+  // maybe implement this stuff in a class rsQuantumParticle or rsQuantumOscillator in the 
+  // QuantumSystems.h/cpp file in the rs-met codebase, functions:
+  // setInitialWaveFunction, setPotentialFunction, setMass, setSpringConstant, 
+  // setSpatialOversampling, setTemporalOversampling, setSpatialRange, 
+  // setDefaultInitialWaveFunction(type, parameter), etc.
+  
+  // Observations:
+  // -a free particle spreads out linearly in time - this is because there's uncertainty in 
+  //  position *and* momentum (i.e. velocity). if at t = 0 it is known that the particle's position 
+  //  x is in 2..3 and velocity is in 9..11, then at t = 1 the position is in 2+9..3+11 = 11..14 and 
+  //  this new interval is wider - the initial width is 3-2 = 1 and the final with is 
+  //  initial_width + 1*momemtum_width = (3-2) + 1*(11-9) = 1+2 = 3
+
+  // https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation
+  // https://en.wikipedia.org/wiki/Wave_packet
+  // https://en.wikipedia.org/wiki/Free_particle
+  // https://en.wikipedia.org/wiki/Particle_in_a_box - approximate the infinite potential well with a V(x) = x^(2*n) for large n
+  // https://en.wikipedia.org/wiki/Particle_in_a_ring
+  // https://en.wikipedia.org/wiki/Quantum_harmonic_oscillator
 
   static const int numSpaceSamples = 81;
   static const int numTimeSamples  = 81;
-  static const int timeOversample  = 100;  // time step should be smaleer than space step
+  static const int timeOversample  = 100;  // time step should be smaller than space step
   static const int spaceOversample = 1;
 
-  double xMax = 1.0;
+  double xMax = 1.0;   // also let user speficy xMin
   double tMax = 1.0;
   double hBar = 1;
   double m    = 100;  // mass
+  double k    = 300;  // spring constant - larger values hold the thing together more strongly, 
+                      // 0 gives a free particle
 
+
+  double w = sqrt(k/m); // angular frequency of oscillator
 
   // allocate arrays for plotting:
   double *t = new double[numTimeSamples];   // time axis for plot
@@ -824,9 +847,21 @@ void testSchroedinger()
   int Nt = numTimeSamples * timeOversample;
   int Nx = numSpaceSamples * spaceOversample;
   typedef std::complex<double> Complex;
-  Complex** Psi;  allocateMatrix( Psi, Nt, Nx);  // wave-function (of space and time)
-  Complex** dPsi; allocateMatrix(dPsi, Nt, Nx);  // derivative of wave function
-  std::vector<Complex> Psi_xx(Nx);               // for 2nd spatial derivative per iteration
+  Complex** Psi;  allocateMatrix( Psi, Nt, Nx);    // wave-function (of space and time)
+  Complex** Psi_t; allocateMatrix(Psi_t, Nt, Nx);  // time derivative of wave function
+  std::vector<Complex> Psi_xx(Nx);                 // 2nd spatial derivative of Psi per iteration
+
+
+  // define the potential function:
+  std::function<Complex (double x)> V;
+  //V = [&](double x) { return 0.0; };             // no potential -> free particle
+
+
+  V = [&](double x) { 
+    double xs = x-0.5; // shifted x - get rid - we just use it here becs our x-range is centered at 0.5
+    return 0.5*m*w*w * xs*xs; 
+  }; // quadratic potential -> harmonic oscillator
+  // oh - but our our x-range is cneterd at 05 - shourd be at 0 -> define a range for x (min/max)
 
 
   // initialize wave-function - give it an initial shape in space of a gaussian bump in the center:
@@ -837,10 +872,14 @@ void testSchroedinger()
   for(int xi = 0; xi < Nx; xi++) {
     double x = double(xi) / (Nx-1);
     double gauss = exp(-(x-mu)*(x-mu) / (sigma*sigma));
-    Psi[0][xi] = gauss;
+    Psi[0][xi] = i * gauss;
   }
-  // todo: maybe multiply +by i or -i - is this how we give it an initial velocity? nope! or maybe 
-  // exp(i*phi) for phi being an arbitrary angle
+  // todo: 
+  //  -maybe multiply by +i or -i or maybe exp(i*phi) for phi being an arbitrary angle
+  //  -is this how we give it an initial velocity? nope! but how do we? i think, we need to shift 
+  //   the Fourier trafe to a frequency other than 0 - by multiplying it with exp(i*lamda*x)? - we 
+  //   probably should not multiply by a real sinusoid because that would give a symmetric 
+  //   magnitude spectrum for the momentum
   // -maybe multiply by a Hermite polynomial this gives the eigenfunctions of the harmonic 
   //  oscillator - the order of the polynomial is the energy level 
 //    https://en.wikipedia.org/wiki/Hermite_polynomials
@@ -851,7 +890,7 @@ void testSchroedinger()
   // solve Schroedinger equation numerically by forward Euler method in time and central 
   // differences in space:
 
-  Complex k = (i*hBar)/(2*m);  // scaler for spatial derivative to get time deriavtive
+  //Complex k = (i*hBar)/(2*m);  // scaler for spatial derivative to get time deriavtive
   double dt = tMax / (Nt-1);   // temporaly sampling interval
   double dx = xMax / (Nx-1);   // spatial sampling interval
   for(ti = 1; ti < Nt; ti++)   // ti: time index
@@ -867,8 +906,19 @@ void testSchroedinger()
 
     // compute time derivative and update wave function:
     for(xi = 0; xi < Nx; xi++) {
-      dPsi[ti][xi] = k*Psi_xx[xi];  // Eq 9.4 in Susskind  ..maybe we should put it in sloe ti-1
-      Psi[ti][xi]  = Psi[ti-1][xi] + 1 * dt * dPsi[ti][xi];
+      //Psi_t[ti-1][xi] = k*Psi_xx[xi];        // Eq 9.4 in Susskind  
+
+      double x = double(xi) / (Nx-1); 
+      // the x-array can't be used bcs. it's not oversampled todo: include a minimum xMin that's
+      // not necessarily zero
+
+      // compute time derivative of the wave function via the Schroedinger equation:
+      // Psi_t = (i*hBar)/(2*m)*Psi_xx - (i/hBar)*V*Psi:
+      Psi_t[ti-1][xi] = ((i*hBar)/(2*m)) * Psi_xx[xi]     // term for free particle
+                       -((i/hBar)* V(x)) * Psi[ti-1][xi]; // term from the potential
+
+      // update the wave function:
+      Psi[ti][xi]  = Psi[ti-1][xi] + dt * Psi_t[ti-1][xi];
     }
     //Psi[ti][0] = Psi[ti][1]; // test
 
@@ -897,9 +947,9 @@ void testSchroedinger()
   //plt.addCommand("set view 50,260"); // todo: add member function setView to GNUPlotter
   //plt.plotSurface(numTimeSamples, numSpaceSamples, t, x, zr);
   //plt.plotSurface(numTimeSamples, numSpaceSamples, t, x, zi);
-  plt.plotSurface(numTimeSamples, numSpaceSamples, t, x, za);
+  //plt.plotSurface(numTimeSamples, numSpaceSamples, t, x, za);
 
-  /*
+  
   plt.addDataMatrix(numTimeSamples, numSpaceSamples, t, x, za);
   plt.setPixelSize(450, 400);
   plt.addCommand("set size square");                      // set aspect ratio to 1:1
@@ -910,7 +960,7 @@ void testSchroedinger()
   //plt.addCommand("set palette gray negative");          // maximum is black
   //plt.addCommand("set palette rgbformulae 30,31,32");     // colors printable as grayscale
   plt.plot();
-  */
+  
 
 
   // clean up:
@@ -919,8 +969,8 @@ void testSchroedinger()
   freeMatrix(zr, numTimeSamples, numSpaceSamples);
   freeMatrix(zi, numTimeSamples, numSpaceSamples);
   freeMatrix(za, numTimeSamples, numSpaceSamples);
-  freeMatrix( Psi, Nt, Nx);
-  freeMatrix(dPsi, Nt, Nx);
+  freeMatrix(Psi,   Nt, Nx);
+  freeMatrix(Psi_t, Nt, Nx);
 }
 
 /*
