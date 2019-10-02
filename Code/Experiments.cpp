@@ -808,7 +808,7 @@ void testSchroedinger()
   double xMax = 1.0;
   double tMax = 1.0;
   double hBar = 1;
-  double m    = 70;  // mass
+  double m    = 100;  // mass
 
 
   // allocate arrays for plotting:
@@ -829,26 +829,28 @@ void testSchroedinger()
   std::vector<Complex> Psi_xx(Nx);               // for 2nd spatial derivative per iteration
 
 
-  // initialize wave-function - give it an initial shape in space:
+  // initialize wave-function - give it an initial shape in space of a gaussian bump in the center:
   int ti, xi;  // temporal and spatial loop indices
-  for(int xi = 0; xi < Nt; xi++)
-    Psi[0][xi] = 0.0;  // 1st index is time index, 2nd is space index
-
-  // a gaussian bump in the center:
+  Complex i(0,1);              // imaginary unit
   double mu = 0.5;
   double sigma = 0.05;
-  for(int xi = 0; xi < Nx; xi++)
-  {
+  for(int xi = 0; xi < Nx; xi++) {
     double x = double(xi) / (Nx-1);
     double gauss = exp(-(x-mu)*(x-mu) / (sigma*sigma));
     Psi[0][xi] = gauss;
   }
+  // todo: maybe multiply +by i or -i - is this how we give it an initial velocity? nope! or maybe 
+  // exp(i*phi) for phi being an arbitrary angle
+  // -maybe multiply by a Hermite polynomial this gives the eigenfunctions of the harmonic 
+  //  oscillator - the order of the polynomial is the energy level 
+//    https://en.wikipedia.org/wiki/Hermite_polynomials
+  // maybe normalize to unit mean
 
   //plotComplexArrayReIm(Psi[0], Nx);
 
   // solve Schroedinger equation numerically by forward Euler method in time and central 
   // differences in space:
-  Complex i(0,1);              // imaginary unit
+
   Complex k = (i*hBar)/(2*m);  // scaler for spatial derivative to get time deriavtive
   double dt = tMax / (Nt-1);   // temporaly sampling interval
   double dx = xMax / (Nx-1);   // spatial sampling interval
@@ -859,9 +861,9 @@ void testSchroedinger()
     for(xi = 0; xi < Nx; xi++)
       Psi_xx[xi] = (Psi[ti-1][wrap(xi-1,Nx)] + Psi[ti-1][wrap(xi+1,Nx)] - 2.*Psi[ti-1][xi])/(dx*dx);
 
-    // no wrap
-    for(xi = 1; xi < Nx-1; xi++)
-      Psi_xx[xi] = (Psi[ti-1][wrap(xi-1,Nx)] + Psi[ti-1][wrap(xi+1,Nx)] - 2.*Psi[ti-1][xi])/(dx*dx);
+    //// no wrap
+    //for(xi = 1; xi < Nx-1; xi++)
+    //  Psi_xx[xi] = (Psi[ti-1][wrap(xi-1,Nx)] + Psi[ti-1][wrap(xi+1,Nx)] - 2.*Psi[ti-1][xi])/(dx*dx);
 
     // compute time derivative and update wave function:
     for(xi = 0; xi < Nx; xi++) {
@@ -882,6 +884,7 @@ void testSchroedinger()
 
   //plotComplexArrayReIm(Psi[Nt-1], Nx);
 
+
   // from the oversampled computation result, obtain the result for plotting by downsampling:
   for(ti = 0; ti < numTimeSamples; ti++) {
     for(xi = 0; xi < numSpaceSamples; xi++) {
@@ -894,10 +897,10 @@ void testSchroedinger()
   //plt.addCommand("set view 50,260"); // todo: add member function setView to GNUPlotter
   //plt.plotSurface(numTimeSamples, numSpaceSamples, t, x, zr);
   //plt.plotSurface(numTimeSamples, numSpaceSamples, t, x, zi);
-  //plt.plotSurface(numTimeSamples, numSpaceSamples, t, x, za);
+  plt.plotSurface(numTimeSamples, numSpaceSamples, t, x, za);
 
-
-  plt.addDataMatrix(numTimeSamples, numSpaceSamples, t, x, zr);
+  /*
+  plt.addDataMatrix(numTimeSamples, numSpaceSamples, t, x, za);
   plt.setPixelSize(450, 400);
   plt.addCommand("set size square");                      // set aspect ratio to 1:1
   plt.addGraph("i 0 nonuniform matrix w image notitle");   
@@ -906,8 +909,8 @@ void testSchroedinger()
   plt.addCommand("set palette gray");                   // maximum is white
   //plt.addCommand("set palette gray negative");          // maximum is black
   //plt.addCommand("set palette rgbformulae 30,31,32");     // colors printable as grayscale
-
   plt.plot();
+  */
 
 
   // clean up:
