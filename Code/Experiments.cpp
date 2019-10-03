@@ -164,8 +164,9 @@ void plotComplexFunctionReIm(const function<complex<T>(complex<T>)>& f,
   // maybe plot level lines
 }
 
+/*
 template<class T>
-void plotComplexArrayReIm(complex<T>* z, int N)
+void plotComplexArrayReIm(const T* x, const std::complex<T>* z, int N)
 {
   std::vector<T> re(N), im(N);
   for(int i = 0; i < N; i++) {
@@ -173,10 +174,19 @@ void plotComplexArrayReIm(complex<T>* z, int N)
     im[i] = z[i].imag();
   }
   GNUPlotter plt;
-  plt.addDataArrays(N, &re[0]);
-  plt.addDataArrays(N, &im[0]);
+  plt.addDataArrays(N, x, &re[0]);
+  plt.addDataArrays(N, x, &im[0]);
   plt.plot();
 }
+
+template<class T>
+void plotComplexArrayReIm(const std::complex<T>* z, int N)
+{
+  std::vector<T> x(N);
+  GNUPlotter::rangeLinear(&x[0], N, T(0), T(N-1));
+  plotComplexArrayReIm(&x[0], &z[0], N);
+}
+*/
 
 
 //-------------------------------------------------------------------------------------------------
@@ -885,7 +895,7 @@ void testSchroedinger()
 //    https://en.wikipedia.org/wiki/Hermite_polynomials
   // maybe normalize to unit mean
 
-  //plotComplexArrayReIm(Psi[0], Nx);
+  //GNUPlotter::plotComplexArrayReIm(Psi[0], Nx);
 
   // solve Schroedinger equation numerically by forward Euler method in time and central 
   // differences in space:
@@ -926,13 +936,13 @@ void testSchroedinger()
 
     if(ti % (timeOversample/1) == 0)
     {
-      //plotComplexArrayReIm(&Psi_xx[0], Nx);  // 2nd spatial derivative
-      //plotComplexArrayReIm(dPsi[ti],   Nx);  // update
-      //plotComplexArrayReIm(Psi[ti],    Nx);
+      //GNUPlotter::plotComplexArrayReIm(&Psi_xx[0], Nx);  // 2nd spatial derivative
+      //GNUPlotter::plotComplexArrayReIm(dPsi[ti],   Nx);  // update
+      //GNUPlotter::plotComplexArrayReIm(Psi[ti],    Nx);
     }
   }
 
-  //plotComplexArrayReIm(Psi[Nt-1], Nx);
+  GNUPlotter::plotComplexArrayReIm(Psi[Nt-1], Nx);
 
 
   // from the oversampled computation result, obtain the result for plotting by downsampling:
