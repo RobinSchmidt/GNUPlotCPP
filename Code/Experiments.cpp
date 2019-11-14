@@ -984,22 +984,12 @@ void testSchroedinger()
 }
 
 // move to GNUPlotter:
-
-
 void addSubPlot(GNUPlotter& p, double x, double y, double w, double h, int datasetIndex)
 {
-  std::string str;
-      
-  str  = "set origin ";
-  str += p.s(x) + ",";
-  str += p.s(y) + "\n";
-  p.addCommand(str);
-
-  str = "plot '" + p.getDataPath() + "' i ";
-  str += p.s((unsigned int)datasetIndex);
-  str += " u 1:2";
-  str += " w lines lw 1.5 notitle";             // make it a style-parameter string
-  p.addCommand(str);
+  p.addCommand("set origin " + p.s(x) + "," + p.s(y) + "\n");
+  p.addCommand("plot '" + p.getDataPath() + "' i " + p.s((unsigned int)datasetIndex) 
+               + " u 1:2" + " w lines lw 1.5 notitle\n"); 
+  // todo make the last part (excluding \n) a style-parameter string
 }
 void showMultiPlot(GNUPlotter& p, int numRows, int numCols)
 {
@@ -1013,7 +1003,6 @@ void showMultiPlot(GNUPlotter& p, int numRows, int numCols)
   p.addCommand("unset multiplot");
   p.invokeGNUPlot();
 }
-
 
 void testMultiPlot()
 {
