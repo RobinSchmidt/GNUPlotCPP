@@ -984,14 +984,47 @@ void testSchroedinger()
 }
 
 
+void testMultiPlot()  // or maybe we should call it 3x4?
+{
+  // make a 4x3 multiplot with lissajous figures
 
-// make a 4x3 multiplot with lissajous figures
+  // Settings:
+  int N = 201;              // number of datapoints per plot
+  int numRows = 3;
+  int numCols = 4;
+
+  // Generate data and add it to the datafile (this is not the most economic way to do it):
+  GNUPlotter p;                             // create a plotter object
+  std::vector<double> x(N), y(N);           // allocate memory for data
+  for(int i = 1; i <= numRows; i++) {       // loop over the plot-rows
+    for(int j = 1; j <= numCols; j++) {     // loop over the plot-columns
+      for(int n = 0; n < N; n++) {          // loop over datapoints for current plot
+        double t = n*2*M_PI / (N-1);        // compute curve parameter
+        x[n] = sin(i*t);                    // compute x-coordinate
+        y[n] = sin(j*t); }                  // compute y-coordinate
+      p.addDataArrays(N, &x[0], &y[0]); }}  // add dataset to file
+
+
+
+
+
+
+
+  double height = 1.0 / numRows;  // relative height of individual subplots
+  double width  = 1.0 / numCols;  // relative width of individual subplots
+
+
+
+}
+
+
 //  -see 
 //  -factor out: 
 //    -initMultiPlot, showMultiPlot
 //    -addSubPlot(double x, double y, double w, double h, ...)
 //     ..this should reverse the y-axis, i.e. start from top...or maybe see how 
 //     matplotlib handles this
+// maybe the plot command can take a title parameter
 
 // todo: try to let
 
