@@ -1010,7 +1010,7 @@ void showMultiPlot(GNUPlotter& p, int numRows, int numCols)
       str = "plot '" + p.getDataPath() + "' i ";
       str += p.s((unsigned int)index);
       str += " u 1:2";
-      str += " w lines lw 2 notitle";     // should be a style-parameter string
+      str += " w lines lw 1.5 notitle";             // make it a style-parameter string
       p.addCommand(str);
     }
   }
@@ -1023,7 +1023,7 @@ void testMultiPlot()  // or maybe we should call it 3x4?
   // Creates a multiplot grid with lissajous figures.
 
   // Settings:
-  int N = 201;              // number of datapoints per plot
+  int N       = 201;        // number of datapoints per plot
   int numRows = 3;          // number of rows
   int numCols = 5;          // number of columns
   int size    = 200;        // number of pixels per subplot
