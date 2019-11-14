@@ -987,12 +987,12 @@ void testSchroedinger()
 void testMultiPlot()  // or maybe we should call it 3x4?
 {
   // make a 4x3 multiplot with lissajous figures
-  // something is still worng
+  // something is still wrong - we get only 3 columns
 
   // Settings:
   int N = 201;              // number of datapoints per plot
   int numRows = 3;
-  int numCols = 4;
+  int numCols = 5;
 
   // Generate data and add it to the datafile (this is not the most economic way to do it):
   GNUPlotter p;                             // create a plotter object
@@ -1001,12 +1001,14 @@ void testMultiPlot()  // or maybe we should call it 3x4?
     for(int j = 1; j <= numCols; j++) {     // loop over the plot-columns
       for(int n = 0; n < N; n++) {          // loop over datapoints for current plot
         double t = n*2*M_PI / (N-1);        // compute curve parameter
-        x[n] = sin(i*t);                    // compute x-coordinate
-        y[n] = sin(j*t); }                  // compute y-coordinate
+        x[n] = sin(i*t);                // compute x-coordinate
+        y[n] = sin(j*t); }              // compute y-coordinate
       p.addDataArrays(N, &x[0], &y[0]); }}  // add dataset to file
 
   // add the subplot commands to the commandfile:
   std::string str;
+  int pixelsPerSubPlot = 200; 
+  p.setPixelSize(numCols*pixelsPerSubPlot, numRows*pixelsPerSubPlot);
   double height = 1.0 / numRows;     // relative height of individual subplots
   double width  = 1.0 / numCols;     // relative width of individual subplots
   p.addCommand("set multiplot");     // init multiplot
@@ -1031,7 +1033,9 @@ void testMultiPlot()  // or maybe we should call it 3x4?
       // add subplot command:
       str = "plot '" + p.getDataPath() + "' i ";
       str += p.s((unsigned int)index);
-      str += " u 1:2 w lines lw 2 notitle";
+      //str += p.s((unsigned int)4);  // test
+      str += " u 1:2";               
+      str += " w lines lw 2 notitle";     // should be a style-parameter string
       p.addCommand(str);
 
       int dummy = 0;
