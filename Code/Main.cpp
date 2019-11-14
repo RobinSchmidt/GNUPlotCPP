@@ -66,7 +66,8 @@ int main(int argc, char** argv)
 
   //testHistogram();
   //testMoebiusStrip();
-  testSchroedinger();
+  //testSchroedinger();
+  testSubPlots();
 
   getchar();
   return(EXIT_SUCCESS);

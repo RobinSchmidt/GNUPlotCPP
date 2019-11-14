@@ -983,6 +983,74 @@ void testSchroedinger()
   freeMatrix(Psi_t, Nt, Nx);
 }
 
+void testSubPlots()
+{
+  // make two subplots for sine and cosine
+  // does not yte work correctly 
+  // -plots appear only on resize (before, the screen is black)
+  // -sizes and positions of the subplots are messed up
+
+  typedef std::string S;
+
+  int    N    = 201;                                          // number of datapoints
+  double xMin = 0;                                            // x-axis minimum value
+  double xMax = 10;                                           // x-axis maximum value
+  GNUPlotter p;                                               // create a plotter object
+  p.addDataFunctions(N, xMin, xMax, &sin, &cos);              // generate and add data 
+  p.addCommand("set multiplot");
+
+  p.addCommand("set size 0.4,0.4");
+  p.addCommand("set origin 0.1,0.1");
+  p.addCommand(S("plot '") + p.getDataPath() + S("' i 0 u 1:2 w lines lw 2"));  // add dataset 1 from file here
+
+  p.addCommand("set size 0.2,0.2");
+  p.addCommand("set origin 0.5,0.5");
+  p.addCommand(S("plot '") + p.getDataPath() + S("' i 0 u 1:3 w lines lw 2"));  // add dataset 2 from file here
+
+
+  p.invokeGNUPlot();
+  int dummy = 0;
+
+
+
+
+  //p.plot();
+
+
+  // plot ’E:/Temp/gnuplotData.dat’ i 0 u 1:2 w lines lw 2 t "y=sin(x)",\
+  // ’E:/Temp/gnuplotData.dat’ i 0 u 1:3 w lines lw 2 t "y=cos(x)",\
+  // ’E:/Temp/gnuplotData.dat’ i 0 u 1:4 w lines lw 1 t "y=tan(x)"
+
+  // http://gnuplot.sourceforge.net/docs_4.2/node203.html
+  // set multiplot
+  // set size 0.4,0.4
+  // set origin 0.1,0.1
+  // plot sin(x)
+  // set size 0.2,0.2
+  // set origin 0.5,0.5
+  // plot cos(x)
+  // unset multiplot
+
+
+
+  // http://gnuplot.sourceforge.net/demo/layout.html
+
+  /*
+  p.setTitle("Trigonometric Functions");                      // caption for the plot
+  p.setLegends("y=sin(x)", "y=cos(x)", "y=tan(x)");           // legends for the 3 graphs
+  p.setAxisLabels("x-axis", "y-axis");                        // labels for the axes
+  p.setPixelSize(800, 400);                                   // pixel size for plot
+  p.setRange(xMin, xMax, -2, 2);                              // range for x- and y-axis
+  p.setGraphColors("800000", "008000", "000080");             // red, green and blue
+  p.setDashType(3, "(1,8,5,8)");                              // use dash-pattern for tan
+  p.setGraphStyles("lines lw 2", "lines lw 2", "lines lw 1"); // linewidths are 2,2,1
+  p.plotFunctions(N, xMin, xMax, &sin, &cos, &tan);           // plot the functions
+  */
+}
+// make a 4x3 multiplot with lissajous figures
+
+
+
 /*
 
 Ideas:

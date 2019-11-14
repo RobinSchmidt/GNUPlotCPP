@@ -27,6 +27,8 @@ void testMoebiusStrip();
 
 void testSchroedinger();
 
+void testSubPlots();
+
 
 
 
