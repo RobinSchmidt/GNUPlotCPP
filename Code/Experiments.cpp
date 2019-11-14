@@ -988,7 +988,7 @@ void testSubPlots()
   // make two subplots for sine and cosine
   // does not yte work correctly 
   // -plots appear only on resize (before, the screen is black)
-  // -sizes and positions of the subplots are messed up
+  // -cosine is plotted on top - should be at bottom
 
   typedef std::string S;
 
@@ -997,15 +997,19 @@ void testSubPlots()
   double xMax = 10;                                           // x-axis maximum value
   GNUPlotter p;                                               // create a plotter object
   p.addDataFunctions(N, xMin, xMax, &sin, &cos);              // generate and add data 
+
   p.addCommand("set multiplot");
 
-  p.addCommand("set size 0.4,0.4");
-  p.addCommand("set origin 0.1,0.1");
-  p.addCommand(S("plot '") + p.getDataPath() + S("' i 0 u 1:2 w lines lw 2"));  // add dataset 1 from file here
+  // factor out into addSubPlot(double x, double y, double w, double h, ...)
+  p.addCommand("set origin 0.0, 0.0");
+  p.addCommand("set size 1.0, 0.5");
+  p.addCommand(S("plot '") + p.getDataPath() + S("' i 0 u 1:2 w lines lw 2 notitle"));  // add dataset 1 from file here
 
-  p.addCommand("set size 0.2,0.2");
-  p.addCommand("set origin 0.5,0.5");
-  p.addCommand(S("plot '") + p.getDataPath() + S("' i 0 u 1:3 w lines lw 2"));  // add dataset 2 from file here
+  p.addCommand("set origin 0.0, 0.5");
+  p.addCommand("set size 1.0, 0.5");
+  p.addCommand(S("plot '") + p.getDataPath() + S("' i 0 u 1:3 w lines lw 2 notitle"));  // add dataset 2 from file here
+
+  // maybe reduce margins
 
 
   p.invokeGNUPlot();
