@@ -384,6 +384,11 @@ public:
   template <class T>
   void addDataMatrix(int Nx, int Ny, T *x, T *y, T **z);
 
+  // todo addDataMatrix(int Nx, int Ny, T *x, T *y, T *z); that accepts a matrix in flat storage
+  // format - maybe have a bool for columnMajor storage (false by default)
+
+
+
   /** Adds a data set representing parametric curve on a 2-dimensional plane. The optional 
   writeParameters argument decides, whether or not the t-values shall be written into the 
   datafile - if so, they will be written into the first column. */

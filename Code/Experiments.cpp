@@ -992,6 +992,8 @@ void testSchroedinger()
 /*
 
 Ideas:
+-add function drawPolygon(int numVertices, T* x, T* y), fillPolygon
+ see demoDipole - there are things like set object circle, etc.
 -plot a bunch of field-lines - maybe use as example 2 charges at (-1,0) and (+1,0), start the 
  field-lines in the middle vertical line (0, y) and from there, integrate them numerically into
  both directions...maybe using a function addBiDirectionalFieldLine
@@ -1108,5 +1110,7 @@ idea to visualize a rank-2 tensor field in 2D (i.e. a 2x2 matrix-field defined i
  -for a pramatrization of the mobius-strip, see here: https://www.youtube.com/watch?v=dz7y7mFLW3U
  -for the mobius knot, replace the circle with the trefoil knot
 
+more inspiration:
+ https://matplotlib.org/gallery/index.html
 
 */

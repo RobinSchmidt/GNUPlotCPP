@@ -952,43 +952,29 @@ void GNUPlotter::generateGraphDescriptors(bool splot)
   unsigned int i, j, k;
   if(splot == false) {
     k = 0;
-    for(i = 0; i < dataInfo.size(); i++)
-    {
-      if(dataInfo[i].type == "matrix")
-      {
+    for(i = 0; i < dataInfo.size(); i++) {
+      if(dataInfo[i].type == "matrix") {
         addGraph("i " + s(i) + " nonuniform matrix" + getStyleString(k));
-        k++;
-      }
-      else
-      {
-        if(dataInfo[i].numColumns == 1)  // this is new -> test...
-        {
+        k++; }
+      else {
+        if(dataInfo[i].numColumns == 1) { // this is new -> test...
           //addGraph("i " + s(i) + " u 1:1" + getStyleString(k));
           addGraph("i " + s(i) + getStyleString(k));
-          k++;
-        }
+          k++; }
         // entered only, if condition above is false:
-        for(j = 0; j < (unsigned int)dataInfo[i].numColumns-1; j++)
-        {
+        for(j = 0; j < (unsigned int)dataInfo[i].numColumns-1; j++) {
           addGraph("i " + s(i) + " u 1:" + s(j+2) + getStyleString(k));
-          k++;
-        }
-      }
-    }
-  }
-  else
-  {
-    for(i = 0; i < dataInfo.size(); i++)
-    {
+          k++;  }}}}
+  else {
+    for(i = 0; i < dataInfo.size(); i++) {
       if(dataInfo[i].type == "matrix")
         addGraph("i " + s(i) + " nonuniform matrix" + getStyleString(i));
       else
-        addGraph("i " + s(i) + getStyleString(i));
-    }
-  }
+        addGraph("i " + s(i) + getStyleString(i)); }}
 }
+// refactor this - split out two functions generateGraphDescriptors2D/3D
 
-// // old:
+// // old - todo: check, if it can be deleted, if so - do it:
 //void GNUPlotter::generateGraphDescriptors(bool splot)
 //{
 //  unsigned int i, j, k;
