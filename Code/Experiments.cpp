@@ -1009,27 +1009,22 @@ void testMultiPlot()  // or maybe we should call it 3x4?
   std::string str;
   int pixelsPerSubPlot = 200; 
   p.setPixelSize(numCols*pixelsPerSubPlot, numRows*pixelsPerSubPlot);
-  double height = 1.0 / numRows;              // relative height of individual subplots
-  double width  = 1.0 / numCols;              // relative width of individual subplots
-  p.addCommand("set multiplot");              // init multiplot
-  for(int i = 0; i < numRows; i++) {          // loop over the plot-rows
-    for(int j = 0; j < numCols; j++) {        // loop over the plot-columns
-      int index = numCols*i + j;              // index of the dataset
+  double h = 1.0 / numRows;                         // relative height of subplots
+  double w = 1.0 / numCols;                         // relative width of subplots
+  p.addCommand("set multiplot");                    // init multiplot
+  p.addCommand("set size "+p.s(w)+","+p.s(h)+"\n"); // set size of subplots
+  for(int i = 0; i < numRows; i++) {                // loop over the plot-rows
+    for(int j = 0; j < numCols; j++) {              // loop over the plot-columns
+      int index = numCols*i + j;                    // index of the dataset
 
       // set subplot position:
-      double x0 = j*width;                    // x-coordinate of subplot
-      double y0;                              // y-coordinate of subplot
-      if(top) y0 = 1.0 - i*height - height;
-      else    y0 = i*height;                
+      double x0 = j*w;
+      double y0;
+      if(top) y0 = 1.0 - i*h - h;
+      else    y0 = i*h;
       str  = "set origin ";
       str += p.s(x0) + ",";
       str += p.s(y0) + "\n";
-      p.addCommand(str);
-
-      // set subplot size (maybe we could set this only once for all plots?):
-      str = "set size ";
-      str += p.s(width)  + ",";
-      str += p.s(height) + "\n";
       p.addCommand(str);
 
       // add subplot command:
