@@ -983,48 +983,17 @@ void testSchroedinger()
   freeMatrix(Psi_t, Nt, Nx);
 }
 
-
+// move to GNUPlotter:
 void showMultiPlot(GNUPlotter& p, int numRows, int numCols)
 {
-
-}
-
-void testMultiPlot()  // or maybe we should call it 3x4?
-{
-  // make a multiplot grid with lissajous figures
-
-  // Settings:
-  int N = 201;              // number of datapoints per plot
-  int numRows = 3;
-  int numCols = 5;
-  bool top = true;          // y coordinate starts at top and goes downward (rename)
-
-  // Generate data and add it to the datafile (this is not the most economic way to do it):
-  GNUPlotter p;                             // create a plotter object
-  std::vector<double> x(N), y(N);           // allocate memory for data
-  for(int i = 1; i <= numRows; i++) {       // loop over the plot-rows
-    for(int j = 1; j <= numCols; j++) {     // loop over the plot-columns
-      for(int n = 0; n < N; n++) {          // loop over datapoints for current plot
-        double t = n*2*M_PI / (N-1);        // compute curve parameter
-        x[n] = sin(i*t);                    // compute x-coordinate
-        y[n] = sin(j*t); }                  // compute y-coordinate
-      p.addDataArrays(N, &x[0], &y[0]); }}  // add dataset to file
-
-  // add the subplot commands to the commandfile:
-
-  int pixelsPerSubPlot = 200; 
-  p.setPixelSize(numCols*pixelsPerSubPlot, numRows*pixelsPerSubPlot);
-  p.addCommand("set size square");                  // apsect ratio of subplots 1:1
-
-  // to be factored out:
-  std::string str;
+  bool top = true;  // y coordinate starts at top and goes downward (rename, make parameter)
   double h = 1.0 / numRows;                         // relative height of subplots
   double w = 1.0 / numCols;                         // relative width of subplots
   p.addCommand("set multiplot");                    // init multiplot
   p.addCommand("set size "+p.s(w)+","+p.s(h)+"\n"); // set size of subplots
+  std::string str;                                  // for accumulating command strings
   for(int i = 0; i < numRows; i++) {                // loop over the plot-rows
     for(int j = 0; j < numCols; j++) {              // loop over the plot-columns
-      int index = numCols*i + j;                    // index of the dataset
 
       // set subplot position:
       double x0 = j*w;
@@ -1037,6 +1006,7 @@ void testMultiPlot()  // or maybe we should call it 3x4?
       p.addCommand(str);
 
       // add subplot command:
+      int index = numCols*i + j;                    // index of the dataset
       str = "plot '" + p.getDataPath() + "' i ";
       str += p.s((unsigned int)index);
       str += " u 1:2";
@@ -1044,13 +1014,35 @@ void testMultiPlot()  // or maybe we should call it 3x4?
       p.addCommand(str);
     }
   }
-  // todo: factor this out somehow - make it easier - maybe 
-  // p.addSubPlots(int numRows, int numColumns, int startIndex = 0) - this must make assumptions on
-  // how the data is stored int the datafile
-  // how can we make the subplots have an aspect ratio of 1:1
-
   p.addCommand("unset multiplot");
   p.invokeGNUPlot();
+}
+
+void testMultiPlot()  // or maybe we should call it 3x4?
+{
+  // Creates a multiplot grid with lissajous figures.
+
+  // Settings:
+  int N = 201;              // number of datapoints per plot
+  int numRows = 3;          // number of rows
+  int numCols = 5;          // number of columns
+  int size    = 200;        // number of pixels per subplot
+
+  // Generate data and add it to the datafile (this is not the most economic way to do it):
+  GNUPlotter p;                             // create a plotter object
+  std::vector<double> x(N), y(N);           // allocate memory for data
+  for(int i = 1; i <= numRows; i++) {       // loop over the plot-rows
+    for(int j = 1; j <= numCols; j++) {     // loop over the plot-columns
+      for(int n = 0; n < N; n++) {          // loop over datapoints for current plot
+        double t = n*2*M_PI / (N-1);        // compute curve parameter
+        x[n] = sin(i*t);                    // compute x-coordinate
+        y[n] = sin(j*t); }                  // compute y-coordinate
+      p.addDataArrays(N, &x[0], &y[0]); }}  // add dataset to file
+
+  // add the subplot commands to the commandfile and plot:
+  p.setPixelSize(numCols*size, numRows*size);
+  p.addCommand("set size square");      // apsect ratio of subplots 1:1
+  showMultiPlot(p, numRows, numCols);
 }
 // maybe try to plot a set of modes for a circular membrane - i.e. a multiplot of polar 3D plots
 
