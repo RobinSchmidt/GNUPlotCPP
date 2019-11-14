@@ -987,7 +987,6 @@ void testSchroedinger()
 void testMultiPlot()  // or maybe we should call it 3x4?
 {
   // make a 4x3 multiplot with lissajous figures
-  // something is still wrong - we get only 3 columns
 
   // Settings:
   int N = 201;              // number of datapoints per plot
@@ -1017,14 +1016,14 @@ void testMultiPlot()  // or maybe we should call it 3x4?
       int index = numCols*i + j;           // index of the dataset
 
       // set subplot position:
-      double x0 = i*width;                 // x-coordinate of plot
-      double y0 = j*height;                // y-coordinate of plot (todo: invert)
+      double x0 = j*width;                 // x-coordinate of plot
+      double y0 = i*height;                // y-coordinate of plot (todo: invert)
       str  = "set origin ";
       str += p.s(x0) + ",";
       str += p.s(y0) + "\n";
       p.addCommand(str);
 
-      // set subplot size:
+      // set subplot size (maybe we could set this only once for all plots?):
       str = "set size ";
       str += p.s(width)  + ",";
       str += p.s(height) + "\n";
@@ -1033,8 +1032,8 @@ void testMultiPlot()  // or maybe we should call it 3x4?
       // add subplot command:
       str = "plot '" + p.getDataPath() + "' i ";
       str += p.s((unsigned int)index);
-      //str += p.s((unsigned int)4);  // test
-      str += " u 1:2";               
+      //str += p.s((unsigned int)5);  // test
+      str += " u 1:2";
       str += " w lines lw 2 notitle";     // should be a style-parameter string
       p.addCommand(str);
 
