@@ -984,44 +984,36 @@ void testSchroedinger()
 }
 
 // move to GNUPlotter:
+
+
+void addSubPlot(GNUPlotter& p, double x, double y, double w, double h, int datasetIndex)
+{
+  std::string str;
+      
+  str  = "set origin ";
+  str += p.s(x) + ",";
+  str += p.s(y) + "\n";
+  p.addCommand(str);
+
+  str = "plot '" + p.getDataPath() + "' i ";
+  str += p.s((unsigned int)datasetIndex);
+  str += " u 1:2";
+  str += " w lines lw 1.5 notitle";             // make it a style-parameter string
+  p.addCommand(str);
+}
 void showMultiPlot(GNUPlotter& p, int numRows, int numCols)
 {
-  bool top = true;  // y coordinate starts at top and goes downward (rename, make parameter)
-  double h = 1.0 / numRows;                         // relative height of subplots
-  double w = 1.0 / numCols;                         // relative width of subplots
-  p.addCommand("set multiplot");                    // init multiplot
-  p.addCommand("set size "+p.s(w)+","+p.s(h)+"\n"); // set size of subplots
-  std::string str;                                  // for accumulating command strings
-  for(int i = 0; i < numRows; i++) {                // loop over the plot-rows
-    for(int j = 0; j < numCols; j++) {              // loop over the plot-columns
-
-      // set subplot position:
-      double x0 = j*w;
-      double y0;
-      if(top) y0 = 1.0 - i*h - h;
-      else    y0 = i*h;
-      str  = "set origin ";
-      str += p.s(x0) + ",";
-      str += p.s(y0) + "\n";
-      p.addCommand(str);
-
-      // add subplot command:
-      int index = numCols*i + j;                    // index of the dataset
-      str = "plot '" + p.getDataPath() + "' i ";
-      str += p.s((unsigned int)index);
-      str += " u 1:2";
-      str += " w lines lw 1.5 notitle";             // make it a style-parameter string
-      p.addCommand(str);
-    }
-  }
+  double h = 1.0 / numRows;                            // relative height of subplots
+  double w = 1.0 / numCols;                            // relative width of subplots
+  p.addCommand("set multiplot");                       // init multiplot
+  p.addCommand("set size "+p.s(w)+","+p.s(h)+"\n");    // set size of subplots
+  for(int i = 0; i < numRows; i++)                     // loop over the plot-rows
+    for(int j = 0; j < numCols; j++)                   // loop over the plot-columns
+      addSubPlot(p, j*w, 1-i*h-h, w, h, numCols*i+j);
   p.addCommand("unset multiplot");
   p.invokeGNUPlot();
 }
-// maybe factor out:
-// -addSubPlot(double x, double y, double w, double h, ...)
-//  ..this should reverse the y-axis, i.e. start from top...or maybe see how 
-// -initMultiPlot, showMultiPlot
-//  matplotlib handles this
+
 
 void testMultiPlot()
 {
