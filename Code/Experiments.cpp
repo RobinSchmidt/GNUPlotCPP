@@ -1026,7 +1026,7 @@ void testMultiPlot()  // or maybe we should call it 3x4?
   int N       = 201;        // number of datapoints per plot
   int numRows = 5;          // number of rows
   int numCols = 5;          // number of columns
-  int size    = 180;        // number of pixels per subplot
+  int size    = 120;        // number of pixels per subplot
 
   // Generate data and add it to the datafile (this is not the most economic way to do it):
   GNUPlotter p;                             // create a plotter object
@@ -1043,9 +1043,15 @@ void testMultiPlot()  // or maybe we should call it 3x4?
   p.setPixelSize(numCols*size, numRows*size);
   p.addCommand("set size square");      // apsect ratio of subplots 1:1
   p.addCommand("unset xtics"); 
-  p.addCommand("unset ytics"); 
+  p.addCommand("unset ytics");
+
+  // what unit is this? inches?
+  p.addCommand("set lmargin 0.2");
+  p.addCommand("set rmargin 0.2");
+  p.addCommand("set tmargin 0.2");
+  p.addCommand("set bmargin 0.2");
+
   showMultiPlot(p, numRows, numCols);
-  // reduce margins
 }
 // maybe try to plot a set of modes for a circular membrane - i.e. a multiplot of polar 3D plots
 
