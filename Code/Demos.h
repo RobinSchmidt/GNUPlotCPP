@@ -20,6 +20,8 @@ void demoTransferMagnitude();   // not yet finished
 
 void demoPlottingStyles();
 void demoTrigFunctions();
+void demoSubPlots();
+
 void demoSquare();
 void demoMatrixData();
 

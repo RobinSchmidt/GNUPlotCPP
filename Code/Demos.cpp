@@ -531,6 +531,43 @@ void demoTrigFunctions()
   p.plotFunctions(N, xMin, xMax, &sin, &cos, &tan);           // plot the functions
 }
 
+void demoSubPlots()
+{
+  // Creates a plot containing two subplots for sine and cosine using the low-level interface, i.e.
+  // adding the respective gnuplot commands directly to the commandfile. Note that gnuplot's origin
+  // is the bottom-left for specifying the locations of the subplots.
+  // -issue: after resizing and applying autoscale, the top plot disappears
+  // -ToDo:  try to let both plots use a common x-axis
+
+  // Settings:
+  int    N    = 201;                              // number of datapoints
+  double xMin = 0;                                // x-axis minimum value
+  double xMax = 10;                               // x-axis maximum value
+
+  // Initializations:
+  GNUPlotter p;                                   // create a plotter object
+  p.addDataFunctions(N, xMin, xMax, &sin, &cos);  // generate and add data 
+  p.addCommand("set multiplot");                  // init multiplot
+
+  // Plot sine function from dataset 1:
+  p.addCommand("set origin 0.0, 0.5");            // 0.0, 0.5: left-center
+  p.addCommand("set size 1.0, 0.5");              // 1.0, 0.5: full-width, half-height
+  p.addCommand("plot '" + p.getDataPath() + "' i 0 u 1:2 w lines lw 2 notitle");
+
+  // Plot cosine function from dataset 2:
+  p.addCommand("set origin 0.0, 0.0");            // 0.0, 0.0: left-bottom
+  p.addCommand("set size 1.0, 0.5");              // 1.0, 0.5: full-width, half-height
+  p.addCommand("plot '" + p.getDataPath() + "' i 0 u 1:3 w lines lw 2 notitle");
+
+  // Finish multiplot and run gnuplot:
+  p.addCommand("unset multiplot");                // without it, it paints only on resize
+  p.invokeGNUPlot();
+
+  // See:
+  // http://gnuplot.sourceforge.net/docs_4.2/node203.html
+  // http://gnuplot.sourceforge.net/demo/layout.html
+}
+
 void demoSquare()
 {
   GNUPlotter p;

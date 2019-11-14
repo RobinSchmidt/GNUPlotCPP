@@ -983,53 +983,18 @@ void testSchroedinger()
   freeMatrix(Psi_t, Nt, Nx);
 }
 
-void testSubPlots()
-{
-  // make two subplots for sine and cosine
-  // -after resizing and applying autoscale, the top plot disappears
-  // todo: 
-  //  -clean up, move to Demos
-  //  -factor out: 
-  //    -initMultiPlot, showMultiPlot
-  //    -addSubPlot(double x, double y, double w, double h, ...)
-  //     ..this should reverse the y-axis, i.e. start from top...or maybe see how 
-  //     matplotlib handles this
-
-  int    N    = 201;                              // number of datapoints
-  double xMin = 0;                                // x-axis minimum value
-  double xMax = 10;                               // x-axis maximum value
-  GNUPlotter p;                                   // create a plotter object
-  p.addDataFunctions(N, xMin, xMax, &sin, &cos);  // generate and add data 
-  p.addCommand("set multiplot");                  // init multiplot
-
-  // plot sine function from dataset 1:
-  p.addCommand("set origin 0.0, 0.5");  // 0,0.5: left-center
-  p.addCommand("set size 1.0, 0.5");    // 1,0.5: full-width, half-height
-  p.addCommand("plot '" + p.getDataPath() + "' i 0 u 1:2 w lines lw 2 notitle");
-
-  // plot cosine function from dataset 2:
-  p.addCommand("set origin 0.0, 0.0"); // 0,0:   left-bottom
-  p.addCommand("set size 1.0, 0.5");   // 1,0.5: full-width, half-height
-  p.addCommand("plot '" + p.getDataPath() + "' i 0 u 1:3 w lines lw 2 notitle");
-
-  // finish multiplot and run gnuplot:
-  p.addCommand("unset multiplot");     // without it, it paints only on resize
-  p.invokeGNUPlot();
 
 
-  // http://gnuplot.sourceforge.net/docs_4.2/node203.html
-  // set multiplot
-  // set size 0.4,0.4
-  // set origin 0.1,0.1
-  // plot sin(x)
-  // set size 0.2,0.2
-  // set origin 0.5,0.5
-  // plot cos(x)
-  // unset multiplot
-
-  // http://gnuplot.sourceforge.net/demo/layout.html
-}
 // make a 4x3 multiplot with lissajous figures
+//  -see 
+//  -factor out: 
+//    -initMultiPlot, showMultiPlot
+//    -addSubPlot(double x, double y, double w, double h, ...)
+//     ..this should reverse the y-axis, i.e. start from top...or maybe see how 
+//     matplotlib handles this
+
+// todo: try to let
+
 
 
 
