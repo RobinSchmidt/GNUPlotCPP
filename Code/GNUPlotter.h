@@ -544,6 +544,16 @@ public:
     CSR s5, CSR s6, CSR s7, CSR s8, CSR s9);
 
 
+
+
+
+  // conversion of numbers to strings:
+  std::string s(unsigned int x);   // conversion of unsigned integers for command file
+  std::string s(double x);         // conversion of doubles for command file
+  std::string sd(double x);        // conversion of doubles for data file
+  std::string sd(int x);           // conversion of integers for data file
+  // todo: add one for floats, rename these...mabye toDataStr, toCmdStr
+
 protected:
 
   /** Creates an initial empty file with the given path. */
@@ -585,13 +595,7 @@ protected:
 
 
 
-  // conversion of numbers to strings:
-  std::string s(unsigned int x);   // conversion of unsigned integers for command file
-  std::string s(double x);         // conversion of doubles for command file
 
-  std::string sd(double x);        // conversion of doubles for data file
-  // add one for floats
-  std::string sd(int x);           // conversion of integers for data file
 
 
 

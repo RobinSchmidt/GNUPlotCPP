@@ -987,6 +987,7 @@ void testSchroedinger()
 void testMultiPlot()  // or maybe we should call it 3x4?
 {
   // make a 4x3 multiplot with lissajous figures
+  // something is still worng
 
   // Settings:
   int N = 201;              // number of datapoints per plot
@@ -1004,17 +1005,45 @@ void testMultiPlot()  // or maybe we should call it 3x4?
         y[n] = sin(j*t); }                  // compute y-coordinate
       p.addDataArrays(N, &x[0], &y[0]); }}  // add dataset to file
 
+  // add the subplot commands to the commandfile:
+  std::string str;
+  double height = 1.0 / numRows;     // relative height of individual subplots
+  double width  = 1.0 / numCols;     // relative width of individual subplots
+  p.addCommand("set multiplot");     // init multiplot
+  for(int i = 0; i < numRows; i++) {       // loop over the plot-rows
+    for(int j = 0; j < numCols; j++) {     // loop over the plot-columns
+      int index = numCols*i + j;           // index of the dataset
+
+      // set subplot position:
+      double x0 = i*width;                 // x-coordinate of plot
+      double y0 = j*height;                // y-coordinate of plot (todo: invert)
+      str  = "set origin ";
+      str += p.s(x0) + ",";
+      str += p.s(y0) + "\n";
+      p.addCommand(str);
+
+      // set subplot size:
+      str = "set size ";
+      str += p.s(width)  + ",";
+      str += p.s(height) + "\n";
+      p.addCommand(str);
+
+      // add subplot command:
+      str = "plot '" + p.getDataPath() + "' i ";
+      str += p.s((unsigned int)index);
+      str += " u 1:2 w lines lw 2 notitle";
+      p.addCommand(str);
+
+      int dummy = 0;
+    }
+  }
+  // todo: factor this out somehow - make it easier - maybe 
+  // p.addSubPlots(int numRows, int numColumns, int startIndex = 0) - this must make assumptions on
+  // how the data is stored int the datafile
 
 
-
-
-
-
-  double height = 1.0 / numRows;  // relative height of individual subplots
-  double width  = 1.0 / numCols;  // relative width of individual subplots
-
-
-
+  p.addCommand("unset multiplot");
+  p.invokeGNUPlot();
 }
 
 
