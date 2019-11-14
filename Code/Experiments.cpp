@@ -1017,10 +1017,15 @@ void showMultiPlot(GNUPlotter& p, int numRows, int numCols)
   p.addCommand("unset multiplot");
   p.invokeGNUPlot();
 }
+// maybe factor out:
+// -addSubPlot(double x, double y, double w, double h, ...)
+//  ..this should reverse the y-axis, i.e. start from top...or maybe see how 
+// -initMultiPlot, showMultiPlot
+//  matplotlib handles this
 
-void testMultiPlot()  // or maybe we should call it 3x4?
+void testMultiPlot()
 {
-  // Creates a multiplot grid with lissajous figures.
+  // Creates a multiplot grid with Lissajous figures.
 
   // Settings:
   int N       = 201;        // number of datapoints per plot
@@ -1039,31 +1044,20 @@ void testMultiPlot()  // or maybe we should call it 3x4?
         y[n] = sin(j*t); }                  // compute y-coordinate
       p.addDataArrays(N, &x[0], &y[0]); }}  // add dataset to file
 
-  // add the subplot commands to the commandfile and plot:
+  // Setup style:
   p.setPixelSize(numCols*size, numRows*size);
   p.addCommand("set size square");      // apsect ratio of subplots 1:1
   p.addCommand("unset xtics"); 
   p.addCommand("unset ytics");
-
-  // what unit is this? inches?
-  p.addCommand("set lmargin 0.2");
+  p.addCommand("set lmargin 0.2");      // what unit is this? inches?
   p.addCommand("set rmargin 0.2");
   p.addCommand("set tmargin 0.2");
   p.addCommand("set bmargin 0.2");
 
+  // Add the subplot commands to the commandfile and plot:
   showMultiPlot(p, numRows, numCols);
 }
-// maybe try to plot a set of modes for a circular membrane - i.e. a multiplot of polar 3D plots
 
-//  -see 
-//  -factor out: 
-//    -initMultiPlot, showMultiPlot
-//    -addSubPlot(double x, double y, double w, double h, ...)
-//     ..this should reverse the y-axis, i.e. start from top...or maybe see how 
-//     matplotlib handles this
-// maybe the plot command can take a title parameter
-
-// todo: try to let
 
 
 
@@ -1077,10 +1071,9 @@ Ideas:
 -make a demo showing a positive charge at +1 and a negative charge at -1 using the physically 
  correct law for the electric field - make another plot with two negative and two positive charges
  the two negative charges should look like 2 gravitational fields - call it demoDipole
-
 -plot complex mapping - maybe there are various ways to do this...
-
-
+-plot a set of modes for a circular membrane - i.e. a multiplot of polar 3D plots
+-maybe the plot command can take a title parameter
 -plot 3D curves (trefoil knot)
 -plot 3D vector fields
 -plot curves on top of a 2D vector field - can be used to show equipotential curves and/or 
