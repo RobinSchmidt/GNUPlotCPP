@@ -984,6 +984,11 @@ void testSchroedinger()
 }
 
 
+void showMultiPlot(GNUPlotter& p, int numRows, int numCols)
+{
+
+}
+
 void testMultiPlot()  // or maybe we should call it 3x4?
 {
   // make a multiplot grid with lissajous figures
@@ -1006,9 +1011,13 @@ void testMultiPlot()  // or maybe we should call it 3x4?
       p.addDataArrays(N, &x[0], &y[0]); }}  // add dataset to file
 
   // add the subplot commands to the commandfile:
-  std::string str;
+
   int pixelsPerSubPlot = 200; 
   p.setPixelSize(numCols*pixelsPerSubPlot, numRows*pixelsPerSubPlot);
+  p.addCommand("set size square");                  // apsect ratio of subplots 1:1
+
+  // to be factored out:
+  std::string str;
   double h = 1.0 / numRows;                         // relative height of subplots
   double w = 1.0 / numCols;                         // relative width of subplots
   p.addCommand("set multiplot");                    // init multiplot
