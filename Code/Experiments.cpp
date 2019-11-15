@@ -993,6 +993,18 @@ void addCircle(GNUPlotter& p, const std::string& attributes,
   p.addCommand(cmd);
 }
 
+void addEllipse(GNUPlotter& p, const std::string& attributes, 
+  double centerX = 0, double centerY = 0, 
+  double width   = 2, double height  = 2, 
+  double angle = 0)  // angle is in degrees
+{
+  std::string cmd = "set object ellipse center " + p.s(centerX) + "," + p.s(centerY) + " size " 
+    + p.s(width) + "," + p.s(height) + " angle " + p.s(angle) + " " + attributes;
+  p.addCommand(cmd);
+}
+// http://gnuplot.sourceforge.net/demo/ellipse.html
+
+
 void addPolygon(GNUPlotter& p, const std::string& attributes,
   const std::vector<double> x, const std::vector<double> y)
 {
@@ -1031,19 +1043,12 @@ void addRegularPolygon(GNUPlotter& p, const std::string& attributes,
 }
 // test parameters
 
-
-
-
-
-
-
-
-// todo: addRectangle, 
-// addRegularPolygon(double centerX, double centerY, double radius, numSides, angle = 0)
 // addLine, addText, addArrow, ....
 // maybe, when they are integrated into GNUPlotter, they should be called drawCircle etc. to 
 // distinguish them from the data adding methods - they use a different mechanism of gnuplot and
 // don't write data into the datafile (they plot the shapes directly via commands)
+// perhaps only the lower level functions should be included into GNUPlotter - those that actually
+// invoke addCommand directly - we'll see
 
 void testGeometry()
 {
@@ -1073,8 +1078,9 @@ void testGeometry()
 
   //addPolygon(p, a, {1,2,4,5}, {1,3,2,6});
 
+  addEllipse(p, a, 4, 2, 6, 4);
 
-  addRectangle(p, a, 3, 2, 5, 4);
+  //addRectangle(p, a, 3, 2, 5, 4);
 
   /*
   p.setRange(-1.1, +1.1, -1.1, +1.1);// we draw inside the normalized square and use some margins

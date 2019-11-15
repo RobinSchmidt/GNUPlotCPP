@@ -618,7 +618,9 @@ void GNUPlotter::addDataCurve2D(const std::function<T(T)>& fx, const std::functi
   else       addDataArrays(Nt,        &x[0], &y[0]); // ...or don't
 
   // the t values may be useful for using color to indicate the t-value along the 
-  // curve? or maybe use tick-marks along the curve - for example, if t in in 0..1 ste markers
+  // curve? see: http://www.gnuplotting.org/using-a-palette-as-line-color/
+  // here for colormaps: https://github.com/Gnuplotting/gnuplot-palettes
+  // ..or maybe use tick-marks along the curve - for example, if t in in 0..1 set markers
   // at 0.1, 0.2, 0.9, 1.0 - maybe these markers could be little arrows to also convey the 
   // orientation of the curve? in any case, the markers should not appear on each t - that would
   // be far too dense - maybe every 20th sample or so would be appropriate
