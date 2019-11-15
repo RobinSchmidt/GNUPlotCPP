@@ -984,13 +984,26 @@ void testSchroedinger()
 }
 
 
-void addCircle(GNUPlotter& p, double centerX, double centerY, double radius, 
-  const std::string& attributes)
+void addCircle(GNUPlotter& p, const std::string& attributes, 
+  double centerX, double centerY, double radius)
 {
   std::string cmd = "set object circle at " + p.s(centerX) + "," + p.s(centerY) 
     + " size " + p.s(radius) + " " + attributes;
   p.addCommand(cmd);
 }
+
+void addTriangle(GNUPlotter& p, const std::string& attributes,
+  double x1, double y1, double x2, double y2, double x3, double y3)
+{
+  std::string cmd = "set object polygon from " 
+    + p.s(x1) + "," + p.s(y1) + " to "
+    + p.s(x2) + "," + p.s(y2) + " to " 
+    + p.s(x3) + "," + p.s(y3) + " to " 
+    + p.s(x1) + "," + p.s(y1) + " " + attributes;
+  p.addCommand(cmd);
+}
+
+
 // todo: addPolygon, addTriangle, addRectangle, addLine, addText, addArrow, ....
 // maybe pass the drawing attributes before the geometric properties
 
@@ -1009,10 +1022,14 @@ void testGeometry()
   //p.addCommand("set object circle at 0.4,0.5 size 0.22 fc rgb \"blue\" fs solid 1.0 front");
   //p.addCommand("set object circle at -0.4,-0.25 size 0.42 fc rgb \"green\" fs solid 1.0 front");
 
-  std::string attributes = "fc rgb \"red\" fs solid 1.0 front"; // use a semi-transparent gray
-  addCircle(p, 0.5, -0.5, 0.5, attributes);
+  std::string attributes = "fc rgb \"red\" fs solid 1.0 front"; // use a semi-transparent color
+  addCircle(p, attributes, 0.5, -0.5, 0.5);
 
 
+  //attributes = "fc rgb \"cyan\" fillstyle solid 1.0 border lt -1";
+  attributes = "fc rgb \"black\""; // polygon doesn't support fs/fillstyle ...old version of gnuplot?
+  addTriangle(p, attributes, 0,0, 1,1, 0,1);
+  // http://soc.if.usp.br/manual/gnuplot-doc/htmldocs/polygon.html
 
 
   p.plot();
