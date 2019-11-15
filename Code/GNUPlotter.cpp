@@ -939,8 +939,14 @@ void GNUPlotter::addPlotCommand(bool splot)
     pc = "splot \\\n";  // 3D plots
   else
     pc = "plot \\\n";   // 2D plots
+
+  // todo: if dataInfo is empty, generate some dummy data
+
+  // auto-generate graph-descriptors, if user has not set them up manually:
   if(graphDescriptors.empty())
     generateGraphDescriptors(splot);
+
+  // add the graph-descriptors to the plot command:
   for(i = 0; i < (int)graphDescriptors.size()-1; i++)
     pc += "'" + dataPath + "' " + graphDescriptors[i] + ",\\\n";
   pc += "'" + dataPath + "' " + graphDescriptors[i];

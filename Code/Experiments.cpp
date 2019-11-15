@@ -984,8 +984,33 @@ void testSchroedinger()
 }
 
 
+void testGeometry()
+{
+  // draw geometric obejcts such as lines, circles, ellipses, polygons, etc.
+
+  GNUPlotter p;
+  p.setRange(-1.1, +1.1, -1.1, +1.1); // we draw inside the normalized square and use some margins
+
+  // add some dummy data:
+  double dummy = 0;
+  p.addDataArrays(1, &dummy, &dummy); // try to do this in a cleaner way
+  // move to GNUPlotter::addPlotCommand
+
+  p.setPixelSize(600, 600);
+  p.addCommand("set size square");  // have a function setAspectRatio(double r), r = w/h
 
 
+  p.addCommand("set object 1 circle at 0.1,0.2 size 0.12 fc rgb \"red\" fs solid 1.0 front");
+
+  p.plot();
+
+  //p.invokeGNUPlot();
+
+  //p.plot();
+}
+
+
+// http://soc.if.usp.br/manual/gnuplot-doc/htmldocs/polygon.html
 
 
 
