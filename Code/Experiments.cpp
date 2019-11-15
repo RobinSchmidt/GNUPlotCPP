@@ -1015,7 +1015,7 @@ void addPolygon(GNUPlotter& p, const std::string& attributes,
   cmd += p.s(x[0]) + "," + p.s(y[0]) + " " + attributes;
   p.addCommand(cmd);
 }
-// can we remove the "object" from the call? with arrow, it seems possible
+// can we remove the "object" from the calls? -> nope. with arrow, it seems possible
 
 void addArrow(GNUPlotter& p, const std::string& attributes,
   double x1, double y1, double x2, double y2)
@@ -1033,6 +1033,14 @@ void addLine(GNUPlotter& p, const std::string& attributes,
   // given attributes
 }
 
+void addText(GNUPlotter& p, const std::string& attributes,
+  const std::string& text, double x, double y)
+{
+  std::string cmd = "set label \"" + text + "\" at " + p.s(x) + "," + p.s(y) + " " + attributes;
+  p.addCommand(cmd);
+}
+// https://stackoverflow.com/questions/16820963/how-to-add-text-to-an-arrow-in-gnuplot
+// http://www.manpagez.com/info/gnuplot/gnuplot-4.4.3/gnuplot_259.php
 
 
 void addTriangle(GNUPlotter& p, const std::string& attributes,
@@ -1048,6 +1056,7 @@ void addRectangle(GNUPlotter& p, const std::string& attributes,
 }
 // maybe add an rotation angle - but maybe that makes more sense, when we specify the center
 // coordinates instead of an edge
+// GNUPlot actually has set object rectangle ...also triangle?
 
 void addRegularPolygon(GNUPlotter& p, const std::string& attributes,
    int numSides, double centerX = 0, double centerY = 0, double radius = 1,double angle = 0)
@@ -1061,7 +1070,6 @@ void addRegularPolygon(GNUPlotter& p, const std::string& attributes,
 }
 // test parameters
 
-// addText
 // maybe, when they are integrated into GNUPlotter, they should be called drawCircle etc. to 
 // distinguish them from the data adding methods - they use a different mechanism of gnuplot and
 // don't write data into the datafile (they plot the shapes directly via commands)
@@ -1099,6 +1107,8 @@ void testGeometry()
   addEllipse(p, a, 4, 2, 6, 4);
 
   addLine(p, a, 1,2, 5,4);
+
+  addText(p, "", "Text", 6,6);
 
   //addRectangle(p, a, 3, 2, 5, 4);
 
