@@ -1011,6 +1011,14 @@ void addTriangle(GNUPlotter& p, const std::string& attributes,
   addPolygon(p, attributes, { x1,x2,x3 }, { y1,y2,y3 });
 }
 
+void addRectangle(GNUPlotter& p, const std::string& attributes,
+  double x1, double y1, double w, double h) // width, height
+{
+  addPolygon(p, attributes, { x1,x1+w,x1+w,x1 }, { y1,y1,y1+h,y1+h });
+}
+// maybe add an rotation angle - but maybe that makes more sense, when we specify the center
+// coordinates instead of an edge
+
 void addRegularPolygon(GNUPlotter& p, const std::string& attributes,
    int numSides, double centerX = 0, double centerY = 0, double radius = 1,double angle = 0)
 {
@@ -1022,6 +1030,12 @@ void addRegularPolygon(GNUPlotter& p, const std::string& attributes,
   addPolygon(p, attributes, x, y);
 }
 // test parameters
+
+
+
+
+
+
 
 
 // todo: addRectangle, 
@@ -1036,7 +1050,8 @@ void testGeometry()
   // draw geometric obejcts such as lines, circles, ellipses, polygons, etc.
 
   GNUPlotter p;
-  p.setRange(-2, 10, -2, 10); // we draw inside the normalized square and use some margins
+  p.setRange(0, 10, 0, 10); 
+
   p.setPixelSize(600, 600);
   p.addCommand("set size square");   // have a function setAspectRatio(double r), r = w/h
 
@@ -1047,21 +1062,33 @@ void testGeometry()
   //p.addCommand("set object circle at -0.4,-0.25 size 0.42 fc rgb \"green\" fs solid 1.0 front");
 
   std::string a = "fc rgb \"red\" fs solid 1.0 front"; // use a semi-transparent color
-  addCircle(p, a, 2, 2, 1);
+  //addCircle(p, a, 2, 2, 1);
 
 
   //attributes = "fc rgb \"cyan\" fillstyle solid 1.0 border lt -1";
   a = "fc rgb \"black\" front"; // polygon doesn't support fs/fillstyle ...old version of gnuplot?
-  addTriangle(p, a, 0,0, 1,1, 0,1);
+  //addTriangle(p, a, 0,0, 1,1, 0,1);
   // http://soc.if.usp.br/manual/gnuplot-doc/htmldocs/polygon.html
 
 
-  addPolygon(p, a, {1,2,4,5}, {1,3,2,6});
+  //addPolygon(p, a, {1,2,4,5}, {1,3,2,6});
 
-  addRegularPolygon(p, a, 3);
-  addRegularPolygon(p, a, 4);
-  addRegularPolygon(p, a, 5);
-  addRegularPolygon(p, a, 6);
+
+  addRectangle(p, a, 3, 2, 5, 4);
+
+  /*
+  p.setRange(-1.1, +1.1, -1.1, +1.1);// we draw inside the normalized square and use some margins
+  addCircle(        p, a);
+  addRegularPolygon(p, a, 10);
+  addRegularPolygon(p, a,  9);
+  addRegularPolygon(p, a,  8);
+  addRegularPolygon(p, a,  7);
+  addRegularPolygon(p, a,  6);
+  addRegularPolygon(p, a,  5);
+  addRegularPolygon(p, a,  4);
+  addRegularPolygon(p, a,  3);
+  */
+
 
 
   p.plot();
