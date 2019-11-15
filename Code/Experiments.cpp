@@ -4,6 +4,7 @@
 
 //#include <math.h>
 #include <random>
+#include <cassert>
 
 using namespace std;
 
@@ -992,6 +993,18 @@ void addCircle(GNUPlotter& p, const std::string& attributes,
   p.addCommand(cmd);
 }
 
+void addPolygon(GNUPlotter& p, const std::string& attributes,
+  const std::vector<double> x, const std::vector<double> y)
+{
+  assert(x.size() == y.size());
+  assert(x.size() > 0);
+  std::string cmd = "set object polygon from ";
+  for(size_t i = 0; i < x.size(); i++)
+    cmd += p.s(x[i]) + "," + p.s(y[i]) + " to ";
+  cmd += p.s(x[0]) + "," + p.s(y[0]) + " " + attributes;
+  p.addCommand(cmd);
+}
+
 void addTriangle(GNUPlotter& p, const std::string& attributes,
   double x1, double y1, double x2, double y2, double x3, double y3)
 {
@@ -1002,6 +1015,7 @@ void addTriangle(GNUPlotter& p, const std::string& attributes,
     + p.s(x1) + "," + p.s(y1) + " " + attributes;
   p.addCommand(cmd);
 }
+// maybe call addPolygon
 
 
 // todo: addPolygon, addTriangle, addRectangle, addLine, addText, addArrow, ....
@@ -1012,7 +1026,7 @@ void testGeometry()
   // draw geometric obejcts such as lines, circles, ellipses, polygons, etc.
 
   GNUPlotter p;
-  p.setRange(-1.1, +1.1, -1.1, +1.1); // we draw inside the normalized square and use some margins
+  p.setRange(0, 10, 0, 10); // we draw inside the normalized square and use some margins
   p.setPixelSize(600, 600);
   p.addCommand("set size square");   // have a function setAspectRatio(double r), r = w/h
 
@@ -1023,13 +1037,16 @@ void testGeometry()
   //p.addCommand("set object circle at -0.4,-0.25 size 0.42 fc rgb \"green\" fs solid 1.0 front");
 
   std::string attributes = "fc rgb \"red\" fs solid 1.0 front"; // use a semi-transparent color
-  addCircle(p, attributes, 0.5, -0.5, 0.5);
+  addCircle(p, attributes, 2, 2, 1);
 
 
   //attributes = "fc rgb \"cyan\" fillstyle solid 1.0 border lt -1";
-  attributes = "fc rgb \"black\""; // polygon doesn't support fs/fillstyle ...old version of gnuplot?
+  attributes = "fc rgb \"black\" front"; // polygon doesn't support fs/fillstyle ...old version of gnuplot?
   addTriangle(p, attributes, 0,0, 1,1, 0,1);
   // http://soc.if.usp.br/manual/gnuplot-doc/htmldocs/polygon.html
+
+
+  addPolygon(p, attributes, {1,2,4,5}, {1,3,2,6});
 
 
   p.plot();
