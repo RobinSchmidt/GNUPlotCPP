@@ -984,6 +984,16 @@ void testSchroedinger()
 }
 
 
+void addCircle(GNUPlotter& p, double centerX, double centerY, double radius, 
+  const std::string& attributes)
+{
+  std::string cmd = "set object circle at " + p.s(centerX) + "," + p.s(centerY) 
+    + " size " + p.s(radius) + " " + attributes;
+  p.addCommand(cmd);
+}
+// todo: addPolygon, addTriangle, addRectangle, addLine, addText, addArrow, ....
+// maybe pass the drawing attributes before the geometric properties
+
 void testGeometry()
 {
   // draw geometric obejcts such as lines, circles, ellipses, polygons, etc.
@@ -995,9 +1005,15 @@ void testGeometry()
 
 
   // make convenience functions like addCircle(GNUPlotter& p, x, y, r, string& attributes)
-  p.addCommand("set object circle at 0.1,0.2 size 0.12 fc rgb \"red\" fs solid 1.0 front");
-  p.addCommand("set object circle at 0.4,0.5 size 0.22 fc rgb \"blue\" fs solid 1.0 front");
-  p.addCommand("set object circle at -0.4,-0.25 size 0.42 fc rgb \"green\" fs solid 1.0 front");
+  //p.addCommand("set object circle at 0.1,0.2 size 0.12 fc rgb \"red\" fs solid 1.0 front");
+  //p.addCommand("set object circle at 0.4,0.5 size 0.22 fc rgb \"blue\" fs solid 1.0 front");
+  //p.addCommand("set object circle at -0.4,-0.25 size 0.42 fc rgb \"green\" fs solid 1.0 front");
+
+  std::string attributes = "fc rgb \"red\" fs solid 1.0 front"; // use a semi-transparent gray
+  addCircle(p, 0.5, -0.5, 0.5, attributes);
+
+
+
 
   p.plot();
 
