@@ -986,7 +986,7 @@ void testSchroedinger()
 
 
 void addCircle(GNUPlotter& p, const std::string& attributes, 
-  double centerX, double centerY, double radius)
+  double centerX = 0, double centerY = 0, double radius = 1)
 {
   std::string cmd = "set object circle at " + p.s(centerX) + "," + p.s(centerY) 
     + " size " + p.s(radius) + " " + attributes;
@@ -1011,17 +1011,32 @@ void addTriangle(GNUPlotter& p, const std::string& attributes,
   addPolygon(p, attributes, { x1,x2,x3 }, { y1,y2,y3 });
 }
 
+void addRegularPolygon(GNUPlotter& p, const std::string& attributes,
+   int numSides, double centerX = 0, double centerY = 0, double radius = 1,double angle = 0)
+{
+  std::vector<double> x(numSides), y(numSides);
+  for(int i = 0; i < numSides; i++) {
+    double arg = angle + 2*M_PI*i / numSides;
+    x[i] = centerX + radius * cos(arg);
+    y[i] = centerY + radius * sin(arg); }
+  addPolygon(p, attributes, x, y);
+}
+// test parameters
 
 
-// todo: addPolygon, addTriangle, addRectangle, addLine, addText, addArrow, ....
-// maybe pass the drawing attributes before the geometric properties
+// todo: addRectangle, 
+// addRegularPolygon(double centerX, double centerY, double radius, numSides, angle = 0)
+// addLine, addText, addArrow, ....
+// maybe, when they are integrated into GNUPlotter, they should be called drawCircle etc. to 
+// distinguish them from the data adding methods - they use a different mechanism of gnuplot and
+// don't write data into the datafile (they plot the shapes directly via commands)
 
 void testGeometry()
 {
   // draw geometric obejcts such as lines, circles, ellipses, polygons, etc.
 
   GNUPlotter p;
-  p.setRange(0, 10, 0, 10); // we draw inside the normalized square and use some margins
+  p.setRange(-2, 10, -2, 10); // we draw inside the normalized square and use some margins
   p.setPixelSize(600, 600);
   p.addCommand("set size square");   // have a function setAspectRatio(double r), r = w/h
 
@@ -1031,17 +1046,22 @@ void testGeometry()
   //p.addCommand("set object circle at 0.4,0.5 size 0.22 fc rgb \"blue\" fs solid 1.0 front");
   //p.addCommand("set object circle at -0.4,-0.25 size 0.42 fc rgb \"green\" fs solid 1.0 front");
 
-  std::string attributes = "fc rgb \"red\" fs solid 1.0 front"; // use a semi-transparent color
-  addCircle(p, attributes, 2, 2, 1);
+  std::string a = "fc rgb \"red\" fs solid 1.0 front"; // use a semi-transparent color
+  addCircle(p, a, 2, 2, 1);
 
 
   //attributes = "fc rgb \"cyan\" fillstyle solid 1.0 border lt -1";
-  attributes = "fc rgb \"black\" front"; // polygon doesn't support fs/fillstyle ...old version of gnuplot?
-  addTriangle(p, attributes, 0,0, 1,1, 0,1);
+  a = "fc rgb \"black\" front"; // polygon doesn't support fs/fillstyle ...old version of gnuplot?
+  addTriangle(p, a, 0,0, 1,1, 0,1);
   // http://soc.if.usp.br/manual/gnuplot-doc/htmldocs/polygon.html
 
 
-  addPolygon(p, attributes, {1,2,4,5}, {1,3,2,6});
+  addPolygon(p, a, {1,2,4,5}, {1,3,2,6});
+
+  addRegularPolygon(p, a, 3);
+  addRegularPolygon(p, a, 4);
+  addRegularPolygon(p, a, 5);
+  addRegularPolygon(p, a, 6);
 
 
   p.plot();
