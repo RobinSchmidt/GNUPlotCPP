@@ -575,7 +575,16 @@ void addSubPlot(GNUPlotter& p, double x, double y, double w, double h, int datas
   p.addCommand("set origin " + p.s(x) + "," + p.s(y) + "\n");
   p.addCommand("plot '" + p.getDataPath() + "' i " + p.s((unsigned int)datasetIndex) 
                + " u 1:2" + " w lines lw 1.5 notitle\n"); 
-  // todo make the last part (excluding \n) a style-parameter string
+  // todo: 
+  // -make the last part (excluding \n) a style-parameter string
+  // -if the " u 1:2" is also included into the parameter, it would support other plotting styles
+  //  and therefore be suitable for inclusion into GNUPlotter - the problem with including it as
+  //  is is that it's too restrictive/specific - subplots may want to interpret the data 
+  //  differently
+  //  -showMultiPlot should then also have such a string parameter and pass it through to 
+  //   addSubPlot
+  //  -the parameter could be named plotStyle or howToPlot or dataInterpretation, dataFormat,
+  //   plotOption, or howTo
 }
 void showMultiPlot(GNUPlotter& p, int numRows, int numCols)
 {
