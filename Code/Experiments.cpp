@@ -1004,7 +1004,6 @@ void addEllipse(GNUPlotter& p, const std::string& attributes,
 }
 // http://gnuplot.sourceforge.net/demo/ellipse.html
 
-
 void addPolygon(GNUPlotter& p, const std::string& attributes,
   const std::vector<double> x, const std::vector<double> y)
 {
@@ -1016,6 +1015,25 @@ void addPolygon(GNUPlotter& p, const std::string& attributes,
   cmd += p.s(x[0]) + "," + p.s(y[0]) + " " + attributes;
   p.addCommand(cmd);
 }
+// can we remove the "object" from the call? with arrow, it seems possible
+
+void addArrow(GNUPlotter& p, const std::string& attributes,
+  double x1, double y1, double x2, double y2)
+{
+  std::string cmd = "set arrow from " + p.s(x1) + "," + p.s(y1) + " to "
+    + p.s(x2) + "," + p.s(y2) + " " + attributes;
+  p.addCommand(cmd);
+}
+
+void addLine(GNUPlotter& p, const std::string& attributes,
+  double x1, double y1, double x2, double y2)
+{
+  addArrow(p, "nohead " + attributes, x1, y1, x2, y2);
+  // a line is just drawn as an arrow without head, i.e. the nohead attribute is added to the 
+  // given attributes
+}
+
+
 
 void addTriangle(GNUPlotter& p, const std::string& attributes,
   double x1, double y1, double x2, double y2, double x3, double y3)
@@ -1043,7 +1061,7 @@ void addRegularPolygon(GNUPlotter& p, const std::string& attributes,
 }
 // test parameters
 
-// addLine, addText, addArrow, ....
+// addText
 // maybe, when they are integrated into GNUPlotter, they should be called drawCircle etc. to 
 // distinguish them from the data adding methods - they use a different mechanism of gnuplot and
 // don't write data into the datafile (they plot the shapes directly via commands)
@@ -1079,6 +1097,8 @@ void testGeometry()
   //addPolygon(p, a, {1,2,4,5}, {1,3,2,6});
 
   addEllipse(p, a, 4, 2, 6, 4);
+
+  addLine(p, a, 1,2, 5,4);
 
   //addRectangle(p, a, 3, 2, 5, 4);
 
