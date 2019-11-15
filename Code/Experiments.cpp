@@ -991,10 +991,10 @@ void testGeometry()
   GNUPlotter p;
   p.setRange(-1.1, +1.1, -1.1, +1.1); // we draw inside the normalized square and use some margins
 
-  // add some dummy data:
-  double dummy = 0;
-  p.addDataArrays(1, &dummy, &dummy); // try to do this in a cleaner way
-  // move to GNUPlotter::addPlotCommand
+  //// add some dummy data:
+  //double dummy = 0;
+  //p.addDataArrays(1, &dummy, &dummy); // try to do this in a cleaner way
+  //// move to GNUPlotter::addPlotCommand
 
   p.setPixelSize(600, 600);
   p.addCommand("set size square");  // have a function setAspectRatio(double r), r = w/h

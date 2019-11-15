@@ -932,6 +932,19 @@ std::string GNUPlotter::sd(int x)
 
 void GNUPlotter::addPlotCommand(bool splot)
 {
+  // If dataInfo is empty (i.e. no data was added to the datafile by client code), we generate some
+  // dummy data. This is needed, if the user just wants to draw geometric figures on an empty 
+  // canvas. If there is no data at all, the code below crashes and even modifying it to avoid the 
+  // crash doesn't work - then it doesn't crahs GNUPlot doesn't open - so, we need at least one 
+  // dummy dataset to plot:
+  if(dataInfo.empty()) {
+    double dummy = 0; addDataArrays(1, &dummy, &dummy, &dummy); } // may work for 2D and 3D
+
+
+
+
+
+  // Initialize the plot command:
   int i;
   string pc;
   addCommand("\n# Plotting:");
@@ -940,13 +953,11 @@ void GNUPlotter::addPlotCommand(bool splot)
   else
     pc = "plot \\\n";   // 2D plots
 
-  // todo: if dataInfo is empty, generate some dummy data
-
-  // auto-generate graph-descriptors, if user has not set them up manually:
+  // Auto-generate graph-descriptors, if user has not set them up manually:
   if(graphDescriptors.empty())
     generateGraphDescriptors(splot);
 
-  // add the graph-descriptors to the plot command:
+  // Add the graph-descriptors to the plot command:
   for(i = 0; i < (int)graphDescriptors.size()-1; i++)
     pc += "'" + dataPath + "' " + graphDescriptors[i] + ",\\\n";
   pc += "'" + dataPath + "' " + graphDescriptors[i];
