@@ -1008,14 +1008,9 @@ void addPolygon(GNUPlotter& p, const std::string& attributes,
 void addTriangle(GNUPlotter& p, const std::string& attributes,
   double x1, double y1, double x2, double y2, double x3, double y3)
 {
-  std::string cmd = "set object polygon from " 
-    + p.s(x1) + "," + p.s(y1) + " to "
-    + p.s(x2) + "," + p.s(y2) + " to " 
-    + p.s(x3) + "," + p.s(y3) + " to " 
-    + p.s(x1) + "," + p.s(y1) + " " + attributes;
-  p.addCommand(cmd);
+  addPolygon(p, attributes, { x1,x2,x3 }, { y1,y2,y3 });
 }
-// maybe call addPolygon
+
 
 
 // todo: addPolygon, addTriangle, addRectangle, addLine, addText, addArrow, ....
