@@ -985,6 +985,9 @@ void testSchroedinger()
 }
 
 
+
+
+/*
 void addCircle(GNUPlotter& p, const std::string& attributes, 
   double centerX = 0, double centerY = 0, double radius = 1)
 {
@@ -1041,18 +1044,22 @@ void addText(GNUPlotter& p, const std::string& attributes,
 }
 // https://stackoverflow.com/questions/16820963/how-to-add-text-to-an-arrow-in-gnuplot
 // http://www.manpagez.com/info/gnuplot/gnuplot-4.4.3/gnuplot_259.php
+*/
+
+
+
 
 
 void addTriangle(GNUPlotter& p, const std::string& attributes,
   double x1, double y1, double x2, double y2, double x3, double y3)
 {
-  addPolygon(p, attributes, { x1,x2,x3 }, { y1,y2,y3 });
+  p.addPolygon(attributes, { x1,x2,x3 }, { y1,y2,y3 });
 }
 
 void addRectangle(GNUPlotter& p, const std::string& attributes,
   double x1, double y1, double w, double h) // width, height
 {
-  addPolygon(p, attributes, { x1,x1+w,x1+w,x1 }, { y1,y1,y1+h,y1+h });
+  p.addPolygon(attributes, { x1,x1+w,x1+w,x1 }, { y1,y1,y1+h,y1+h });
 }
 // maybe add an rotation angle - but maybe that makes more sense, when we specify the center
 // coordinates instead of an edge
@@ -1066,7 +1073,7 @@ void addRegularPolygon(GNUPlotter& p, const std::string& attributes,
     double arg = angle + 2*M_PI*i / numSides;
     x[i] = centerX + radius * cos(arg);
     y[i] = centerY + radius * sin(arg); }
-  addPolygon(p, attributes, x, y);
+  p.addPolygon(attributes, x, y);
 }
 // test parameters
 
@@ -1104,11 +1111,11 @@ void testGeometry()
 
   //addPolygon(p, a, {1,2,4,5}, {1,3,2,6});
 
-  addEllipse(p, a, 4, 2, 6, 4);
+  p.addEllipse(a, 4, 2, 6, 4);
 
-  addLine(p, a, 1,2, 5,4);
+  p.addLine(a, 1,2, 5,4);
 
-  addText(p, "", "Text", 6,6);
+  p.addText("", "Text", 6,6);
 
   //addRectangle(p, a, 3, 2, 5, 4);
 

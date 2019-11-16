@@ -489,6 +489,31 @@ public:
 
 
   //-----------------------------------------------------------------------------------------------
+  /** \name Drawing.
+  These functions are meant for directly drawing geometric shapes, text, etc onto the canvas. They
+  do not add anything to the datafile, rather they add commands like a "set object circle..." to
+  the commandfile. These drawing commands appear before the plot commands (...hmm - does this have 
+  to be the case?).  */
+
+  void addCircle(const std::string& attributes, double centerX = 0, double centerY = 0, 
+    double radius = 1);
+
+  void addEllipse(const std::string& attributes, double centerX = 0, double centerY = 0, 
+    double width   = 2, double height  = 2, double angle = 0);  // angle is in degrees
+
+  void addPolygon(const std::string& attributes, const std::vector<double> x, 
+    const std::vector<double> y);
+
+  void addArrow(const std::string& attributes, double x1, double y1, double x2, double y2);
+
+  void addLine(const std::string& attributes, double x1, double y1, double x2, double y2);
+
+  void addText(const std::string& attributes, const std::string& text, double x, double y);
+
+  // maybe rename to drawCircle, etc.
+
+
+  //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
 
   /** Returns the path of the datafile. */
@@ -559,8 +584,13 @@ public:
 
 
 
+
+
+
+
   //-----------------------------------------------------------------------------------------------
   /** \name Handling variable argument lists */
+  // should be protected or private
 
   template<class T> 
   static T nullValue(T);

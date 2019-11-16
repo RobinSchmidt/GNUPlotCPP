@@ -20,9 +20,7 @@ int main(int argc, char** argv)
   demoPlottingStyles();
   demoTrigFunctions();
   demoMultiPlot1();
-  */
   demoMultiPlot2();
-  /*
   demoSquare();
   demoMatrixData();
   demoLissajous();
@@ -71,7 +69,7 @@ int main(int argc, char** argv)
   //testHistogram();
   //testMoebiusStrip();
   //testSchroedinger();
-  //testGeometry();
+  testGeometry();
   
 
   getchar();
