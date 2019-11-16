@@ -1078,7 +1078,7 @@ void drawRegularPolygon(GNUPlotter& p, const std::string& attributes,
 // test parameters
 
 
-
+/*
 void drawPolyLine(GNUPlotter& p, const std::string& attributes, const std::vector<double> x,
   const std::vector<double> y)
 {
@@ -1086,6 +1086,7 @@ void drawPolyLine(GNUPlotter& p, const std::string& attributes, const std::vecto
   for(int i = 0; i < (int)x.size() - 1; i++)
     p.drawLine(attributes, x[i], y[i], x[i+1], y[i+1]);
 }
+*/
 
 void plotPolyLine(GNUPlotter& p, const std::string& attributes, const std::vector<double> x,
   const std::vector<double> y)
@@ -1160,7 +1161,7 @@ void testGeometry() // rename to testDrawing
   //drawRegularPolygon(p, a,  4);
   //drawRegularPolygon(p, a,  3);
   
-  drawPolyLine(p, "lw 2", { 1,2,2,1 }, { 1,1,2,2 });
+  p.drawPolyLine("lw 2", { 1,2,2,1 }, { 1,1,2,2 });
 
   //plotPolyLine(p, "with lines lw 2 notitle", { 1,2,2,1 }, { 1,1,2,2 });
   //p.invokeGNUPlot();

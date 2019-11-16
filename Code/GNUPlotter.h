@@ -509,11 +509,15 @@ public:
 
   void drawLine(const std::string& attributes, double x1, double y1, double x2, double y2);
 
+  void drawPolyLine(const std::string& attributes, 
+    const std::vector<double> x, const std::vector<double> y);
+
   /** The x,y-coordinates specify the center-left of the text. A typical attribute string could 
   look like: .... */
   void drawText(const std::string& attributes, const std::string& text, double x, double y);
 
-  // add drawPolyLine
+  // maybe reorder from simple to complex: line,arrow,polyline,polygon,circle,ellipse...text is
+  // actually most complex geometrically - but very common - maybe put it first
 
 
   //-----------------------------------------------------------------------------------------------

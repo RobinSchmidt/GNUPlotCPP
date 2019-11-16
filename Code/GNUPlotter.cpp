@@ -793,21 +793,32 @@ void GNUPlotter::drawPolygon(const std::string& attributes,
   cmd += s(x[0]) + "," + s(y[0]) + " " + attributes;
   addCommand(cmd);
 }
-// can we remove the "object" from the calls? -> nope. with arrow, it seems possible
 
 void GNUPlotter::drawArrow(const std::string& attr,
   double x1, double y1, double x2, double y2)
 {
   addCommand("set arrow from " + s(x1) + "," + s(y1) + " to "
              + s(x2) + "," + s(y2) + " " + attr);
+  // The syntax for arrows is different from polygons, circles, ellipses, etc. - it doesn't include 
+  // the "object" - that's a bit inconsistent.
 }
 
 void GNUPlotter::drawLine(const std::string& attributes,
   double x1, double y1, double x2, double y2)
 {
   drawArrow("nohead " + attributes, x1, y1, x2, y2);
-  // a line is just drawn as an arrow without head, i.e. the nohead attribute is added to the 
-  // given attributes
+  // A line is just drawn as an arrow without head, i.e. the nohead attribute is added to the 
+  // given attributes.
+}
+
+void GNUPlotter::drawPolyLine(const std::string& attributes, 
+  const std::vector<double> x, const std::vector<double> y)
+{
+  assert(x.size() == y.size(), "x and y must have the same size");
+  for(int i = 0; i < (int)x.size() - 1; i++)
+    drawLine(attributes, x[i], y[i], x[i+1], y[i+1]);
+  // It's awkward that we have to draw a polyline as a bunch of lines which in turn are just arrows
+  // wihtout a head, but gnuplot doesn't provide line or polyline primitives. ...how weird is that?
 }
 
 void GNUPlotter::drawText(const std::string& attr,
