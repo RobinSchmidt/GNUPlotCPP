@@ -496,28 +496,28 @@ public:
   will be drawn on top the shapes, unless they specify "front" in their attributes string. 
   (...hmm - does this have to be the case?).  */
 
+  /** The x,y-coordinates specify the center-left of the text. A typical attribute string could 
+  look like: .... */
+  void drawText(const std::string& attributes, const std::string& text, double x, double y);
+
+  void drawLine(const std::string& attributes, double x1, double y1, double x2, double y2);
+
+  void drawArrow(const std::string& attributes, double x1, double y1, double x2, double y2);
+
+  void drawPolyLine(const std::string& attributes, 
+    const std::vector<double> x, const std::vector<double> y);
+
+  void drawPolygon(const std::string& attributes, const std::vector<double> x, 
+    const std::vector<double> y);
+
   void drawCircle(const std::string& attributes, double centerX = 0, double centerY = 0, 
     double radius = 1);
 
   void drawEllipse(const std::string& attributes, double centerX = 0, double centerY = 0, 
     double width = 2, double height = 2, double angle = 0);  // angle is in degrees
 
-  void drawPolygon(const std::string& attributes, const std::vector<double> x, 
-    const std::vector<double> y);
+  // maybe add drawRectangle, drawTriangle, drawRegularPolygon
 
-  void drawArrow(const std::string& attributes, double x1, double y1, double x2, double y2);
-
-  void drawLine(const std::string& attributes, double x1, double y1, double x2, double y2);
-
-  void drawPolyLine(const std::string& attributes, 
-    const std::vector<double> x, const std::vector<double> y);
-
-  /** The x,y-coordinates specify the center-left of the text. A typical attribute string could 
-  look like: .... */
-  void drawText(const std::string& attributes, const std::string& text, double x, double y);
-
-  // maybe reorder from simple to complex: line,arrow,polyline,polygon,circle,ellipse...text is
-  // actually most complex geometrically - but very common - maybe put it first
 
 
   //-----------------------------------------------------------------------------------------------

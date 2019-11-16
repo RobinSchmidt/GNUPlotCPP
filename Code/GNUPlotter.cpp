@@ -769,6 +769,53 @@ template void GNUPlotter::addFieldLine2D(const std::function<double(double, doub
 //-------------------------------------------------------------------------------------------------
 // Drawing:
 
+void GNUPlotter::drawText(const std::string& attr,
+  const std::string& text, double x, double y)
+{
+  addCommand("set label \"" + text + "\" at " + s(x) + "," + s(y) + " " + attr);
+}
+// https://stackoverflow.com/questions/16820963/how-to-add-text-to-an-arrow-in-gnuplot
+// http://www.manpagez.com/info/gnuplot/gnuplot-4.4.3/gnuplot_259.php
+
+void GNUPlotter::drawLine(const std::string& attributes,
+  double x1, double y1, double x2, double y2)
+{
+  drawArrow("nohead " + attributes, x1, y1, x2, y2);
+  // A line is just drawn as an arrow without head, i.e. the nohead attribute is added to the 
+  // attributes that are already given.
+}
+
+void GNUPlotter::drawArrow(const std::string& attr,
+  double x1, double y1, double x2, double y2)
+{
+  addCommand("set arrow from " + s(x1) + "," + s(y1) + " to "
+    + s(x2) + "," + s(y2) + " " + attr);
+}
+
+void GNUPlotter::drawPolyLine(const std::string& attributes, 
+  const std::vector<double> x, const std::vector<double> y)
+{
+  assert(x.size() == y.size(), "x and y must have the same size");
+  for(int i = 0; i < (int)x.size() - 1; i++)
+    drawLine(attributes, x[i], y[i], x[i+1], y[i+1]);
+  // It's awkward that we have to draw a polyline as a bunch of lines which in turn are just arrows
+  // without a head, but gnuplot doesn't provide line or polyline primitives. ...how weird is that?
+}
+
+void GNUPlotter::drawPolygon(const std::string& attributes,
+  const std::vector<double> x, const std::vector<double> y)
+{
+  assert(x.size() == y.size(), "x and y must have the same size");
+  if(x.size() < 3) return; // we don't draw degenerate polygons
+  std::string cmd = "set object polygon from ";
+  for(size_t i = 0; i < x.size(); i++)
+    cmd += s(x[i]) + "," + s(y[i]) + " to ";
+  cmd += s(x[0]) + "," + s(y[0]) + " " + attributes;
+  addCommand(cmd);
+  // The syntax for polygons, circles, ellipses, etc. is different than for arrows and (text) 
+  // labels. It doesn't includes "object" - that's a bit inconsistent.
+}
+
 void GNUPlotter::drawCircle(const std::string& attr, double x, double y, double r)
 {
   addCommand("set object circle at " + s(x) + "," + s(x) + " size " + s(r) + " " + attr);
@@ -781,53 +828,6 @@ void GNUPlotter::drawEllipse(const std::string& attr,
               + s(w) + "," + s(h) + " angle " + s(a) + " " + attr);
 }
 // http://gnuplot.sourceforge.net/demo/ellipse.html
-
-void GNUPlotter::drawPolygon(const std::string& attributes,
-  const std::vector<double> x, const std::vector<double> y)
-{
-  assert(x.size() == y.size(), "x and y must have the same size");
-  if(x.size() < 3) return; // we don't draw degenerate polygons
-  std::string cmd = "set object polygon from ";
-  for(size_t i = 0; i < x.size(); i++)
-    cmd += s(x[i]) + "," + s(y[i]) + " to ";
-  cmd += s(x[0]) + "," + s(y[0]) + " " + attributes;
-  addCommand(cmd);
-}
-
-void GNUPlotter::drawArrow(const std::string& attr,
-  double x1, double y1, double x2, double y2)
-{
-  addCommand("set arrow from " + s(x1) + "," + s(y1) + " to "
-             + s(x2) + "," + s(y2) + " " + attr);
-  // The syntax for arrows is different from polygons, circles, ellipses, etc. - it doesn't include 
-  // the "object" - that's a bit inconsistent.
-}
-
-void GNUPlotter::drawLine(const std::string& attributes,
-  double x1, double y1, double x2, double y2)
-{
-  drawArrow("nohead " + attributes, x1, y1, x2, y2);
-  // A line is just drawn as an arrow without head, i.e. the nohead attribute is added to the 
-  // given attributes.
-}
-
-void GNUPlotter::drawPolyLine(const std::string& attributes, 
-  const std::vector<double> x, const std::vector<double> y)
-{
-  assert(x.size() == y.size(), "x and y must have the same size");
-  for(int i = 0; i < (int)x.size() - 1; i++)
-    drawLine(attributes, x[i], y[i], x[i+1], y[i+1]);
-  // It's awkward that we have to draw a polyline as a bunch of lines which in turn are just arrows
-  // wihtout a head, but gnuplot doesn't provide line or polyline primitives. ...how weird is that?
-}
-
-void GNUPlotter::drawText(const std::string& attr,
-  const std::string& text, double x, double y)
-{
-  addCommand("set label \"" + text + "\" at " + s(x) + "," + s(y) + " " + attr);
-}
-// https://stackoverflow.com/questions/16820963/how-to-add-text-to-an-arrow-in-gnuplot
-// http://www.manpagez.com/info/gnuplot/gnuplot-4.4.3/gnuplot_259.php
 
 // see here for what types of objects are supported:
 // http://soc.if.usp.br/manual/gnuplot-doc/htmldocs/set_002dshow.html#set_002dshow
