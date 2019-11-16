@@ -155,21 +155,24 @@ void GNUPlotter::plot3D()
 
 void GNUPlotter::showMultiPlot(GNUPlotter& p, int numRows, int numCols, const std::string& how)
 {
+  addCommand("set multiplot");                             // init multiplot
+
   double h = 1.0 / numRows;                                // relative height of subplots
   double w = 1.0 / numCols;                                // relative width of subplots
-  addCommand("set multiplot");                             // init multiplot
-  addCommand("set size " + p.s(w) + "," + p.s(h));         // set size of subplots
   for(int i = 0; i < numRows; i++)                         // loop over the plot-rows
     for(int j = 0; j < numCols; j++)                       // loop over the plot-columns
       addSubPlot(p, j*w, 1-i*h-h, w, h, numCols*i+j, how);
+
   addCommand("unset multiplot");
   invokeGNUPlot();
 }
+// factor out initMultiPlot/finishMultiPlot...or maybe use show instead of finish
 
 void GNUPlotter::addSubPlot(GNUPlotter& p, double x, double y, double w, double h, int datasetIndex, 
   const std::string& how)
 {
-  addCommand("set origin " + p.s(x) + "," + p.s(y));
+  addCommand("set origin " + p.s(x) + "," + p.s(y));    // bottom-left corner of this subplot
+  addCommand("set size "   + p.s(w) + "," + p.s(h));    // size of this subplot
   addCommand("plot '" + p.getDataPath() + "' i " + p.s((unsigned int)datasetIndex) + " " + how);
 }
 // todo: this should also allow to use splot instead of plot - have a boolean splot or plot3D 

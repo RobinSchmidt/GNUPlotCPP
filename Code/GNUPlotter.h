@@ -130,9 +130,17 @@ public:
 
 
   void showMultiPlot(GNUPlotter& p, int numRows, int numCols, const std::string& howTo);
-  // todo: allow for 3D multiplots, have a default howTo string - this helps the user also to 
-  // understand what they are supposed to put into this string
+  // todo: 
+  // -add documentation
+  // -allow for 3D multiplots
+  // -have a default howTo string - this helps the user also to understand what they are supposed 
+  //  to put into this string
+  // -maybe rename to homogenousMultiPlot
 
+  /** Used internally by showMultiPlot. Client code probably does not need to deal with it 
+  directly, unless it wants the subplots to be heterogenous, like using different plotting styles 
+  or options for data-interpretation for each subplot. ...hmm - that could actually be a quite 
+  common use case...  */
   void addSubPlot(GNUPlotter& p, double x, double y, double w, double h, int datasetIndex, 
     const std::string& howTo);
 
