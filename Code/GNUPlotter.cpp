@@ -153,6 +153,29 @@ void GNUPlotter::plot3D()
   invokeGNUPlot();
 }
 
+void GNUPlotter::showMultiPlot(GNUPlotter& p, int numRows, int numCols, const std::string& how)
+{
+  double h = 1.0 / numRows;                                // relative height of subplots
+  double w = 1.0 / numCols;                                // relative width of subplots
+  addCommand("set multiplot");                             // init multiplot
+  addCommand("set size " + p.s(w) + "," + p.s(h));         // set size of subplots
+  for(int i = 0; i < numRows; i++)                         // loop over the plot-rows
+    for(int j = 0; j < numCols; j++)                       // loop over the plot-columns
+      addSubPlot(p, j*w, 1-i*h-h, w, h, numCols*i+j, how);
+  addCommand("unset multiplot");
+  invokeGNUPlot();
+}
+
+void GNUPlotter::addSubPlot(GNUPlotter& p, double x, double y, double w, double h, int datasetIndex, 
+  const std::string& how)
+{
+  addCommand("set origin " + p.s(x) + "," + p.s(y));
+  addCommand("plot '" + p.getDataPath() + "' i " + p.s((unsigned int)datasetIndex) + " " + how);
+}
+// todo: this should also allow to use splot instead of plot - have a boolean splot or plot3D 
+// parameter
+
+
 template <class T>
 void GNUPlotter::plotFunctionTables(int N, const T *x, const T *y1, const T *y2, const T *y3, 
   const T *y4, const T *y5, const T *y6, const T *y7, const T *y8, const T *y9)

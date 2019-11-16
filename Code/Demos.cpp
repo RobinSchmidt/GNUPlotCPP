@@ -568,39 +568,6 @@ void demoMultiPlot1()
   // http://gnuplot.sourceforge.net/demo/layout.html
 }
 
-
-
-void addSubPlot(GNUPlotter& p, double x, double y, double w, double h, int datasetIndex, 
-  const std::string& how)
-{
-  p.addCommand("set origin " + p.s(x) + "," + p.s(y));
-  p.addCommand("plot '" + p.getDataPath() + "' i " + p.s((unsigned int)datasetIndex) + " " + how);
-
-
-               //+ " u 1:2" + " w lines lw 1.5 notitle\n"); 
-  // todo: 
-  // -make the last part (excluding \n) a style-parameter string
-  // -if the " u 1:2" is also included into the parameter, it would support other plotting styles
-  //  and therefore be suitable for inclusion into GNUPlotter - the problem with including it as
-  //  is is that it's too restrictive/specific - subplots may want to interpret the data 
-  //  differently
-  //  -showMultiPlot should then also have such a string parameter and pass it through to 
-  //   addSubPlot
-  //  -the parameter could be named plotStyle or howToPlot or dataInterpretation, dataFormat,
-  //   plotOption, or howTo
-}
-void showMultiPlot(GNUPlotter& p, int numRows, int numCols, const std::string& how)
-{
-  double h = 1.0 / numRows;                                // relative height of subplots
-  double w = 1.0 / numCols;                                // relative width of subplots
-  p.addCommand("set multiplot");                           // init multiplot
-  p.addCommand("set size " + p.s(w) + "," + p.s(h));       // set size of subplots
-  for(int i = 0; i < numRows; i++)                         // loop over the plot-rows
-    for(int j = 0; j < numCols; j++)                       // loop over the plot-columns
-      addSubPlot(p, j*w, 1-i*h-h, w, h, numCols*i+j, how);
-  p.addCommand("unset multiplot");
-  p.invokeGNUPlot();
-}
 void demoMultiPlot2()
 {
   // Creates a multiplot grid with Lissajous figures using the helper function showMultiPlot (maybe
@@ -635,7 +602,7 @@ void demoMultiPlot2()
 
   // Add the subplot commands to the commandfile and plot via helper function showMultiPlot:
   std::string howTo = "u 1:2 w lines lw 1.5 notitle";
-  showMultiPlot(p, numRows, numCols, howTo);
+  p.showMultiPlot(p, numRows, numCols, howTo);
 }
 
 void demoSquare()

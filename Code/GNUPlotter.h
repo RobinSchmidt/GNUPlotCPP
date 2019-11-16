@@ -128,6 +128,17 @@ public:
   if you set up the data manually.*/
   void plot3D();
 
+
+  void showMultiPlot(GNUPlotter& p, int numRows, int numCols, const std::string& howTo);
+  // todo: allow for 3D multiplots, have a default howTo string - this helps the user also to 
+  // understand what they are supposed to put into this string
+
+  void addSubPlot(GNUPlotter& p, double x, double y, double w, double h, int datasetIndex, 
+    const std::string& howTo);
+
+
+
+
   /** Plots the function values in the arrays y1, y2, ... against an abscissa given by the array x. */
   template <class T>
   void plotFunctionTables(int N, const T *x, const T *y1, const T *y2 = nullptr, 
@@ -172,6 +183,7 @@ public:
   void plotBivariateFunction(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax, T (*f)(T, T));
    // let these functions take multiple functions, use internally a function
    // addBivariateFunctionData
+
 
   // provide more functions for specialized plots
   // plotFunctionFamily, plotVectorField, plotHistogram, bodePlot, scatterPlot, plotComplexMapping
