@@ -785,8 +785,8 @@ void GNUPlotter::drawEllipse(const std::string& attr,
 void GNUPlotter::drawPolygon(const std::string& attributes,
   const std::vector<double> x, const std::vector<double> y)
 {
-  //assert(x.size() == y.size());
-  //assert(x.size() > 0);
+  assert(x.size() == y.size(), "x and y must have the same size");
+  if(x.size() < 3) return; // we don't draw degenerate polygons
   std::string cmd = "set object polygon from ";
   for(size_t i = 0; i < x.size(); i++)
     cmd += s(x[i]) + "," + s(y[i]) + " to ";
@@ -945,6 +945,13 @@ void GNUPlotter::systemCall(const std::string &callString)
   char *cString = toZeroTerminatedString(callString);
   system(cString);
   delete[] cString;
+}
+
+void GNUPlotter::assert(bool condition, const char* errorMessage)
+{
+  if(!condition) {
+    std::cout << errorMessage;
+    std::terminate(); }
 }
 
 std::string GNUPlotter::getStyleString(unsigned int i)

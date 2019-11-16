@@ -1077,6 +1077,22 @@ void drawRegularPolygon(GNUPlotter& p, const std::string& attributes,
 }
 // test parameters
 
+
+void plotPolyLine(GNUPlotter& p, const std::string& attributes, const std::vector<double> x,
+  const std::vector<double> y)
+{
+  assert(x.size() == y.size(), "x and y must have the same size");
+  std::string cmd = "$data << EOD\n";
+  for(size_t i = 0; i < x.size(); i++)
+    cmd += p.s(x[i]) + " " + p.s(y[i]) + "\n";
+  cmd += "EOD\n"; // maybe remove 2nd \n
+  p.addCommand(cmd);
+  p.addCommand("plot \"$data\" " + attributes);
+}
+// https://stackoverflow.com/questions/3318228/how-to-plot-data-without-a-separate-file-by-specifying-all-points-inside-the-gnu
+// https://groups.google.com/forum/#!msg/comp.graphics.apps.gnuplot/UdiiC2cBQNo/xEyj6i7Y910J
+
+
 // maybe, when they are integrated into GNUPlotter, they should be called drawCircle etc. to 
 // distinguish them from the data adding methods - they use a different mechanism of gnuplot and
 // don't write data into the datafile (they plot the shapes directly via commands)
@@ -1088,7 +1104,7 @@ void testGeometry() // rename to testDrawing
   // draw geometric obejcts such as lines, circles, ellipses, polygons, etc.
 
   GNUPlotter p;
-  //p.setRange(0, 10, 0, 10); 
+  p.setRange(0, 10, 0, 10); 
 
   p.setPixelSize(600, 600);
   p.addCommand("set size square");   // have a function setAspectRatio(double r), r = w/h
@@ -1132,74 +1148,9 @@ void testGeometry() // rename to testDrawing
   //drawRegularPolygon(p, a,  3);
   
 
-  // how would we draw a polyline? do we have to use drawLine for each segment? or can we use the 
-  // plot command with inlining the coordinate data, like
-  // "plot 0,0, 0,1, 1,1, 1,0, 0,0 with lines...." - let's try:
-
-  //std::string cmd = "plot 0,0, 0,1, 1,1, 1,0, 0,0 with lines lw 2";
-  //p.addCommand(cmd);
-
-  // https://stackoverflow.com/questions/3318228/how-to-plot-data-without-a-separate-file-by-specifying-all-points-inside-the-gnu
-  //p.addCommand("X = \"0 0 1 1 0\"");
-  //p.addCommand("Y = \"0 1 1 0 0\"");
-  //p.addCommand("plot X,Y with lines lw2");
-
-  // https://groups.google.com/forum/#!msg/comp.graphics.apps.gnuplot/UdiiC2cBQNo/xEyj6i7Y910J
-  /*
-  X="0.1 0.2 0.3 0.4 0.5"
-  Y="-1  0   2   4   8"
-  set parametric
-  set trange [1:words(X)]; set samples words(X)
-  plot (0+word(X,int(t))),(0+word(Y,int(t)))
-  */
-
-  //p.addCommand("X=\"0.1 0.2 0.3 0.4 0.5\"");
-  //p.addCommand("Y=\"-1  0   2   4   8\"");
-  //p.addCommand("set parametric");
-  //p.addCommand("set samples words(X)");
-  //p.addCommand("plot (0+word(X,int(t))),(0+word(Y,int(t))) notitle");
-  //p.invokeGNUPlot();
-  // hmm - somthing flashes up very briefly - ok - it is when calling plot below - apparently, 
-  // the screen is cleared before plotting agfain
-  //p.addCommand("");
-  //p.addCommand("");
-
-
-  //p.addCommand("plot '-' \"0 1 2 3\",\"1,4,2,1\" w lines lw2 notitle");
-
-
-  //p.addCommand("plot '-' using 1:2\n 1 10\n 2 20\n 3 32\n 4 40\n 5 50\n e\n with lines lw2");
-  //p.addCommand("plot '-' using 1:2\n 1 10\n 2 20\n 3 32\n 4 40\n 5 50\n e\n"); // ues + symbols
-
-  //p.addCommand("plot notitle '-' using 1:2\n 1 10\n 2 20\n 3 32\n 4 40\n 5 50\n e\n");
-  //p.addCommand("plot '-' using 1:2\n 1 2\n 2 1\n 3 3\n 4 1\n 5 2\n e\n");
-  //p.addCommand("plot '-' using 1:2\n 1 2\n 2 1\n 3 3\n 4 1\n 5 2\n");
-
-
-
-  /*
-  $data << EOD
-  1 1
-  2 4
-  3 9
-  4 16
-  EOD
-
-  plot "$data" \
-  with linespoints \
-  title "my data"
-  */
-
-  //p.addCommand("$data << EOD\n 1 1\n 2 4\n 3 9\n 4 16\n EOD\n\n");
-  p.addCommand("$data << EOD\n1 1\n2 4\n3 9\n4 16\nEOD\n\n");
-  //p.addCommand("$data\n 1 1\n 2 4\n 3 9\n 4 16\n\n");
-  p.addCommand("plot \"$data\" with linespoints title \"my data\"");
+  plotPolyLine(p, "with lines lw 2 notitle", { 1,2,2,1 }, { 1,1,2,2 });
   p.invokeGNUPlot();
-  // ok - this works
 
-  //p.plot();
-
-  //p.invokeGNUPlot();
 
   //p.plot();
 }

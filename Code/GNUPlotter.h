@@ -651,6 +651,8 @@ protected:
   /** Calls the operating system to execute the command given by callString. */
   void systemCall(const std::string &callString);
 
+  void assert(bool condition, const char* errorMessage = nullptr);
+
   /** Adds the command for actually plotting the data to the commandfile. */
   void addPlotCommand(bool splot = false);
 
