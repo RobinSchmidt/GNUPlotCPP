@@ -769,20 +769,16 @@ template void GNUPlotter::addFieldLine2D(const std::function<double(double, doub
 //-------------------------------------------------------------------------------------------------
 // Drawing:
 
-void GNUPlotter::addCircle(const std::string& attributes, 
-  double centerX, double centerY, double radius)
+void GNUPlotter::addCircle(const std::string& attr, double x, double y, double r)
 {
-  std::string cmd = "set object circle at " + s(centerX) + "," + s(centerY) 
-    + " size " + s(radius) + " " + attributes;
-  addCommand(cmd);
+  addCommand("set object circle at " + s(x) + "," + s(x) + " size " + s(r) + " " + attr);
 }
 
-void GNUPlotter::addEllipse(const std::string& attributes, 
-  double centerX, double centerY, double width, double height, double angle)  // angle is in degrees
+void GNUPlotter::addEllipse(const std::string& attr, 
+  double x, double y, double w, double h, double a)  // angle is in degrees
 {
-  std::string cmd = "set object ellipse center " + s(centerX) + "," + s(centerY) + " size " 
-    + s(width) + "," + s(height) + " angle " + s(angle) + " " + attributes;
-  addCommand(cmd);
+  addCommand("set object ellipse center " + s(x) + "," + s(y) + " size " 
+              + s(w) + "," + s(h) + " angle " + s(a) + " " + attr);
 }
 // http://gnuplot.sourceforge.net/demo/ellipse.html
 
@@ -799,12 +795,11 @@ void GNUPlotter::addPolygon(const std::string& attributes,
 }
 // can we remove the "object" from the calls? -> nope. with arrow, it seems possible
 
-void GNUPlotter::addArrow(const std::string& attributes,
+void GNUPlotter::addArrow(const std::string& attr,
   double x1, double y1, double x2, double y2)
 {
-  std::string cmd = "set arrow from " + s(x1) + "," + s(y1) + " to "
-    + s(x2) + "," + s(y2) + " " + attributes;
-  addCommand(cmd);
+  addCommand("set arrow from " + s(x1) + "," + s(y1) + " to "
+             + s(x2) + "," + s(y2) + " " + attr);
 }
 
 void GNUPlotter::addLine(const std::string& attributes,
@@ -815,11 +810,10 @@ void GNUPlotter::addLine(const std::string& attributes,
   // given attributes
 }
 
-void GNUPlotter::addText(const std::string& attributes,
+void GNUPlotter::addText(const std::string& attr,
   const std::string& text, double x, double y)
 {
-  std::string cmd = "set label \"" + text + "\" at " + s(x) + "," + s(y) + " " + attributes;
-  addCommand(cmd);
+  addCommand("set label \"" + text + "\" at " + s(x) + "," + s(y) + " " + attr);
 }
 // https://stackoverflow.com/questions/16820963/how-to-add-text-to-an-arrow-in-gnuplot
 // http://www.manpagez.com/info/gnuplot/gnuplot-4.4.3/gnuplot_259.php
