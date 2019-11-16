@@ -39,6 +39,7 @@ public:
 
   //-----------------------------------------------------------------------------------------------
   /** \name Construction/Destruction */
+  // move down
 
   /** Constructor.*/
   GNUPlotter();
@@ -51,7 +52,7 @@ public:
   void initialize();
 
   //-----------------------------------------------------------------------------------------------
-  /** \name Convenience functions 
+  /** \name Static convenience functions 
   These functions can be called simply like GNUPlotter::plot... without creating a GNUPlotter 
   object and are meant for some quick and dirty plots with default look. */
 
@@ -67,6 +68,7 @@ public:
     plt.plot();
   }
   // maybe de-inline
+
 
   /** Plots real and imaginary parts of the complex array z agains the x-axis given by x. */
   template<class T>
@@ -110,42 +112,15 @@ public:
   static void plotComplexVectorField(const std::function<std::complex<T>(std::complex<T>)>& f,
     int Nr, T rMin, T rMax, int Ni, T iMin, T iMax, bool conjugate = true);
 
-
   // todo: plotFunction, plotBivariateFunction ...this would be the same as plotScalarField2D
 
 
   //-----------------------------------------------------------------------------------------------
-  /** \name Plotting */
-
-  /** After the data has been set up and possibly a couple of formatting functions have been
-  called, calling this function will actually invoke GNUPlot for plotting the data according to the
-  desired settings. Used internally, but can be also called, if you set up the data manually. */
-  void plot();
-
-  /** Like plot, but is used for 3D plots (invoking GNUPlot's "splot" command instead of "plot"). 
-  It is supposed that the appropriate data-setup functions have been called before, such that the 
-  datasets may meaningfully be interpreted as 3D datasets.  Used internally, but can be also called, 
-  if you set up the data manually.*/
-  void plot3D();
-
-
-  void showMultiPlot(GNUPlotter& p, int numRows, int numCols, const std::string& howTo);
-  // todo: 
-  // -add documentation
-  // -allow for 3D multiplots
-  // -have a default howTo string - this helps the user also to understand what they are supposed 
-  //  to put into this string
-  // -maybe rename to homogenousMultiPlot
-
-  /** Used internally by showMultiPlot. Client code probably does not need to deal with it 
-  directly, unless it wants the subplots to be heterogenous, like using different plotting styles 
-  or options for data-interpretation for each subplot. ...hmm - that could actually be a quite 
-  common use case...  */
-  void addSubPlot(GNUPlotter& p, double x, double y, double w, double h, int datasetIndex, 
-    const std::string& howTo);
-
-
-
+  /** \name Convenience functions 
+  These functions can be called by creating a plotter object and then calling the respective 
+  function on that object. In between, you may call further setup functions on the plotter object 
+  to customize the appearance. They are a little bit less convenient than the static ones (require 
+  two lines of code instead of one), but allow for a lot more flexibility. */
 
   /** Plots the function values in the arrays y1, y2, ... against an abscissa given by the array x. */
   template <class T>
@@ -192,9 +167,16 @@ public:
    // let these functions take multiple functions, use internally a function
    // addBivariateFunctionData
 
-
+  // ToDo: 
+  // -for those functions which receive a function pointer, use std::function instead - this 
+  //   will allow use with lambda-functions, functors *and* function-pointers -> more flexible
+  // -make a version of plotSurface that accepts a matrix in flat storage (row- or column-major)
   // provide more functions for specialized plots
   // plotFunctionFamily, plotVectorField, plotHistogram, bodePlot, scatterPlot, plotComplexMapping
+
+
+
+
 
   //-----------------------------------------------------------------------------------------------
   /** \name Style Setup */
@@ -284,6 +266,7 @@ public:
   a string of formatting options, for example "center" for centered text (see the set label 
   documentation in the GNUPlot manual). */
   void addAnnotation(double x, double y, CSR text, CSR options = "");
+
 
   //-----------------------------------------------------------------------------------------------
   /** \name Data setup */
@@ -478,7 +461,6 @@ public:
     T x0, T y0, T stepSize, int numPoints, int oversampling = 1);
 
 
-
   /** Adds a graph to the plot. You must pass a string that describes how the data (from the 
   previously created datafile) should be used to produce one of the graphs in the plot. This is a 
   string that appears in the actual "plot" or "splot" command that will be created for GNUPlot 
@@ -494,10 +476,8 @@ public:
   flexibility and generality in the use of this plotter class. */
   void addGraph(CSR descriptor);
 
-
   //-----------------------------------------------------------------------------------------------
   /** \name Combined addData + addGraph functions */
-
 
   template<class T>
   void addVectorField2D(const std::function<T(T, T)>& fx, const std::function<T(T, T)>& fy,
@@ -506,9 +486,6 @@ public:
   template<class T>
   void addFieldLine2D(const std::function<T(T, T)>& fx, const std::function<T(T, T)>& fy,
     T x0, T y0, T stepSize, int numPoints, int oversampling = 1);
-
-
-
 
 
   //-----------------------------------------------------------------------------------------------
@@ -536,12 +513,51 @@ public:
   static void decimate(T* x, int Nx, T* y, int factor);
 
 
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Preparing and invoking gnuplot */
+
+  /** After the data has been set up and possibly a couple of formatting functions have been
+  called, calling this function will actually invoke GNUPlot for plotting the data according to the
+  desired settings. Used internally, but can be also called, if you set up the data manually. */
+  void plot();
+
+  /** Like plot, but is used for 3D plots (invoking GNUPlot's "splot" command instead of "plot"). 
+  It is supposed that the appropriate data-setup functions have been called before, such that the 
+  datasets may meaningfully be interpreted as 3D datasets.  Used internally, but can be also called, 
+  if you set up the data manually.*/
+  void plot3D();
+
+  /** Function to create a homogenous multiplot with the given number of rows and columns (starting
+  at top left and going rightward and down). Homogenous means, that each subplot is of the same 
+  kind, i.e. has the same way of interpreting data from the datafile and the same plotting style. 
+  The data should be prepared such there are numRows*numCols datasets in the datafile and each 
+  dataset is for one of the subplots. The "howTo" string determines, how the datasets are to be 
+  interpreted and also sets up some style options of the plots. The default value would interpret 
+  the first columns of each dataset as x-coordinates and the second columns as y-coordinates and 
+  draw a curve using lines. */
+  void showMultiPlot(int numRows, int numCols, 
+    const std::string& howTo = "u 1:2 w lines lw 1.5 notitle");
+  // todo: 
+  // -allow for 3D multiplots
+  // -maybe rename to homogenousMultiPlot
+
+  /** Used internally by showMultiPlot. Client code probably does not need to deal with it 
+  directly, unless it wants the subplots to be heterogenous, like using different plotting styles 
+  or options for data-interpretation for each subplot. ...hmm - that could actually be a quite 
+  common use case...  */
+  void addSubPlot(double x, double y, double w, double h, int datasetIndex, 
+    const std::string& howTo);
+
+
   /** Initializes the command file. May be called by client code, if it wants to start with an 
   empty command file, i.e. a file that doesn't contain the default commands. */
   void clearCommandFile();
 
   /** Executes GNUPlot with the appropriate commandline parameter to read the command file. */
   void invokeGNUPlot();
+
+
 
   //-----------------------------------------------------------------------------------------------
   /** \name Handling variable argument lists */

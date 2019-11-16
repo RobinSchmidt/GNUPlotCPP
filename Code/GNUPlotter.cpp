@@ -125,59 +125,9 @@ template void GNUPlotter::plotComplexVectorField(const function<complex<double>(
 
 
 
-// plotting:
 
 
-/*
-template <class T>
-static void GNUPlotter::plot(int N, T *x, T *y1, T *y2, T *y3, T *y4, T *y5, T *y6, T *y7, T *y8,
-  T *y9)
-{
-  GNUPlotter plt;
-  plt.addDataArrays(N, x, y1, y2, y3, y4, y5, y6, y7, y8, y9);
-  plt.plot();
-}
-template void GNUPlotter::plot(int N, double *y1, double *y2, double *y3, double *y4,
-  double *y5, double *y6, double *y7, double *y8, double *y9);
-*/
-
-void GNUPlotter::plot()
-{
-  addPlotCommand(false);
-  invokeGNUPlot();
-}
-
-void GNUPlotter::plot3D()
-{
-  addPlotCommand(true);
-  invokeGNUPlot();
-}
-
-void GNUPlotter::showMultiPlot(GNUPlotter& p, int numRows, int numCols, const std::string& how)
-{
-  addCommand("set multiplot");                             // init multiplot
-
-  double h = 1.0 / numRows;                                // relative height of subplots
-  double w = 1.0 / numCols;                                // relative width of subplots
-  for(int i = 0; i < numRows; i++)                         // loop over the plot-rows
-    for(int j = 0; j < numCols; j++)                       // loop over the plot-columns
-      addSubPlot(p, j*w, 1-i*h-h, w, h, numCols*i+j, how);
-
-  addCommand("unset multiplot");
-  invokeGNUPlot();
-}
-// factor out initMultiPlot/finishMultiPlot...or maybe use show instead of finish
-
-void GNUPlotter::addSubPlot(GNUPlotter& p, double x, double y, double w, double h, int datasetIndex, 
-  const std::string& how)
-{
-  addCommand("set origin " + p.s(x) + "," + p.s(y));    // bottom-left corner of this subplot
-  addCommand("set size "   + p.s(w) + "," + p.s(h));    // size of this subplot
-  addCommand("plot '" + p.getDataPath() + "' i " + p.s((unsigned int)datasetIndex) + " " + how);
-}
-// todo: this should also allow to use splot instead of plot - have a boolean splot or plot3D 
-// parameter
-
+//-------------------------------------------------------------------------------------------------
 
 template <class T>
 void GNUPlotter::plotFunctionTables(int N, const T *x, const T *y1, const T *y2, const T *y3, 
@@ -289,6 +239,9 @@ template void GNUPlotter::plotBivariateFunction(int Nx, float xMin, float xMax, 
 template void GNUPlotter::plotBivariateFunction(int Nx, int xMin, int xMax, int Ny, int yMin,
   int yMax, int (*f)(int, int));
 
+
+
+//-------------------------------------------------------------------------------------------------
 // style setup:
 
 void GNUPlotter::addCommand(string command)
@@ -847,6 +800,46 @@ void GNUPlotter::decimate(T* x, int Nx, T* y, int factor)
     y[i] = x[i*factor];
 }
 
+//-------------------------------------------------------------------------------------------------
+// plotting:
+
+void GNUPlotter::plot()
+{
+  addPlotCommand(false);
+  invokeGNUPlot();
+}
+
+void GNUPlotter::plot3D()
+{
+  addPlotCommand(true);
+  invokeGNUPlot();
+}
+
+void GNUPlotter::showMultiPlot(int numRows, int numCols, const std::string& how)
+{
+  addCommand("set multiplot");                             // init multiplot
+
+  double h = 1.0 / numRows;                                // relative height of subplots
+  double w = 1.0 / numCols;                                // relative width of subplots
+  for(int i = 0; i < numRows; i++)                         // loop over the plot-rows
+    for(int j = 0; j < numCols; j++)                       // loop over the plot-columns
+      addSubPlot(j*w, 1-i*h-h, w, h, numCols*i+j, how);
+
+  addCommand("unset multiplot");
+  invokeGNUPlot();
+}
+// factor out initMultiPlot/finishMultiPlot...or maybe use show instead of finish
+
+void GNUPlotter::addSubPlot(double x, double y, double w, double h, int datasetIndex, 
+  const std::string& how)
+{
+  addCommand("set origin " + s(x) + "," + s(y));    // bottom-left corner of this subplot
+  addCommand("set size "   + s(w) + "," + s(h));    // size of this subplot
+  addCommand("plot '" + getDataPath() + "' i " + s((unsigned int)datasetIndex) + " " + how);
+}
+// todo: this should also allow to use splot instead of plot - have a boolean splot or plot3D 
+// parameter
+
 void GNUPlotter::clearCommandFile()
 {
   initFile(commandPath);
@@ -871,6 +864,7 @@ void GNUPlotter::invokeGNUPlot()
   int dummy = 0;
 }
 
+//-------------------------------------------------------------------------------------------------
 // internal functions:
 
 void GNUPlotter::initFile(const std::string &path)

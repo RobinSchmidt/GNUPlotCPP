@@ -602,7 +602,7 @@ void demoMultiPlot2()
 
   // Add the subplot commands to the commandfile and plot via helper function showMultiPlot:
   std::string howTo = "u 1:2 w lines lw 1.5 notitle";
-  p.showMultiPlot(p, numRows, numCols, howTo);
+  p.showMultiPlot(numRows, numCols, howTo);
 }
 
 void demoSquare()
