@@ -1050,22 +1050,22 @@ void addText(GNUPlotter& p, const std::string& attributes,
 
 
 
-void addTriangle(GNUPlotter& p, const std::string& attributes,
+void drawriangle(GNUPlotter& p, const std::string& attributes,
   double x1, double y1, double x2, double y2, double x3, double y3)
 {
-  p.addPolygon(attributes, { x1,x2,x3 }, { y1,y2,y3 });
+  p.drawPolygon(attributes, { x1,x2,x3 }, { y1,y2,y3 });
 }
 
-void addRectangle(GNUPlotter& p, const std::string& attributes,
+void drawRectangle(GNUPlotter& p, const std::string& attributes,
   double x1, double y1, double w, double h) // width, height
 {
-  p.addPolygon(attributes, { x1,x1+w,x1+w,x1 }, { y1,y1,y1+h,y1+h });
+  p.drawPolygon(attributes, { x1,x1+w,x1+w,x1 }, { y1,y1,y1+h,y1+h });
 }
 // maybe add an rotation angle - but maybe that makes more sense, when we specify the center
 // coordinates instead of an edge
 // GNUPlot actually has set object rectangle ...also triangle?
 
-void addRegularPolygon(GNUPlotter& p, const std::string& attributes,
+void drawRegularPolygon(GNUPlotter& p, const std::string& attributes,
    int numSides, double centerX = 0, double centerY = 0, double radius = 1,double angle = 0)
 {
   std::vector<double> x(numSides), y(numSides);
@@ -1073,7 +1073,7 @@ void addRegularPolygon(GNUPlotter& p, const std::string& attributes,
     double arg = angle + 2*M_PI*i / numSides;
     x[i] = centerX + radius * cos(arg);
     y[i] = centerY + radius * sin(arg); }
-  p.addPolygon(attributes, x, y);
+  p.drawPolygon(attributes, x, y);
 }
 // test parameters
 
@@ -1083,7 +1083,7 @@ void addRegularPolygon(GNUPlotter& p, const std::string& attributes,
 // perhaps only the lower level functions should be included into GNUPlotter - those that actually
 // invoke addCommand directly - we'll see
 
-void testGeometry()
+void testGeometry() // rename to testDrawing
 {
   // draw geometric obejcts such as lines, circles, ellipses, polygons, etc.
 
@@ -1100,37 +1100,37 @@ void testGeometry()
   //p.addCommand("set object circle at -0.4,-0.25 size 0.42 fc rgb \"green\" fs solid 1.0 front");
 
   std::string a = "fc rgb \"red\" fs solid 1.0 front"; // use a semi-transparent color
-  //addCircle(p, a, 2, 2, 1);
+  //drawCircle(p, a, 2, 2, 1);
 
 
   //attributes = "fc rgb \"cyan\" fillstyle solid 1.0 border lt -1";
   a = "fc rgb \"black\" front"; // polygon doesn't support fs/fillstyle ...old version of gnuplot?
-  //addTriangle(p, a, 0,0, 1,1, 0,1);
+  //drawTriangle(p, a, 0,0, 1,1, 0,1);
   // http://soc.if.usp.br/manual/gnuplot-doc/htmldocs/polygon.html
 
 
-  //addPolygon(p, a, {1,2,4,5}, {1,3,2,6});
+  p.drawPolygon(a, {1,2,4,5}, {1,3,2,6});
 
-  p.addEllipse(a, 4, 2, 6, 4);
+  p.drawEllipse(a, 4, 2, 6, 4);
 
-  p.addLine(a, 1,2, 5,4);
+  p.drawLine(a, 1,2, 5,4);
 
-  p.addText("", "Text", 6,6);
+  p.drawText("", "Text", 6,6);
 
-  //addRectangle(p, a, 3, 2, 5, 4);
+  drawRectangle(p, a, 3, 2, 5, 4);
 
-  /*
+  
   p.setRange(-1.1, +1.1, -1.1, +1.1);// we draw inside the normalized square and use some margins
-  addCircle(        p, a);
-  addRegularPolygon(p, a, 10);
-  addRegularPolygon(p, a,  9);
-  addRegularPolygon(p, a,  8);
-  addRegularPolygon(p, a,  7);
-  addRegularPolygon(p, a,  6);
-  addRegularPolygon(p, a,  5);
-  addRegularPolygon(p, a,  4);
-  addRegularPolygon(p, a,  3);
-  */
+  p.drawCircle(         a);
+  drawRegularPolygon(p, a, 10);
+  drawRegularPolygon(p, a,  9);
+  drawRegularPolygon(p, a,  8);
+  drawRegularPolygon(p, a,  7);
+  drawRegularPolygon(p, a,  6);
+  drawRegularPolygon(p, a,  5);
+  drawRegularPolygon(p, a,  4);
+  drawRegularPolygon(p, a,  3);
+  
 
 
 

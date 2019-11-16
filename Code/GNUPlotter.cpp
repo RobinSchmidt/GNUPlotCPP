@@ -769,12 +769,12 @@ template void GNUPlotter::addFieldLine2D(const std::function<double(double, doub
 //-------------------------------------------------------------------------------------------------
 // Drawing:
 
-void GNUPlotter::addCircle(const std::string& attr, double x, double y, double r)
+void GNUPlotter::drawCircle(const std::string& attr, double x, double y, double r)
 {
   addCommand("set object circle at " + s(x) + "," + s(x) + " size " + s(r) + " " + attr);
 }
 
-void GNUPlotter::addEllipse(const std::string& attr, 
+void GNUPlotter::drawEllipse(const std::string& attr, 
   double x, double y, double w, double h, double a)  // angle is in degrees
 {
   addCommand("set object ellipse center " + s(x) + "," + s(y) + " size " 
@@ -782,7 +782,7 @@ void GNUPlotter::addEllipse(const std::string& attr,
 }
 // http://gnuplot.sourceforge.net/demo/ellipse.html
 
-void GNUPlotter::addPolygon(const std::string& attributes,
+void GNUPlotter::drawPolygon(const std::string& attributes,
   const std::vector<double> x, const std::vector<double> y)
 {
   //assert(x.size() == y.size());
@@ -795,22 +795,22 @@ void GNUPlotter::addPolygon(const std::string& attributes,
 }
 // can we remove the "object" from the calls? -> nope. with arrow, it seems possible
 
-void GNUPlotter::addArrow(const std::string& attr,
+void GNUPlotter::drawArrow(const std::string& attr,
   double x1, double y1, double x2, double y2)
 {
   addCommand("set arrow from " + s(x1) + "," + s(y1) + " to "
              + s(x2) + "," + s(y2) + " " + attr);
 }
 
-void GNUPlotter::addLine(const std::string& attributes,
+void GNUPlotter::drawLine(const std::string& attributes,
   double x1, double y1, double x2, double y2)
 {
-  addArrow("nohead " + attributes, x1, y1, x2, y2);
+  drawArrow("nohead " + attributes, x1, y1, x2, y2);
   // a line is just drawn as an arrow without head, i.e. the nohead attribute is added to the 
   // given attributes
 }
 
-void GNUPlotter::addText(const std::string& attr,
+void GNUPlotter::drawText(const std::string& attr,
   const std::string& text, double x, double y)
 {
   addCommand("set label \"" + text + "\" at " + s(x) + "," + s(y) + " " + attr);
