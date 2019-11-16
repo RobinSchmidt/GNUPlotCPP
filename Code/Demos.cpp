@@ -570,16 +570,18 @@ void demoMultiPlot1()
 
 void demoMultiPlot2()
 {
-  // Creates a multiplot grid with Lissajous figures using the helper function showMultiPlot (maybe
-  // this should be moved into GNUPlotter)
+  // Creates a multiplot grid with Lissajous figures using the higher-level inteface function 
+  // GNUPlotter::showMultiPlot which wraps adding all the separate "plot" commands which is done
+  // manually in the example above.
 
   // Settings:
   int N       = 201;        // number of datapoints per plot
   int numRows = 5;          // number of rows
   int numCols = 5;          // number of columns
   int size    = 120;        // number of pixels per subplot
+  double dp   = M_PI/2;     // phase offset "delta-phi" for y-coordinate
 
-  // Generate data and add it to the datafile (this is not the most economic way to do it):
+  // Generate the Lissajous figure data and add it to the datafile:
   GNUPlotter p;                             // create a plotter object
   std::vector<double> x(N), y(N);           // allocate memory for data
   for(int i = 1; i <= numRows; i++) {       // loop over the plot-rows
@@ -587,7 +589,7 @@ void demoMultiPlot2()
       for(int n = 0; n < N; n++) {          // loop over datapoints for current plot
         double t = n*2*M_PI / (N-1);        // compute curve parameter
         x[n] = sin(i*t);                    // compute x-coordinate
-        y[n] = sin(j*t); }                  // compute y-coordinate
+        y[n] = sin(j*t+dp); }               // compute y-coordinate
       p.addDataArrays(N, &x[0], &y[0]); }}  // add dataset to file
 
   // Setup style:
@@ -604,6 +606,9 @@ void demoMultiPlot2()
   std::string howTo = "u 1:2 w lines lw 1.5 notitle"; // that's actually the default, so it...
   p.showMultiPlot(numRows, numCols, howTo);           // ...wouldn't be needed, but anyway
 }
+// todo: 
+// -can we plot a familiy of lissajous figures into each subplot, for various values of dp, like
+//  0,45,90,135,180,...?
 // todo: make a heterogenous multiplot - maybe a bunch of pole/zero plots for filters with 
 // frequency responses next to it
 // or: a unit circle in the top-left corner and a sine-wave to the right and cosine wave downward
