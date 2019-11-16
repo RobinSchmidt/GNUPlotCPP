@@ -1078,6 +1078,15 @@ void drawRegularPolygon(GNUPlotter& p, const std::string& attributes,
 // test parameters
 
 
+
+void drawPolyLine(GNUPlotter& p, const std::string& attributes, const std::vector<double> x,
+  const std::vector<double> y)
+{
+  assert(x.size() == y.size(), "x and y must have the same size");
+  for(int i = 0; i < (int)x.size() - 1; i++)
+    p.drawLine(attributes, x[i], y[i], x[i+1], y[i+1]);
+}
+
 void plotPolyLine(GNUPlotter& p, const std::string& attributes, const std::vector<double> x,
   const std::vector<double> y)
 {
@@ -1085,12 +1094,16 @@ void plotPolyLine(GNUPlotter& p, const std::string& attributes, const std::vecto
   std::string cmd = "$data << EOD\n";
   for(size_t i = 0; i < x.size(); i++)
     cmd += p.s(x[i]) + " " + p.s(y[i]) + "\n";
-  cmd += "EOD\n"; // maybe remove 2nd \n
+  cmd += "EOD\n";
   p.addCommand(cmd);
   p.addCommand("plot \"$data\" " + attributes);
 }
 // https://stackoverflow.com/questions/3318228/how-to-plot-data-without-a-separate-file-by-specifying-all-points-inside-the-gnu
 // https://groups.google.com/forum/#!msg/comp.graphics.apps.gnuplot/UdiiC2cBQNo/xEyj6i7Y910J
+// move to GNUPlotter, maybe rename to drawPolyLine - figure out, if it behaves differently from the
+// "set object..." calls - yes - it does - when calling GNUPlotter::plot after it, the screen gets 
+// cleared
+
 
 
 // maybe, when they are integrated into GNUPlotter, they should be called drawCircle etc. to 
@@ -1147,12 +1160,13 @@ void testGeometry() // rename to testDrawing
   //drawRegularPolygon(p, a,  4);
   //drawRegularPolygon(p, a,  3);
   
+  drawPolyLine(p, "lw 2", { 1,2,2,1 }, { 1,1,2,2 });
 
-  plotPolyLine(p, "with lines lw 2 notitle", { 1,2,2,1 }, { 1,1,2,2 });
-  p.invokeGNUPlot();
+  //plotPolyLine(p, "with lines lw 2 notitle", { 1,2,2,1 }, { 1,1,2,2 });
+  //p.invokeGNUPlot();
 
 
-  //p.plot();
+  p.plot();
 }
 
 
