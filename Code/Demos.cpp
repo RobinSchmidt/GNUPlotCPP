@@ -601,9 +601,17 @@ void demoMultiPlot2()
   p.addCommand("set bmargin 0.2");
 
   // Add the subplot commands to the commandfile and plot via helper function showMultiPlot:
-  std::string howTo = "u 1:2 w lines lw 1.5 notitle";
-  p.showMultiPlot(numRows, numCols, howTo);
+  std::string howTo = "u 1:2 w lines lw 1.5 notitle"; // that's actually the default, so it...
+  p.showMultiPlot(numRows, numCols, howTo);           // ...wouldn't be needed, but anyway
 }
+// todo: make a heterogenous multiplot - maybe a bunch of pole/zero plots for filters with 
+// frequency responses next to it
+// or: a unit circle in the top-left corner and a sine-wave to the right and cosine wave downward
+// ...can we rotate plots? ...and how can we fill the big space in the bottom right? maybe a more 
+// detailed plot of what's going on in the unit circle?
+// or: a 2D scatter plot with histograms top and right...or top and left and the top-left corner
+// could be used for some text, explaining, what is shown - make a convenience function 
+// scatterWithHist to create such plots - could actually be useful for analyzing stereo signals
 
 void demoSquare()
 {
