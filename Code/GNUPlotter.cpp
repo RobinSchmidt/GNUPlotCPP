@@ -818,6 +818,8 @@ void GNUPlotter::drawText(const std::string& attr,
 // https://stackoverflow.com/questions/16820963/how-to-add-text-to-an-arrow-in-gnuplot
 // http://www.manpagez.com/info/gnuplot/gnuplot-4.4.3/gnuplot_259.php
 
+// see here for what types of objects are supported:
+// http://soc.if.usp.br/manual/gnuplot-doc/htmldocs/set_002dshow.html#set_002dshow
 
 //-------------------------------------------------------------------------------------------------
 // inquiry:
@@ -1016,6 +1018,11 @@ void GNUPlotter::addPlotCommand(bool splot)
   // dummy dataset to plot:
   if(dataInfo.empty()) {
     double dummy = 0; addDataArrays(1, &dummy, &dummy, &dummy); } // may work for 2D and 3D
+
+  // hmm - maybe in case of an empty dataset, we should just call replot?:
+  // http://soc.if.usp.br/manual/gnuplot-doc/htmldocs/set_002dshow.html#set_002dshow
+
+
 
   // Auto-generate graph-descriptors, if user has not set them up manually:
   if(graphDescriptors.empty())
