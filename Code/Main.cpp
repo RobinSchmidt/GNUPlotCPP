@@ -69,7 +69,8 @@ int main(int argc, char** argv)
   //testHistogram();
   //testMoebiusStrip();
   //testSchroedinger();
-  testDrawing();
+  //testDrawing();
+  testRotation();
   
 
   getchar();

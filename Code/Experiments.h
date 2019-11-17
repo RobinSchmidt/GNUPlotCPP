@@ -28,6 +28,7 @@ void testMoebiusStrip();
 void testSchroedinger();
 
 void testDrawing();
+void testRotation();
 
 
 

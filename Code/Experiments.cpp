@@ -1154,9 +1154,36 @@ void testDrawing()
 
   p.plot();
 }
-
-
 // http://soc.if.usp.br/manual/gnuplot-doc/htmldocs/polygon.html
+
+void testRotation()
+{
+  // We rotate a plot by 90°...
+
+  static const int N = 501;
+  double xMin = 0.0;
+  double xMax = 10.0;
+
+  // Generate the data:
+  GNUPlotter p;
+  double x[N], y[N], z[N];
+  p.rangeLinear(x, N, xMin, xMax);
+  for(int n = 0; n < N; n++) 
+  {
+    y[n] = cos(x[n]);
+    z[n] = 0;
+  }
+
+  // plot:
+  p.setRange(xMin, xMax, -1.1, 1.1, 0, 1);
+  p.addDataArrays(N,x, y, z);
+  //p.addCommand("set view 0,0");
+  p.addCommand("set view 0,90");
+  p.addCommand("set ztics 10");   // supress tics
+  p.plot3D();
+
+  // how can we make it fill the whole page/canvas?
+}
 
 
 
@@ -1165,6 +1192,9 @@ void testDrawing()
 Ideas:
 -rotating plots:
 -https://stackoverflow.com/questions/48958962/plot-vertical-graphs-gnuplot-rotate-xlabel-and-key
+ -how about using a 3D plot, looking from above and then use the set view command?
+-nice example for a contour plot:
+ http://www.phyast.pitt.edu/~zov1/gnuplot/html/contour.html
 
 -add function drawPolygon(int numVertices, T* x, T* y), fillPolygon
  see demoDipole - there are things like set object circle, etc.
