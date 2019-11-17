@@ -505,10 +505,13 @@ public:
   void drawArrow(const std::string& attributes, double x1, double y1, double x2, double y2);
 
   void drawPolyLine(const std::string& attributes, 
-    const std::vector<double> x, const std::vector<double> y);
+    const std::vector<double>& x, const std::vector<double>& y);
 
-  void drawPolygon(const std::string& attributes, const std::vector<double> x, 
-    const std::vector<double> y);
+
+
+
+  void drawPolygon(const std::string& attributes, const std::vector<double>& x, 
+    const std::vector<double>& y);
 
   void drawCircle(const std::string& attributes, double centerX = 0, double centerY = 0, 
     double radius = 1);
@@ -516,9 +519,12 @@ public:
   void drawEllipse(const std::string& attributes, double centerX = 0, double centerY = 0, 
     double width = 2, double height = 2, double angle = 0);  // angle is in degrees
 
+
+
   // maybe add drawRectangle, drawTriangle, drawRegularPolygon
 
-
+  // maybe have additional functions that accept raw arrays insetad of std::vector for drawPolygon
+  // and drawPolyLine
 
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */

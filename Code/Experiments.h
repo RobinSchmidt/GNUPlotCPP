@@ -27,7 +27,7 @@ void testMoebiusStrip();
 
 void testSchroedinger();
 
-void testGeometry();
+void testDrawing();
 
 
 

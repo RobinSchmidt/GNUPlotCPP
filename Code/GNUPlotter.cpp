@@ -793,7 +793,7 @@ void GNUPlotter::drawArrow(const std::string& attr,
 }
 
 void GNUPlotter::drawPolyLine(const std::string& attributes, 
-  const std::vector<double> x, const std::vector<double> y)
+  const std::vector<double>& x, const std::vector<double>& y)
 {
   assert(x.size() == y.size(), "x and y must have the same size");
   for(int i = 0; i < (int)x.size() - 1; i++)
@@ -803,7 +803,7 @@ void GNUPlotter::drawPolyLine(const std::string& attributes,
 }
 
 void GNUPlotter::drawPolygon(const std::string& attributes,
-  const std::vector<double> x, const std::vector<double> y)
+  const std::vector<double>& x, const std::vector<double>& y)
 {
   assert(x.size() == y.size(), "x and y must have the same size");
   if(x.size() < 3) return; // we don't draw degenerate polygons
@@ -818,7 +818,7 @@ void GNUPlotter::drawPolygon(const std::string& attributes,
 
 void GNUPlotter::drawCircle(const std::string& attr, double x, double y, double r)
 {
-  addCommand("set object circle at " + s(x) + "," + s(x) + " size " + s(r) + " " + attr);
+  addCommand("set object circle at " + s(x) + "," + s(y) + " size " + s(r) + " " + attr);
 }
 
 void GNUPlotter::drawEllipse(const std::string& attr, 

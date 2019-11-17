@@ -4,7 +4,7 @@
 
 //#include <math.h>
 #include <random>
-#include <cassert>
+//#include <cassert>
 
 using namespace std;
 
@@ -1077,21 +1077,10 @@ void drawRegularPolygon(GNUPlotter& p, const std::string& attributes,
 }
 // test parameters
 
-
-/*
-void drawPolyLine(GNUPlotter& p, const std::string& attributes, const std::vector<double> x,
-  const std::vector<double> y)
-{
-  assert(x.size() == y.size(), "x and y must have the same size");
-  for(int i = 0; i < (int)x.size() - 1; i++)
-    p.drawLine(attributes, x[i], y[i], x[i+1], y[i+1]);
-}
-*/
-
 void plotPolyLine(GNUPlotter& p, const std::string& attributes, const std::vector<double> x,
   const std::vector<double> y)
 {
-  assert(x.size() == y.size(), "x and y must have the same size");
+  //assert(x.size() == y.size(), "x and y must have the same size");
   std::string cmd = "$data << EOD\n";
   for(size_t i = 0; i < x.size(); i++)
     cmd += p.s(x[i]) + " " + p.s(y[i]) + "\n";
@@ -1101,19 +1090,12 @@ void plotPolyLine(GNUPlotter& p, const std::string& attributes, const std::vecto
 }
 // https://stackoverflow.com/questions/3318228/how-to-plot-data-without-a-separate-file-by-specifying-all-points-inside-the-gnu
 // https://groups.google.com/forum/#!msg/comp.graphics.apps.gnuplot/UdiiC2cBQNo/xEyj6i7Y910J
-// move to GNUPlotter, maybe rename to drawPolyLine - figure out, if it behaves differently from the
-// "set object..." calls - yes - it does - when calling GNUPlotter::plot after it, the screen gets 
-// cleared
+// using the plot command with data inlined into the commandfile behaves differently 
+// from GNUPlotter::drawPolyLine: when calling GNUPlotter::plot after it, the screen gets 
+// cleared ...maybe, we should provide both functions in GNUPlotter...we'll see
 
 
-
-// maybe, when they are integrated into GNUPlotter, they should be called drawCircle etc. to 
-// distinguish them from the data adding methods - they use a different mechanism of gnuplot and
-// don't write data into the datafile (they plot the shapes directly via commands)
-// perhaps only the lower level functions should be included into GNUPlotter - those that actually
-// invoke addCommand directly - we'll see
-
-void testGeometry() // rename to testDrawing
+void testDrawing()
 {
   // draw geometric obejcts such as lines, circles, ellipses, polygons, etc.
 
@@ -1124,28 +1106,31 @@ void testGeometry() // rename to testDrawing
   p.addCommand("set size square");   // have a function setAspectRatio(double r), r = w/h
 
 
-  // make convenience functions like addCircle(GNUPlotter& p, x, y, r, string& attributes)
-  //p.addCommand("set object circle at 0.1,0.2 size 0.12 fc rgb \"red\" fs solid 1.0 front");
-  //p.addCommand("set object circle at 0.4,0.5 size 0.22 fc rgb \"blue\" fs solid 1.0 front");
-  //p.addCommand("set object circle at -0.4,-0.25 size 0.42 fc rgb \"green\" fs solid 1.0 front");
 
-  std::string a = "fc rgb \"red\" fs solid 1.0 front"; // use a semi-transparent color
-  //drawCircle(p, a, 2, 2, 1);
+  //std::string a = "fc rgb \"red\" fs solid 1.0 front"; // use a semi-transparent color
+
+  //std::string a = "fc rgb \"red\" fs transparent solid 0.5 front";
 
 
+  p.drawEllipse("fc rgb \"red\" fs transparent solid 0.5 front", 5, 4, 6, 3);
+  p.drawCircle("fc rgb \"blue\" fs transparent solid 0.5 front", 2, 5, 1);
+  // it seems, the outline is drawn without transparency?
+
+  p.drawPolygon("fc rgb \"green\" front", {1,2,4,5}, {1,3,2,6});
+  // why can we not fill it?
   //attributes = "fc rgb \"cyan\" fillstyle solid 1.0 border lt -1";
-  a = "fc rgb \"black\" front"; // polygon doesn't support fs/fillstyle ...old version of gnuplot?
+  //a = "fc rgb \"black\" front"; // polygon doesn't support fs/fillstyle ...old version of gnuplot?
   //drawTriangle(p, a, 0,0, 1,1, 0,1);
   // http://soc.if.usp.br/manual/gnuplot-doc/htmldocs/polygon.html
 
 
-  //p.drawPolygon(a, {1,2,4,5}, {1,3,2,6});
+  p.drawText("", "Text", 6,6);
+  // what attributes can we give it? can we choose font and size? bold/italic?
 
-  //p.drawEllipse(a, 4, 2, 6, 4);
 
   //p.drawLine(a, 1,2, 5,4);
 
-  //p.drawText("", "Text", 6,6);
+
 
   //drawRectangle(p, a, 3, 2, 5, 4);
 
@@ -1178,6 +1163,9 @@ void testGeometry() // rename to testDrawing
 /*
 
 Ideas:
+-rotating plots:
+-https://stackoverflow.com/questions/48958962/plot-vertical-graphs-gnuplot-rotate-xlabel-and-key
+
 -add function drawPolygon(int numVertices, T* x, T* y), fillPolygon
  see demoDipole - there are things like set object circle, etc.
 -plot a bunch of field-lines - maybe use as example 2 charges at (-1,0) and (+1,0), start the 
