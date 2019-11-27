@@ -1177,12 +1177,27 @@ void testRotation()
   // plot:
   p.setRange(xMin, xMax, -1.1, 1.1, 0, 1);
   p.addDataArrays(N,x, y, z);
-  //p.addCommand("set view 0,0");
-  p.addCommand("set view 0,90");
+
+
+  //p.addCommand("set view 0,90");
+
+
+  p.addCommand("set view 0,90, 1.8,1");
+
+
+  p.addCommand("set lmargin 0");
+  p.addCommand("set rmargin 0");
+  p.addCommand("set tmargin 0");
+  p.addCommand("set bmargin -1");
+
+
+  //p.addCommand("set view map");
+
   p.addCommand("set ztics 10");   // supress tics
   p.plot3D();
 
   // how can we make it fill the whole page/canvas?
+  // http://gnuplot.sourceforge.net/docs_4.2/node281.html
 }
 
 
@@ -1195,6 +1210,13 @@ Ideas:
  -how about using a 3D plot, looking from above and then use the set view command?
 -nice example for a contour plot:
  http://www.phyast.pitt.edu/~zov1/gnuplot/html/contour.html
+
+-is it possible to use another backend rather than gnuplot? maybe matplotlib, i.e. generate a 
+ python script instead of a gnuplot commandfile - maybe the datafile could stay just the same?
+ maybe make a class PyPlotter or PyPlotCPP - maybe we can alos use RSPlot as backend?
+ maybe we should have an abstract Plotter baseclass
+ https://www.webfx.com/blog/web-design/free-data-visualization-tools/
+ perhaps this: https://d3js.org/
 
 -add function drawPolygon(int numVertices, T* x, T* y), fillPolygon
  see demoDipole - there are things like set object circle, etc.

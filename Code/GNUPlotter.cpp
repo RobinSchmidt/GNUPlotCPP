@@ -124,9 +124,6 @@ template void GNUPlotter::plotComplexVectorField(const function<complex<float>(c
 template void GNUPlotter::plotComplexVectorField(const function<complex<double>(complex<double>)>& f, int Nr, double rMin, double rMax, int Ni, double iMin, double iMax, bool conj);
 
 
-
-
-
 //-------------------------------------------------------------------------------------------------
 
 template <class T>
@@ -201,20 +198,6 @@ void GNUPlotter::plotBivariateFunction(int Nx, int Ny, T *x, T *y, T (*f)(T, T))
 {
   addDataBivariateFunction(Nx, Ny, x, y, f);
   plot3D();
-
-  //int i, j;
-  //T **z = new T*[Nx];
-  //for(i = 0; i < Nx; i++)
-  //  z[i] = new T[Ny];
-  //for(i = 0; i < Nx; i++)
-  //{
-  //  for(j = 0; j < Ny; j++)
-  //    z[i][j] = f(x[i], y[j]);
-  //}
-  //plotSurface(Nx, Ny, x, y, z);
-  //for(i = 0; i < Nx; i++)
-  //  delete[] z[i];
-  //delete[] z;
 }
 
 template <class T>
@@ -223,14 +206,6 @@ void GNUPlotter::plotBivariateFunction(int Nx, T xMin, T xMax, int Ny, T yMin, T
 {
   addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
   plot3D();
-
-  //T *x = new T[Nx];
-  //T *y = new T[Ny];
-  //GNUPlotter::rangeLinear(x, Nx, xMin, xMax);
-  //GNUPlotter::rangeLinear(y, Ny, yMin, yMax);
-  //plotBivariateFunction(Nx, Ny, x, y, f);
-  //delete[] x;
-  //delete[] y;
 }
 template void GNUPlotter::plotBivariateFunction(int Nx, double xMin, double xMax, int Ny,
   double yMin, double yMax, double (*f)(double, double));
@@ -644,11 +619,9 @@ void GNUPlotter::addDataBivariateFunction(int Nx, int Ny, T *x, T *y,
   T **z = new T*[Nx];
   for(i = 0; i < Nx; i++)
     z[i] = new T[Ny];
-  for(i = 0; i < Nx; i++)
-  {
+  for(i = 0; i < Nx; i++) {
     for(j = 0; j < Ny; j++)
-      z[i][j] = f(x[i], y[j]);
-  }
+      z[i][j] = f(x[i], y[j]); }
   addDataMatrix(Nx, Ny, x, y, z);
   for(i = 0; i < Nx; i++)
     delete[] z[i];
@@ -1088,43 +1061,6 @@ void GNUPlotter::generateGraphDescriptors(bool splot)
         addGraph("i " + s(i) + getStyleString(i)); }}
 }
 // refactor this - split out two functions generateGraphDescriptors2D/3D
-
-// // old - todo: check, if it can be deleted, if so - do it:
-//void GNUPlotter::generateGraphDescriptors(bool splot)
-//{
-//  unsigned int i, j, k;
-//  if(splot == false) {
-//    k = 0;
-//    for(i = 0; i < dataInfo.size(); i++)
-//    {
-//      if(dataInfo[i].type == "matrix")
-//      {
-//        addGraph("i " + s(i) + " nonuniform matrix" + getStyleString(k));
-//        k++;
-//      }
-//      else
-//      {
-//        for(j = 0; j < (unsigned int)dataInfo[i].numColumns-1; j++)
-//        {
-//          addGraph("i " + s(i) + " u 1:" + s(j+2) + getStyleString(k));
-//          k++;
-//        }
-//      }
-//    }
-//  }
-//  else
-//  {
-//    for(i = 0; i < dataInfo.size(); i++)
-//    {
-//      if(dataInfo[i].type == "matrix")
-//        addGraph("i " + s(i) + " nonuniform matrix" + getStyleString(i));
-//      else
-//        addGraph("i " + s(i) + getStyleString(i));
-//    }
-//  }
-//}
-
-
 
 
 // argument handling
