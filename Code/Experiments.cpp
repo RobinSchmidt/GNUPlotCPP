@@ -1216,9 +1216,10 @@ void testAnimation()
 
   std::string datafile = plt.getDataPath();
 
-  // animate:
-  //plt.addCommand("set terminal gif animate delay 30"); // delay is specified in centiseconds
-  plt.addCommand("set terminal gif animate delay 30 optimize"); // delay is in centiseconds
+  plt.addCommand("set terminal gif animate delay 30 optimize"); 
+    // delay is specified in centiseconds with the default being 5, corresponding to 20 frames per 
+    // second - 4 would be 25 fps. without the "optimize", the gif file is larger (12kB vs 7kB)
+
   plt.addCommand("set output 'gnuplotOutput.gif'");  
     // file ends up in the project directory, i.e. the current working directory
     // todo: let gnuplot put it into the temp directory where also the data- and commandfiles are
@@ -1228,19 +1229,17 @@ void testAnimation()
   plt.addCommand("set yrange [-1:6]");
 
   plt.addCommand("stats '" + datafile + "' nooutput"); 
-    // why stats? is this the command to fill in the STATS_blocks variable that is used later?
+    // i think, this command fills in the STATS_blocks variable that is used later
 
-
-
-  plt.addCommand("do for [i=1:int(STATS_blocks-1)] {");  // what is STATS_blocks?
+  plt.addCommand("do for [i=1:int(STATS_blocks-1)] {"); 
   plt.addCommand("  set grid xtics ytics noztics nox2tics noy2tics"); // seems to have no effect
   plt.addCommand("  plot '" + datafile + "' index (i-1) u 1:2 with circles notitle");
   plt.addCommand("}");
 
   // for STATS_blocks
   // http://soc.if.usp.br/manual/gnuplot-doc/htmldocs/stats_005f_0028Statistical_005fSummary_0029.html
-  // STATS_something contains statistical values of the datafile
-
+  // STATS_something contains statistical values of the datafile including the STATS_blocks field 
+  // which is the number of blocks ...maybe we could have used our local variable N as well...
 
   plt.invokeGNUPlot();
 
@@ -1253,6 +1252,8 @@ void testAnimation()
   //  -> done: the loop should run only up to STATS_blocks-1 - this was a bug in the original code
   //  from stackoverflow
 
+  // maybe make a more interesting animation...
+
   // see here for general info on animate
   // http://gnuplot.sourceforge.net/docs_4.2/node378.html
 
@@ -1263,6 +1264,9 @@ void testAnimation()
 // http://www.gnuplotting.org/tag/animation/
 // http://gnuplot-surprising.blogspot.com/2011/09/creating-gif-animation-using-gnuplot.html
 // https://stackoverflow.com/questions/22898971/gif-animation-in-gnuplot
+
+// in this video, the grid settings work for all frames
+// https://www.youtube.com/watch?v=DF0dCOllLFI
 
 
 /*
