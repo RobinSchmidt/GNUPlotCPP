@@ -1225,6 +1225,14 @@ void testAnimation()
     // todo: let gnuplot put it into the temp directory where also the data- and commandfiles are
     // ...or maybe it's good to get the file in the current working directory? hmmm
 
+
+  //plt.addCommand("set grid xtics ytics noztics nox2tics noy2tics");
+
+  //plt.addCommand("unset grid");
+  plt.addCommand("set grid");  
+    // only affects the first frame - frames 2,3 are always drawn without grids, whatever we do :-(
+
+
   plt.addCommand("set xrange [-1:6]");
   plt.addCommand("set yrange [-1:6]");
 
@@ -1232,7 +1240,7 @@ void testAnimation()
     // i think, this command fills in the STATS_blocks variable that is used later
 
   plt.addCommand("do for [i=1:int(STATS_blocks-1)] {"); 
-  plt.addCommand("  set grid xtics ytics noztics nox2tics noy2tics"); // seems to have no effect
+  //plt.addCommand("  set grid"); // seems to have no effect
   plt.addCommand("  plot '" + datafile + "' index (i-1) u 1:2 with circles notitle");
   plt.addCommand("}");
 
