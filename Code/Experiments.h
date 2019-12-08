@@ -30,6 +30,8 @@ void testSchroedinger();
 void testDrawing();
 void testRotation();
 
+void testAnimation();
+
 
 
 

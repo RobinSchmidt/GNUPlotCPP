@@ -1200,6 +1200,69 @@ void testRotation()
   // http://gnuplot.sourceforge.net/docs_4.2/node281.html
 }
 
+void testAnimation()
+{
+  // code from here:
+  // https://stackoverflow.com/questions/22898971/gif-animation-in-gnuplot
+
+  GNUPlotter plt;
+
+  // create datafile:
+  static const int N = 3;
+  double x[N] = { 0,2,4 }, y[N] = { 1,3,5 };
+  for(int i = 0; i < N; i++)
+    plt.addDataArrays(1, &x[i], &y[i]);
+
+
+  std::string datafile = plt.getDataPath();
+
+  // animate:
+  //plt.addCommand("set terminal gif animate delay 30"); // delay is specified in centiseconds
+  plt.addCommand("set terminal gif animate delay 30 optimize"); // delay is in centiseconds
+  plt.addCommand("set output 'gnuplotOutput.gif'");  
+    // file ends up in the project directory, i.e. the current working directory
+    // todo: let gnuplot put it into the temp directory where also the data- and commandfiles are
+    // ...or maybe it's good to get the file in the current working directory? hmmm
+
+  plt.addCommand("set xrange [-1:6]");
+  plt.addCommand("set yrange [-1:6]");
+
+  plt.addCommand("stats '" + datafile + "' nooutput"); 
+    // why stats? is this the command to fill in the STATS_blocks variable that is used later?
+
+
+
+  plt.addCommand("do for [i=1:int(STATS_blocks-1)] {");  // what is STATS_blocks?
+  plt.addCommand("  set grid xtics ytics noztics nox2tics noy2tics"); // seems to have no effect
+  plt.addCommand("  plot '" + datafile + "' index (i-1) u 1:2 with circles notitle");
+  plt.addCommand("}");
+
+  // for STATS_blocks
+  // http://soc.if.usp.br/manual/gnuplot-doc/htmldocs/stats_005f_0028Statistical_005fSummary_0029.html
+  // STATS_something contains statistical values of the datafile
+
+
+  plt.invokeGNUPlot();
+
+  // -the first plot has a grid, the others do not - apparently our default settings only apply to 
+  //  the first plot - to have them always, we probably need to drag the commands into the loop?
+  //  ...nope - that doen't seem to work either
+  // -what is the unit of the delay? milliseconds? it seems a bit too long for milliseconds - it 
+  //  feels more like centiseconds but that would be unusual - oh - yes - it is centiseconds
+  // -there's a warning message about skipping invalid data - why? try to fix it!
+  //  -> done: the loop should run only up to STATS_blocks-1 - this was a bug in the original code
+  //  from stackoverflow
+
+  // see here for general info on animate
+  // http://gnuplot.sourceforge.net/docs_4.2/node378.html
+
+  int dummy = 0;
+}
+// see also here:
+// https://stackoverflow.com/questions/27430479/gnuplot-from-data-file-for-assignment-in-do-for-loop-for-an-animation
+// http://www.gnuplotting.org/tag/animation/
+// http://gnuplot-surprising.blogspot.com/2011/09/creating-gif-animation-using-gnuplot.html
+// https://stackoverflow.com/questions/22898971/gif-animation-in-gnuplot
 
 
 /*
