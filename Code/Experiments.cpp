@@ -561,10 +561,23 @@ void generateImplicitCurveData(const function<T(T, T)>& f, T z, vector<T>& x, ve
 // https://stackoverflow.com/questions/1131815/how-to-plot-implicit-equations - simple method
 // https://homepages.warwick.ac.uk/staff/David.Tall/pdfs/dot1986b-implicit-fns.pdf
 
+
+
+template<class T>
+void setContourLevels(GNUPlotter& plt, const vector<T>& levels)
+{
+  string str = "set cntrparam levels discrete ";
+  str += to_string(levels[0]);
+  for(size_t i = 1; i < levels.size(); i++)
+    str += "," + to_string(levels[i]);
+  plt.addCommand(str);
+}
+// move into GNUPlotter class
+
 // move to top where teh other plot... functions are
 template<class T>
 void plotLevelLines(const function<T(T, T)>& f, const vector<T>& levels, 
-  T xMin, T xMax, T yMin, T yMax)
+  T xMin, T xMax, T yMin, T yMax, int Nx = 65, int Ny = 65)
 {
   // under construction
   // problem: we can't use a high number of samples in the data because then gnuplot also wants to 
@@ -574,11 +587,11 @@ void plotLevelLines(const function<T(T, T)>& f, const vector<T>& levels,
   // they become "wobbly"
   // ..maybe try unset surface - doesn't help against the slowdown when using higher Nx,Ny
 
-  int Nx = 201, Ny = 201; // optional make parameters - this is a lot for doing a surface plot
+  //int Nx = 201, Ny = 201; // optional make parameters - this is a lot for doing a surface plot
                           // but for finding the correct contours, we need good resolution
 
   //Nx = Ny = 21;  // fast, but shows wobbles
-  Nx = Ny = 65;  // compromise between speed and precision
+  //Nx = Ny = 65;  // compromise between speed and precision
 
   GNUPlotter plt;
 
@@ -596,25 +609,18 @@ void plotLevelLines(const function<T(T, T)>& f, const vector<T>& levels,
   plt.addCommand("unset surface");      // set/unset switches surface drawing on/off
   plt.addCommand("set view map");     // Set a bird eye (xy plane) view
   plt.addCommand("set contour");      // Plot contour lines
-  plt.addCommand("set key outside");
   //plt.addCommand("set cntrparam cubicspline");  // wobbly, slow
 
-  // factor out into plt.setContourLevels:
-  string str = "set cntrparam levels discrete ";
-  str += to_string(levels[0]);
-  for(size_t i = 1; i < levels.size(); i++)
-    str += "," + to_string(levels[i]);
-  plt.addCommand(str);
-
   // additional commands from source above that seem to have no effect:
+  //plt.addCommand("set key outside");
   //plt.addCommand("set colorbox");  // set/unset seems to have no effect
   //plt.addCommand("set cbrange [0:7000]");  // color range of contour values - no effect
   //plt.addCommand("set palette model RGB defined ( 0 'white', 1 'black' )"); // no effect
   //plt.addCommand("set style line 1 lc rgb '#4169E1' pt 7 ps 2");
 
+  setContourLevels(plt, levels);
   plt.plot3D();
 
-  // ok - it generally works - now refine!
   // how can we have a colorbar that shows the values of the contours?
   
   // this is when we would want to create the contour lines ourselves - but this turns out to be 
@@ -628,6 +634,8 @@ void plotLevelLines(const function<T(T, T)>& f, const vector<T>& levels,
   //  int dummy = 0;
   //}
 }
+// todo: extend to deal with multiple functions - especially the case 2 is important
+
 // see
 // http://www.phyast.pitt.edu/~zov1/gnuplot/html/contour.html
 // http://gnuplot.sourceforge.net/demo/contours.html
@@ -655,25 +663,18 @@ void levelLines()
   // complex function f(z) = z^2
 
 
-  double xMin = -8.0;
-  double xMax = +8.0;
-  double yMin = -8.0;
-  double yMax = +8.0;
-
+  double xMin, xMax, yMin, yMax;
+  vector<double> z;
   function<double(double, double)> f;
-  //f = [] (double x, double y) { return x*x - y*y; };
-  f = [] (double x, double y) { return y*sin(x) + x*cos(y) + 0.1*x*y; }; // has interesting features for testing contour-plots
+
+  f = [] (double x, double y) { return x*x - y*y; };
+  xMin = yMin = -4; xMax = yMax = 4; z = rangeLinear(11, -10, 10);
+
+  //f = [] (double x, double y) { return y*sin(x) + x*cos(y) + 0.1*x*y; }; // has interesting features for testing contour-plots
+  //xMin = yMin = -8; xMax = yMax = 8; z = rangeLinear(9, -10, 10);
+
   vector<double> levels = rangeLinear(11, -10, 10);
-  plotLevelLines(f, levels, xMin, xMax, yMin, yMax);
-
-
-
-  // ToDo: write a function 
-  //   plotLevelLines(function<double>(double, double)>& f, vector<double>& levels)
-  // that takes the scalar field function R^2 -> R and a set of levels/heights ..later maybe 
-  // extend/refactor to a function that may take an array of functions - we only need two for the 
-  // two harmonic conjugates, but maybe it's nice to have the additional flexibility to use more
-
+  plotLevelLines(f, z, xMin, xMax, yMin, yMax);
 }
 // how would this look for 3D vector fields? we would have level-surfaces. for "conjugacy",
 // should we have 3 sets of level surfaces that intersect in a particluar way (like always producing 3 
