@@ -567,56 +567,56 @@ void plotLevelLines(const function<T(T, T)>& f, const vector<T>& levels,
   T xMin, T xMax, T yMin, T yMax)
 {
   // under construction
+  // problem: we can't use a high number of samples in the data because then gnuplot also wants to 
+  // use that data for plotting the surface - actually we would like to use oversampled data for 
+  // letting gnuplot figure out the contours and normally sampled data for plotting the surface
+  // ..using the normally sampled data for finding the contours leads to artifacts int the contours
+  // they become "wobbly"
+  // ..maybe try unset surface - doesn't help against the slowdown when using higher Nx,Ny
 
   int Nx = 201, Ny = 201; // optional make parameters - this is a lot for doing a surface plot
-                          // but for finding the correct contotours, we need good resolution
+                          // but for finding the correct contours, we need good resolution
 
-  Nx = Ny = 41;  // preliminary
+  //Nx = Ny = 21;  // fast, but shows wobbles
+  Nx = Ny = 65;  // compromise between speed and precision
 
   GNUPlotter plt;
 
   plt.addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
-  // the gnuplot commands below expect surface data in triplet format
+
 
   //plt.addCommand("set pm3d map");
 
-  //plt.plot3D();  // preliminary
 
   // now, we need to tell gnuplot to generate and plot the contours from the data - how?
   // https://www.albertopassalacqua.com/?p=40
 
-
-
+  // commands taken from here:
   // https://askubuntu.com/questions/1046878/gnuplot-plot-data-points-on-2d-contour-plot
-  //  set pm3d explicit
-  //  set surface
-  //  set view map  # Set a bird eye (xy plane) view
-  //  set contour  # Plot contour lines
-  //  set key outside
-  //  set cntrparam cubicspline  # Smooth out the lines
-  //  set cntrparam levels discrete 3.197,3.552  # Plot the selected contours
-  //  unset colorbox
-  //  set cbrange [0:7000]  # Set the color range of contour values.
-  //  set palette model RGB defined ( 0 'white', 1 'black' )
-  //  set style line 1 lc rgb '#4169E1' pt 7 ps 2
-  //  splot 'Contours.txt' using 1:2:3 with pm3d notitle,\
-  //  'M_Coord_Plain.txt' using 1:2:(0) with points ls 1 notitle
+
 
   plt.addCommand("set pm3d explicit");
-  plt.addCommand("set surface");      // set/unset switches surface drawing on/off
+  plt.addCommand("unset surface");      // set/unset switches surface drawing on/off
   plt.addCommand("set view map");     // Set a bird eye (xy plane) view
   plt.addCommand("set contour");      // Plot contour lines
   plt.addCommand("set key outside");
   plt.addCommand("set cntrparam cubicspline");  // Smooth out the lines
-  plt.addCommand("set cntrparam levels discrete -1.0,0.0,1.0"); // preliminary - Plot the selected contours
-  plt.addCommand("unset colorbox");
-  plt.addCommand("set cbrange [0:7000]");  // color range of contour values
-  plt.addCommand("set palette model RGB defined ( 0 'white', 1 'black' )");
-  plt.addCommand("set style line 1 lc rgb '#4169E1' pt 7 ps 2");
 
-  //plt.addCommand("splot 'Contours.txt' using 1:2:3 with pm3d notitle"); // nope - we have matrix data
-  //plt.addCommand("");
-  //plt.invokeGNUPlot();
+
+  // factor out into plt.setContourLevels:
+  string str = "set cntrparam levels discrete ";
+  str += to_string(levels[0]);
+  for(size_t i = 1; i < levels.size(); i++)
+    str += "," + to_string(levels[i]);
+  plt.addCommand(str);
+
+
+  // additional commands from source above that seem to have no effect:
+  //plt.addCommand("set colorbox");  // set/unset seems to have no effect
+  //plt.addCommand("set cbrange [0:7000]");  // color range of contour values - no effect
+  //plt.addCommand("set palette model RGB defined ( 0 'white', 1 'black' )"); // no effect
+  //plt.addCommand("set style line 1 lc rgb '#4169E1' pt 7 ps 2");
+
 
   plt.plot3D();
 
