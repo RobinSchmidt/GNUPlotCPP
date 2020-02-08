@@ -4,7 +4,7 @@
 
 //#include <math.h>
 #include <random>
-//#include <cassert>
+#include <cassert>
 
 using namespace std;
 
@@ -546,14 +546,70 @@ vector<double> rangeLinear(int N, double min, double max)
 }
 
 
+// Fills the arrays x,y (assumed to be of same length) with pairs of values for which f(x,y) = z.
+// This is useful for generating the data for plotting implicity curves. */
+template<class T>
+void generateImplicitCurveData(const function<T(T, T)>& f, T z, vector<T>& x, vector<T>& y)
+{
+  // under construction
+  assert(x.size() == y.size());
+  size_t N = x.size();
+}
+// the function may actually have multiple contours
+// http://shamshad-npti.github.io/implicit/curve/2015/10/08/Implicit-curve/
+// https://academic.oup.com/comjnl/article/33/5/402/480353 - quadtree algo
+// https://stackoverflow.com/questions/1131815/how-to-plot-implicit-equations - simple method
+// https://homepages.warwick.ac.uk/staff/David.Tall/pdfs/dot1986b-implicit-fns.pdf
+
 // move to top where teh other plot... functions are
 template<class T>
-void plotLevelLines(const function<T(T, T)>& f, const vector<T>& levels)
+void plotLevelLines(const function<T(T, T)>& f, const vector<T>& levels, 
+  T xMin, T xMax, T yMin, T yMax)
 {
+  // under construction
+
+  int Nx = 201, Ny = 201; // optional make parameters - this is a lot for doing a surface plot
+                          // but for finding the correct contotours, we need good resolution
+
+  Nx = Ny = 41;  // preliminary
+
+  GNUPlotter plt;
+  plt.addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
+
+  plt.plot3D();  // preliminary
+
+  // now, we need to tell gnuplot to generate and plot the contours from the data - how?
 
 
-  int dummy = 0;
+  //int numSamples = 200;
+
+
+  
+  // this is when we would want to create the contour lines ourselves - but this turns out to be 
+  // nontrivial - instead we use gnuplot to figure out the contour lines from the surface data...
+  //for(size_t i = 0; i < levels.size(); i++)
+  //{
+  //  generateImplicitCurveData(f, levels[i], x, y);
+
+  //  // ..add data to datafile and graph-descriptor to plotter....
+
+  //  int dummy = 0;
+  //}
 }
+// see
+// http://www.phyast.pitt.edu/~zov1/gnuplot/html/contour.html
+// http://gnuplot.sourceforge.net/demo/contours.html
+// maybe have a version that plots the function itself as surface with contours plotted on the 
+// xy-plane and one that only plots the contours. maybe have options to fill the contours as in a 
+// topographic map, maybe allow colormaps
+
+// perhaps, we need first a function to draw an implicitly defined curve (adds data and 
+// graph-descriptor to a plotter object), then call this in a loop using functions given by 
+// f(x,y) - levels[i]
+// generateImplicitCurveData
+
+// a nice example function to test the contour-plot is z = y*sin(x) + x*cos(y) + k*x*y
+// where k ~= 0.1  in the range x,y in -10...10 - this function has some interesting features
 
 // a.k.a "contour plot"
 void levelLines()
@@ -566,10 +622,17 @@ void levelLines()
   // example case, these two harmonic functions would be the real and imaginary parts of the 
   // complex function f(z) = z^2
 
+
+  double xMin = -3.0;
+  double xMax = +3.0;
+  double yMin = -3.0;
+  double yMax = +3.0;
+
   function<double(double, double)> f;
   f = [] (double x, double y) { return x*x - y*y; };
+  //f = [] (double x, double y) { return y*sin(x) + x*cos(y) + 0.1*x*y; }; // has interesting features for testing contour-plots
   vector<double> levels = rangeLinear(21, -10, 10);
-  plotLevelLines(f, levels);
+  plotLevelLines(f, levels, xMin, xMax, yMin, yMax);
 
 
 
@@ -1467,6 +1530,8 @@ idea to visualize a rank-2 tensor field in 2D (i.e. a 2x2 matrix-field defined i
 -todo: draw a trefoil-knot, a mobius-strip and a trefoil-mobius-knot
  -for a pramatrization of the mobius-strip, see here: https://www.youtube.com/watch?v=dz7y7mFLW3U
  -for the mobius knot, replace the circle with the trefoil knot
+
+-draw the discontonuous surface examples from Weitz' Differentialgeometrie
 
 more inspiration:
  https://matplotlib.org/gallery/index.html
