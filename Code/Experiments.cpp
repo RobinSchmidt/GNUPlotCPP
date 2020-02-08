@@ -574,16 +574,53 @@ void plotLevelLines(const function<T(T, T)>& f, const vector<T>& levels,
   Nx = Ny = 41;  // preliminary
 
   GNUPlotter plt;
-  plt.addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
 
-  plt.plot3D();  // preliminary
+  plt.addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
+  // the gnuplot commands below expect surface data in triplet format
+
+  //plt.addCommand("set pm3d map");
+
+  //plt.plot3D();  // preliminary
 
   // now, we need to tell gnuplot to generate and plot the contours from the data - how?
+  // https://www.albertopassalacqua.com/?p=40
 
 
-  //int numSamples = 200;
 
+  // https://askubuntu.com/questions/1046878/gnuplot-plot-data-points-on-2d-contour-plot
+  //  set pm3d explicit
+  //  set surface
+  //  set view map  # Set a bird eye (xy plane) view
+  //  set contour  # Plot contour lines
+  //  set key outside
+  //  set cntrparam cubicspline  # Smooth out the lines
+  //  set cntrparam levels discrete 3.197,3.552  # Plot the selected contours
+  //  unset colorbox
+  //  set cbrange [0:7000]  # Set the color range of contour values.
+  //  set palette model RGB defined ( 0 'white', 1 'black' )
+  //  set style line 1 lc rgb '#4169E1' pt 7 ps 2
+  //  splot 'Contours.txt' using 1:2:3 with pm3d notitle,\
+  //  'M_Coord_Plain.txt' using 1:2:(0) with points ls 1 notitle
 
+  plt.addCommand("set pm3d explicit");
+  plt.addCommand("set surface");      // set/unset switches surface drawing on/off
+  plt.addCommand("set view map");     // Set a bird eye (xy plane) view
+  plt.addCommand("set contour");      // Plot contour lines
+  plt.addCommand("set key outside");
+  plt.addCommand("set cntrparam cubicspline");  // Smooth out the lines
+  plt.addCommand("set cntrparam levels discrete -1.0,0.0,1.0"); // preliminary - Plot the selected contours
+  plt.addCommand("unset colorbox");
+  plt.addCommand("set cbrange [0:7000]");  // color range of contour values
+  plt.addCommand("set palette model RGB defined ( 0 'white', 1 'black' )");
+  plt.addCommand("set style line 1 lc rgb '#4169E1' pt 7 ps 2");
+
+  //plt.addCommand("splot 'Contours.txt' using 1:2:3 with pm3d notitle"); // nope - we have matrix data
+  //plt.addCommand("");
+  //plt.invokeGNUPlot();
+
+  plt.plot3D();
+
+  // ok - it generally works - now refine!
   
   // this is when we would want to create the contour lines ourselves - but this turns out to be 
   // nontrivial - instead we use gnuplot to figure out the contour lines from the surface data...
