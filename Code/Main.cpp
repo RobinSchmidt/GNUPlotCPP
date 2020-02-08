@@ -50,6 +50,7 @@ int main(int argc, char** argv)
 
   //testInitialValueSolver();
 
+  levelLines();
   //demoVectorField();
   //demoDipole();  // not so interesting - we should draw field lines, not the vector field
 
@@ -66,12 +67,13 @@ int main(int argc, char** argv)
   //vectorFieldExperiment();
   //zedSquaredVectorField();
 
+
   //testHistogram();
   //testMoebiusStrip();
   //testSchroedinger();
   //testDrawing();
   //testRotation();
-  testAnimation();
+  //testAnimation();
   
 
   getchar();

@@ -308,6 +308,11 @@ void vectorFieldExperiment()
   fx = [] (double x, double y) { return x*x - y*y; }; // x^2 - y^2 = Re{ z^2 }
   fy = [] (double x, double y) { return 2*x*y;     }; // 2xy       = Im{ z^2 }
 
+  // try the rabbits-and-foxes ODE system from here (at 9.33)
+  // https://www.youtube.com/watch?v=i8FukKfMKCI
+  //fx = [] (double x, double y) { return 3*x - y; }; // R' = 3R - 1F
+  //fy = [] (double x, double y) { return y;       }; // F' = 1F
+
   // todo: draw the vector field of a dipole, move to demos, maybe let the function have a 
   // parameter that selects, which particular function is drawn (z^2, dipole, quadrupole, etc.)
 
@@ -532,6 +537,58 @@ void demoVectorField()
 }
 
 
+// convenience function - maybe move into GNUPlotter
+vector<double> rangeLinear(int N, double min, double max)
+{
+  vector<double> r(N);
+  GNUPlotter::rangeLinear(&r[0], N, min, max);
+  return r;
+}
+
+
+// move to top where teh other plot... functions are
+template<class T>
+void plotLevelLines(const function<T(T, T)>& f, const vector<T>& levels)
+{
+
+
+  int dummy = 0;
+}
+
+// a.k.a "contour plot"
+void levelLines()
+{
+  // We plot the level lines (contours) of a scalar field over R^2. As example scalar field, we 
+  // use  f(x,y) = x^2 - y^2. 
+  // ToDo: plot contours of two scalar fields into a single plot, like 
+  //   u(x,y) = x^2 - y^2, v(x,y) = 2*x*y
+  // idea: we want to plot contours of some potential field and its harmonic conjugate - in this 
+  // example case, these two harmonic functions would be the real and imaginary parts of the 
+  // complex function f(z) = z^2
+
+  function<double(double, double)> f;
+  f = [] (double x, double y) { return x*x - y*y; };
+  vector<double> levels = rangeLinear(21, -10, 10);
+  plotLevelLines(f, levels);
+
+
+
+  // ToDo: write a function 
+  //   plotLevelLines(function<double>(double, double)>& f, vector<double>& levels)
+  // that takes the scalar field function R^2 -> R and a set of levels/heights ..later maybe 
+  // extend/refactor to a function that may take an array of functions - we only need two for the 
+  // two harmonic conjugates, but maybe it's nice to have the additional flexibility to use more
+
+}
+// how would this look for 3D vector fields? we would have level-surfaces. for "conjugacy",
+// should we have 3 sets of level surfaces that intersect in a particluar way (like always producing 3 
+// mutually perpendicular lines when 3 of these surfaces intersect in a coner?). check laplace 
+// equation in 3D (i think, it's something about the vector-field being irrotaional?)
+
+// todo: make a similar function plotStreamLines ..hmm - but this would apply to an ODE, not to a 
+// scalar field. ...but we use the scalar field here with idea in mind that it should represent a 
+// potential - the gradient woul give an associated vector field, which in turn could also be seen 
+// as ODE system (the two component functions of the vector field give a firection field...)
 
 void testInitialValueSolver()
 {
