@@ -584,10 +584,6 @@ void plotLevelLines(const function<T(T, T)>& f, const vector<T>& levels,
 
   plt.addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
 
-
-  //plt.addCommand("set pm3d map");
-
-
   // now, we need to tell gnuplot to generate and plot the contours from the data - how?
   // https://www.albertopassalacqua.com/?p=40
 
@@ -595,13 +591,13 @@ void plotLevelLines(const function<T(T, T)>& f, const vector<T>& levels,
   // https://askubuntu.com/questions/1046878/gnuplot-plot-data-points-on-2d-contour-plot
 
 
-  plt.addCommand("set pm3d explicit");
+  //plt.addCommand("set pm3d map");
+  plt.addCommand("set pm3d explicit");  // makes no difference
   plt.addCommand("unset surface");      // set/unset switches surface drawing on/off
   plt.addCommand("set view map");     // Set a bird eye (xy plane) view
   plt.addCommand("set contour");      // Plot contour lines
   plt.addCommand("set key outside");
-  plt.addCommand("set cntrparam cubicspline");  // Smooth out the lines
-
+  //plt.addCommand("set cntrparam cubicspline");  // wobbly, slow
 
   // factor out into plt.setContourLevels:
   string str = "set cntrparam levels discrete ";
@@ -610,17 +606,16 @@ void plotLevelLines(const function<T(T, T)>& f, const vector<T>& levels,
     str += "," + to_string(levels[i]);
   plt.addCommand(str);
 
-
   // additional commands from source above that seem to have no effect:
   //plt.addCommand("set colorbox");  // set/unset seems to have no effect
   //plt.addCommand("set cbrange [0:7000]");  // color range of contour values - no effect
   //plt.addCommand("set palette model RGB defined ( 0 'white', 1 'black' )"); // no effect
   //plt.addCommand("set style line 1 lc rgb '#4169E1' pt 7 ps 2");
 
-
   plt.plot3D();
 
   // ok - it generally works - now refine!
+  // how can we have a colorbar that shows the values of the contours?
   
   // this is when we would want to create the contour lines ourselves - but this turns out to be 
   // nontrivial - instead we use gnuplot to figure out the contour lines from the surface data...
@@ -660,15 +655,15 @@ void levelLines()
   // complex function f(z) = z^2
 
 
-  double xMin = -3.0;
-  double xMax = +3.0;
-  double yMin = -3.0;
-  double yMax = +3.0;
+  double xMin = -8.0;
+  double xMax = +8.0;
+  double yMin = -8.0;
+  double yMax = +8.0;
 
   function<double(double, double)> f;
-  f = [] (double x, double y) { return x*x - y*y; };
-  //f = [] (double x, double y) { return y*sin(x) + x*cos(y) + 0.1*x*y; }; // has interesting features for testing contour-plots
-  vector<double> levels = rangeLinear(21, -10, 10);
+  //f = [] (double x, double y) { return x*x - y*y; };
+  f = [] (double x, double y) { return y*sin(x) + x*cos(y) + 0.1*x*y; }; // has interesting features for testing contour-plots
+  vector<double> levels = rangeLinear(11, -10, 10);
   plotLevelLines(f, levels, xMin, xMax, yMin, yMax);
 
 
