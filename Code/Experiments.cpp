@@ -31,6 +31,14 @@ std::vector<double> diff(const std::vector<double>& x)
   return d;
 }
 
+vector<double> rangeLinear(int N, double min, double max)
+{
+  vector<double> r(N);
+  GNUPlotter::rangeLinear(&r[0], N, min, max);
+  return r;
+}
+
+
 //-------------------------------------------------------------------------------------------------
 // convenience functions for certain types of plots (eventually move to class GNUPlotter):
 
@@ -162,7 +170,7 @@ void plotComplexFunctionReIm(const function<complex<T>(complex<T>)>& f,
   plt.addDataBivariateFunction(Nr, rMin, rMax, Ni, iMin, iMax, fi);
   plt.plot3D();
 
-  // maybe plot level lines
+  // maybe plot level lines / contours
 }
 
 /*
@@ -189,6 +197,57 @@ void plotComplexArrayReIm(const std::complex<T>* z, int N)
 }
 */
 
+template<class T>
+void setContourLevels(GNUPlotter& plt, const vector<T>& levels)
+{
+  string str = "set cntrparam levels discrete ";
+  str += to_string(levels[0]);
+  for(size_t i = 1; i < levels.size(); i++)
+    str += "," + to_string(levels[i]);
+  plt.addCommand(str);
+}
+
+template<class T>
+void plotContours(GNUPlotter& plt, const function<T(T, T)>& f, const vector<T>& levels,
+  T xMin, T xMax, T yMin, T yMax, int Nx = 65, int Ny = 65)
+{
+  plt.addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
+  plt.addCommand("unset surface");    // set/unset switches surface drawing on/off
+  plt.addCommand("set view map");     // look onto xy plane from above
+  plt.addCommand("set contour");      // Plot contour lines
+  setContourLevels(plt, levels);
+  plt.plot3D();
+}
+
+template<class T>
+inline void plotContours(GNUPlotter& plt, 
+  const function<T(T, T)>& f1, const function<T(T, T)>& f2, 
+  const vector<T>& levels,
+  T xMin, T xMax, T yMin, T yMax, int Nx = 65, int Ny = 65)
+{
+  plt.addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f1);
+  plotContours(plt, f2, levels, xMin, xMax, yMin, yMax);
+}
+
+template<class T>
+inline void plotComplexContours(GNUPlotter& plt,
+  const function<complex<T>(complex<T>)>& f,
+  const vector<T>& levels,
+  T xMin, T xMax, T yMin, T yMax, int Nx = 65, int Ny = 65)
+{
+  function<T(T, T)> fr, fi;
+  fr = [=](T x, T y) { return f(complex<T>(x, y)).real(); };
+  fi = [=](T x, T y) { return f(complex<T>(x, y)).imag(); };
+  plotContours(plt, fr, fi, levels, xMin, xMax, yMin, yMax);
+}
+
+template<class T>
+inline void plotComplexContours(const function<complex<T>(complex<T>)>& f,
+  const vector<T>& levels, T xMin, T xMax, T yMin, T yMax, int Nx = 65, int Ny = 65)
+{
+  GNUPlotter plt;
+  plotComplexContours(plt, f, levels, xMin, xMax, yMin, yMax, Nx, Ny);
+}
 
 //-------------------------------------------------------------------------------------------------
 // actual experiments:
@@ -295,8 +354,9 @@ void complexReIm()
   function<complex<double>(complex<double>)> f;
   f = [] (complex<double> z) { return z*z + 1.; };
   int N = 21;    // number of samples
-  double r = 2;  // range from -r to +r (for both re and im)
+  double r = 4;  // range from -r to +r (for both re and im)
   plotComplexFunctionReIm(f, N, -r, r, N, -r, r);
+  plotComplexContours(f, rangeLinear(9, -10, 10), -r, r, -r, r);
 }
 
 
@@ -537,13 +597,6 @@ void demoVectorField()
 }
 
 
-// convenience function - maybe move into GNUPlotter
-vector<double> rangeLinear(int N, double min, double max)
-{
-  vector<double> r(N);
-  GNUPlotter::rangeLinear(&r[0], N, min, max);
-  return r;
-}
 
 
 // Fills the arrays x,y (assumed to be of same length) with pairs of values for which f(x,y) = z.
@@ -563,16 +616,8 @@ void generateImplicitCurveData(const function<T(T, T)>& f, T z, vector<T>& x, ve
 
 
 
-template<class T>
-void setContourLevels(GNUPlotter& plt, const vector<T>& levels)
-{
-  string str = "set cntrparam levels discrete ";
-  str += to_string(levels[0]);
-  for(size_t i = 1; i < levels.size(); i++)
-    str += "," + to_string(levels[i]);
-  plt.addCommand(str);
-}
-// move into GNUPlotter class
+
+
 
 // move to top where teh other plot... functions are
 template<class T>
@@ -594,7 +639,11 @@ void plotLevelLines(const function<T(T, T)>& f, const vector<T>& levels,
   //Nx = Ny = 65;  // compromise between speed and precision
 
   GNUPlotter plt;
+  //plt.addCommand("set cntrparam cubicspline");  // wobbly, slow
+  plotContours(plt, f, levels,  xMin, xMax, yMin, yMax, Nx, Ny);
 
+
+  /*
   plt.addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
 
   // now, we need to tell gnuplot to generate and plot the contours from the data - how?
@@ -604,14 +653,15 @@ void plotLevelLines(const function<T(T, T)>& f, const vector<T>& levels,
   // https://askubuntu.com/questions/1046878/gnuplot-plot-data-points-on-2d-contour-plot
 
 
-  //plt.addCommand("set pm3d map");
-  plt.addCommand("set pm3d explicit");  // makes no difference
-  plt.addCommand("unset surface");      // set/unset switches surface drawing on/off
-  plt.addCommand("set view map");     // Set a bird eye (xy plane) view
+
+  plt.addCommand("unset surface");    // set/unset switches surface drawing on/off
+  plt.addCommand("set view map");     // look onto xy plane from above
   plt.addCommand("set contour");      // Plot contour lines
-  //plt.addCommand("set cntrparam cubicspline");  // wobbly, slow
+
 
   // additional commands from source above that seem to have no effect:
+  //plt.addCommand("set pm3d map");
+  //plt.addCommand("set pm3d explicit");  // makes no difference
   //plt.addCommand("set key outside");
   //plt.addCommand("set colorbox");  // set/unset seems to have no effect
   //plt.addCommand("set cbrange [0:7000]");  // color range of contour values - no effect
@@ -621,6 +671,7 @@ void plotLevelLines(const function<T(T, T)>& f, const vector<T>& levels,
   setContourLevels(plt, levels);
   plt.plot3D();
 
+  */
   // how can we have a colorbar that shows the values of the contours?
   
   // this is when we would want to create the contour lines ourselves - but this turns out to be 
@@ -665,17 +716,25 @@ void levelLines()
 
   double xMin, xMax, yMin, yMax;
   vector<double> z;
-  function<double(double, double)> f;
+  function<double(double, double)> f, g;
 
   f = [] (double x, double y) { return x*x - y*y; };
+  g = [] (double x, double y) { return 2*x*y;     };
   xMin = yMin = -4; xMax = yMax = 4; z = rangeLinear(11, -10, 10);
 
-  //f = [] (double x, double y) { return y*sin(x) + x*cos(y) + 0.1*x*y; }; // has interesting features for testing contour-plots
-  //xMin = yMin = -8; xMax = yMax = 8; z = rangeLinear(9, -10, 10);
+  GNUPlotter plt;
+  plt.addCommand("set size square");
+  plt.setPixelSize(600, 600);
+  plotContours(plt, f, g, z, xMin, xMax, yMin, yMax);
 
-  vector<double> levels = rangeLinear(11, -10, 10);
+
+  // has interesting features for testing contour-plots
+  f = [] (double x, double y) { return y*sin(x) + x*cos(y) + 0.1*x*y; }; 
+  xMin = yMin = -8; xMax = yMax = 8; z = rangeLinear(9, -10, 10);
   plotLevelLines(f, z, xMin, xMax, yMin, yMax);
 }
+// there are artifacts at the center in both plots
+
 // how would this look for 3D vector fields? we would have level-surfaces. for "conjugacy",
 // should we have 3 sets of level surfaces that intersect in a particluar way (like always producing 3 
 // mutually perpendicular lines when 3 of these surfaces intersect in a coner?). check laplace 
