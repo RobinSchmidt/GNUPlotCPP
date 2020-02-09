@@ -220,6 +220,38 @@ void plotContours(GNUPlotter& plt, const function<T(T, T)>& f, const vector<T>& 
   plt.plot3D();
 }
 
+// problem: we can't use a high number of samples in the data because then gnuplot also wants to 
+// use that data for plotting the surface - actually we would like to use oversampled data for 
+// letting gnuplot figure out the contours and normally sampled data for plotting the surface
+// ..using the normally sampled data for finding the contours leads to artifacts int the contours
+// ..unset surface - doesn't help against the slowdown when using higher Nx,Ny
+// maybe have options to fill the contours as in a topographic map, maybe allow colormaps
+
+// see:
+// https://www.albertopassalacqua.com/?p=40
+// https://askubuntu.com/questions/1046878/gnuplot-plot-data-points-on-2d-contour-plot
+// http://www.phyast.pitt.edu/~zov1/gnuplot/html/contour.html
+// http://gnuplot.sourceforge.net/demo/contours.html
+
+// additional commands from source above that seem to have no effect:
+//plt.addCommand("set pm3d map");
+//plt.addCommand("set pm3d explicit");  // makes no difference
+//plt.addCommand("set key outside");
+//plt.addCommand("set colorbox");  // set/unset seems to have no effect
+//plt.addCommand("set cbrange [0:7000]");  // color range of contour values - no effect
+//plt.addCommand("set palette model RGB defined ( 0 'white', 1 'black' )"); // no effect
+//plt.addCommand("set style line 1 lc rgb '#4169E1' pt 7 ps 2");
+
+template<class T>
+void plotContours(const function<T(T, T)>& f, const vector<T>& levels,
+  T xMin, T xMax, T yMin, T yMax, int Nx = 65, int Ny = 65)
+{
+  GNUPlotter plt;
+  plotContours(plt, f, levels, xMin, xMax, yMin, yMax, Nx, Ny);
+}
+
+
+
 template<class T>
 inline void plotContours(GNUPlotter& plt, 
   const function<T(T, T)>& f1, const function<T(T, T)>& f2, 
@@ -256,6 +288,8 @@ inline void plotComplexContours(const function<complex<T>(complex<T>)>& f,
 // polygons/polylines
 // but maybe implement it more generally as a function R^2 -> R^2 and make a wrapper for C -> C as
 // was done with the contour plots
+
+
 
 //-------------------------------------------------------------------------------------------------
 // actual experiments:
@@ -625,124 +659,25 @@ void generateImplicitCurveData(const function<T(T, T)>& f, T z, vector<T>& x, ve
 // https://stackoverflow.com/questions/1131815/how-to-plot-implicit-equations - simple method
 // https://homepages.warwick.ac.uk/staff/David.Tall/pdfs/dot1986b-implicit-fns.pdf
 
-
-
-
-
-
-// move to top where teh other plot... functions are
-template<class T>
-void plotLevelLines(const function<T(T, T)>& f, const vector<T>& levels, 
-  T xMin, T xMax, T yMin, T yMax, int Nx = 65, int Ny = 65)
+void contours()
 {
-  // under construction
-  // problem: we can't use a high number of samples in the data because then gnuplot also wants to 
-  // use that data for plotting the surface - actually we would like to use oversampled data for 
-  // letting gnuplot figure out the contours and normally sampled data for plotting the surface
-  // ..using the normally sampled data for finding the contours leads to artifacts int the contours
-  // they become "wobbly"
-  // ..maybe try unset surface - doesn't help against the slowdown when using higher Nx,Ny
-
-  //int Nx = 201, Ny = 201; // optional make parameters - this is a lot for doing a surface plot
-                          // but for finding the correct contours, we need good resolution
-
-  //Nx = Ny = 21;  // fast, but shows wobbles
-  //Nx = Ny = 65;  // compromise between speed and precision
-
-  GNUPlotter plt;
-  //plt.addCommand("set cntrparam cubicspline");  // wobbly, slow
-  plotContours(plt, f, levels,  xMin, xMax, yMin, yMax, Nx, Ny);
-
-
-  /*
-  plt.addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
-
-  // now, we need to tell gnuplot to generate and plot the contours from the data - how?
-  // https://www.albertopassalacqua.com/?p=40
-
-  // commands taken from here:
-  // https://askubuntu.com/questions/1046878/gnuplot-plot-data-points-on-2d-contour-plot
-
-
-
-  plt.addCommand("unset surface");    // set/unset switches surface drawing on/off
-  plt.addCommand("set view map");     // look onto xy plane from above
-  plt.addCommand("set contour");      // Plot contour lines
-
-
-  // additional commands from source above that seem to have no effect:
-  //plt.addCommand("set pm3d map");
-  //plt.addCommand("set pm3d explicit");  // makes no difference
-  //plt.addCommand("set key outside");
-  //plt.addCommand("set colorbox");  // set/unset seems to have no effect
-  //plt.addCommand("set cbrange [0:7000]");  // color range of contour values - no effect
-  //plt.addCommand("set palette model RGB defined ( 0 'white', 1 'black' )"); // no effect
-  //plt.addCommand("set style line 1 lc rgb '#4169E1' pt 7 ps 2");
-
-  setContourLevels(plt, levels);
-  plt.plot3D();
-
-  */
-  // how can we have a colorbar that shows the values of the contours?
-  
-  // this is when we would want to create the contour lines ourselves - but this turns out to be 
-  // nontrivial - instead we use gnuplot to figure out the contour lines from the surface data...
-  //for(size_t i = 0; i < levels.size(); i++)
-  //{
-  //  generateImplicitCurveData(f, levels[i], x, y);
-
-  //  // ..add data to datafile and graph-descriptor to plotter....
-
-  //  int dummy = 0;
-  //}
-}
-// todo: extend to deal with multiple functions - especially the case 2 is important
-
-// see
-// http://www.phyast.pitt.edu/~zov1/gnuplot/html/contour.html
-// http://gnuplot.sourceforge.net/demo/contours.html
-// maybe have a version that plots the function itself as surface with contours plotted on the 
-// xy-plane and one that only plots the contours. maybe have options to fill the contours as in a 
-// topographic map, maybe allow colormaps
-
-// perhaps, we need first a function to draw an implicitly defined curve (adds data and 
-// graph-descriptor to a plotter object), then call this in a loop using functions given by 
-// f(x,y) - levels[i]
-// generateImplicitCurveData
-
-// a nice example function to test the contour-plot is z = y*sin(x) + x*cos(y) + k*x*y
-// where k ~= 0.1  in the range x,y in -10...10 - this function has some interesting features
-
-// a.k.a "contour plot"
-void levelLines()
-{
-  // We plot the level lines (contours) of a scalar field over R^2. As example scalar field, we 
-  // use  f(x,y) = x^2 - y^2. 
-  // ToDo: plot contours of two scalar fields into a single plot, like 
-  //   u(x,y) = x^2 - y^2, v(x,y) = 2*x*y
-  // idea: we want to plot contours of some potential field and its harmonic conjugate - in this 
-  // example case, these two harmonic functions would be the real and imaginary parts of the 
-  // complex function f(z) = z^2
-
-
   double xMin, xMax, yMin, yMax;
   vector<double> z;
   function<double(double, double)> f, g;
 
-  f = [] (double x, double y) { return x*x - y*y; };
-  g = [] (double x, double y) { return 2*x*y;     };
-  xMin = yMin = -4; xMax = yMax = 4; z = rangeLinear(11, -10, 10);
-
   GNUPlotter plt;
   plt.addCommand("set size square");
   plt.setPixelSize(600, 600);
-  plotContours(plt, f, g, z, xMin, xMax, yMin, yMax);
 
+  f = [] (double x, double y) { return x*x - y*y; };
+  g = [] (double x, double y) { return 2*x*y;     };
+  xMin = yMin = -4; xMax = yMax = 4; z = rangeLinear(11, -10, 10);
+  plotContours(plt, f, g, z, xMin, xMax, yMin, yMax);
 
   // has interesting features for testing contour-plots
   f = [] (double x, double y) { return y*sin(x) + x*cos(y) + 0.1*x*y; }; 
   xMin = yMin = -8; xMax = yMax = 8; z = rangeLinear(9, -10, 10);
-  plotLevelLines(f, z, xMin, xMax, yMin, yMax);
+  plotContours(f, z, xMin, xMax, yMin, yMax);
 }
 // there are artifacts at the center in both plots
 

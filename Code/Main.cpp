@@ -50,7 +50,7 @@ int main(int argc, char** argv)
 
   //testInitialValueSolver();
 
-  //levelLines();   // rename to contours
+  contours();
   //demoVectorField();
   //demoDipole();  // not so interesting - we should draw field lines, not the vector field
 
@@ -63,7 +63,7 @@ int main(int argc, char** argv)
   //surfaceExperiment();
   //complexExperiment();
   //complexCurve();
-  complexReIm();
+  //complexReIm();
   //vectorFieldExperiment();
   //zedSquaredVectorField();
 
