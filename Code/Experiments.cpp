@@ -170,7 +170,8 @@ void plotComplexFunctionReIm(const function<complex<T>(complex<T>)>& f,
   plt.addDataBivariateFunction(Nr, rMin, rMax, Ni, iMin, iMax, fi);
   plt.plot3D();
 
-  // maybe plot level lines / contours
+  // maybe plot level lines / contours - needs another parameter - make it optional and if left 
+  // empty, don't plot contours
 }
 
 /*
@@ -248,6 +249,13 @@ inline void plotComplexContours(const function<complex<T>(complex<T>)>& f,
   GNUPlotter plt;
   plotComplexContours(plt, f, levels, xMin, xMax, yMin, yMax, Nx, Ny);
 }
+
+// make a function to plot the complex mapping - maybe of different curves in the input plane - in 
+// the simplest case, the "curves" are just horizontal and vertical lines - also use lines through 
+// the origin at different angles and circles - but also allow for arbitrary curves and/or 
+// polygons/polylines
+// but maybe implement it more generally as a function R^2 -> R^2 and make a wrapper for C -> C as
+// was done with the contour plots
 
 //-------------------------------------------------------------------------------------------------
 // actual experiments:
@@ -352,7 +360,10 @@ void complexCurve()
 void complexReIm()
 {
   function<complex<double>(complex<double>)> f;
-  f = [] (complex<double> z) { return z*z + 1.; };
+  //f = [] (complex<double> z) { return z*z + 1.; };
+  f = [] (complex<double> z) { return z*z; };
+  //f = [] (complex<double> z) { return z*z*z; }; // contour plot shows artifacts at center
+  //f = [] (complex<double> z) { return 1. / z; }; // also very artifacty
   int N = 21;    // number of samples
   double r = 4;  // range from -r to +r (for both re and im)
   plotComplexFunctionReIm(f, N, -r, r, N, -r, r);
