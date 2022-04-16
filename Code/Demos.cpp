@@ -1098,6 +1098,31 @@ void demoPendulumPhasePortrait()
   // tics at multiples of pi:
   // http://www.gnuplotting.org/tag/tics/  // ...it also says something about multiplots
   // http://www.gnuplotting.org/set-your-tic-labels-to-use-pi-or-to-be-blank/
+  
+  // Other idea to visualize phase-portraits:
+  // -start with a black background
+  // -pick a bunch of equally spaced points on the grid, for each of them do: 
+  //  -color them white
+  //  -iterate the ODE one time step back into the reverse direction, i.e. into the past, color the 
+  //   pixel 99% white, take another step and color 98% white and so on until black is reached 
+  //   (after 100 steps in this example, that number should be adjustable)
+  // -this will produce trails that fade away into the past and end up at the chosen grid points
+  // -one could also iterate in the forward direction, but then the most visible white ends of the 
+  //  trails will be at irregular positions which may not look as good. Maybe it makes sense to go
+  //  in both directions a little bit (starting at a middle gray at the grid point and increasing 
+  //  brightness while going forward, decreasing it going backward)
+  // -the number of steps taken, the step-size and an oversampling factor for the steps should be
+  //  adjusted by the user to the ODE at hand (oversampling means here: take n internal steps with 
+  //  smaller size to determine, where a single step goes to)
+  // -the density of the grid-points should also be user parameter, of course
+  // -the "color the pixel" should actually be understood as: "add a dot", placed at sub-pixel 
+  //  position via bilinear de-interpolation as done in rsImagePainter::paintDot
+  // -perhaps one could use a nonlinear fade-function, but that's for a later refinement
+  // -i think, this is similar to a streamline plot? 
+  //    https://matplotlib.org/stable/gallery/images_contours_and_fields/plot_streamplot.html
+  //  but with a slightly different flavor: no arrows, instead fading trails, streamline endpoints
+  //  are on a regular grid (normally, the starting points are selected). maybe call it reverse
+  //  streamline plot
 }
 
 

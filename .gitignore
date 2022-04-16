@@ -17,3 +17,6 @@
 *.suo
 *.tlog
 *.user
+*.gif
+Build/VisualStudio2015/Debug
+Build/VisualStudio2015/x64
