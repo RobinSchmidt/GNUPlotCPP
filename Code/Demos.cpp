@@ -1061,7 +1061,7 @@ void demoPendulumPhasePortrait()
   double g  = 1;    // gravitational pull/acceleration
   double L  = 1;    // length of pendulum
   // see video by 3blue1brown video about this sort of plot:
-  // https://www.youtube.com/watch?v=p_di4Zn4wz4 
+  // https://www.youtube.com/watch?v=p_di4Zn4wz4 at around 15:17
 
   // two bivariate functions fx(x,y), fy(x,y) define the vector field:
   std::function<double(double, double)> fx, fy; 

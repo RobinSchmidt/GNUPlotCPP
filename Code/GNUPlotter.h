@@ -37,6 +37,8 @@ class GNUPlotter
 
 public:
 
+  enum class ColorPalette;  // Forward declaration
+
   //-----------------------------------------------------------------------------------------------
   /** \name Construction/Destruction */
   // move down
@@ -203,6 +205,11 @@ public:
 
   /** This function can be used, if more than 10 legends are needed. */
   void setLegends(CVR<std::string> legends);
+
+  /** Sets up a color palette to be used, for example, as color map for heat-map and 
+  contour-filling plots with pm3d or for indicating strength in vector field plots. The color 
+  palettes are named in the ColorPalette enum. */
+  void setColorPalette(ColorPalette palette, bool inverted = false);
 
   /** Sets the colors to be used for the datasets. Each color must be a zero terminated c-string of
   the form RRGGBB or AARRGGBB where RR is a hexadecimal value for the red component, GG for green, 
@@ -611,9 +618,26 @@ public:
   void invokeGNUPlot();
 
 
+  //-----------------------------------------------------------------------------------------------
+  /** Enumerations */
 
+  /** Named color palettes. ...TBC... */
+  enum class ColorPalette  
+  {
+    // Unipolar maps:
+    magma,
+    printable,          // black-blue-pink-orange-yellow-white. Translates well to grayscale.
+    plasma,
+    viridis,            // From dark blue via green to yellow.
+    viridisBrt,         // Similar to viridis but a bit brighter.
 
+    // Bipolar maps:
+    prpGrnRed,
 
+    numColorPalettes
+  };
+  // We use suffixes Brt for Bright, Drk for dark
+  // ToDo: document sources, see comments at the bottom of GNUPlotter.cpp 
 
 
   //-----------------------------------------------------------------------------------------------
