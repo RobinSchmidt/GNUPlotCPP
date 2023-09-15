@@ -709,6 +709,8 @@ void contours()
   //plotContours(f, z, xMin, xMax, yMin, yMax);
 
   // New, experimental:
+  using CP = GNUPlotter::ColorPalette;
+  plt.setColorPalette(CP::viridis);
   plotContourMap(plt, f, z, xMin, xMax, yMin, yMax, 301, 301);
   // -We need clipping and/or specify a z-range
   // -We need more colors.
