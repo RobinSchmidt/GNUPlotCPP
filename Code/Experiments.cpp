@@ -708,16 +708,25 @@ void contours()
   xMin = yMin = -8; xMax = yMax = 8; z = rangeLinear(9, -10, 10);
   //plotContours(f, z, xMin, xMax, yMin, yMax);
 
+  // There are artifacts at the center in both plots
+
   // New, experimental:
   using CP = GNUPlotter::ColorPalette;
   plt.setColorPalette(CP::viridis);
+  z = rangeLinear(21, -20, 20);
+  //z = rangeLinear(41, -20, 20);  // very dense - needs finer lines or bigger size
+
+  //plt.addCommand("set style increment user");
+  //plt.addCommand("do for [i=1:20] { set style line i lw 2 }" );
+  // Has no effect on the contour lines. We want to adjust the line width to make them thinner.
+  // https://stackoverflow.com/questions/18878163/gnuplot-contour-line-color-set-style-line-and-set-linetype-not-working
+
+  plt.setPixelSize(600, 600);
   plotContourMap(plt, f, z, xMin, xMax, yMin, yMax, 301, 301);
-  // -We need clipping and/or specify a z-range
-  // -We need more colors.
   // -Clicking on "apply autoscale" changes the colors. Maybe we need to fix the z-range or 
   //  something.
 }
-// there are artifacts at the center in both plots
+
 
 // how would this look for 3D vector fields? we would have level-surfaces. for "conjugacy",
 // should we have 3 sets of level surfaces that intersect in a particluar way (like always producing 3 
