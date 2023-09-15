@@ -704,7 +704,7 @@ void contours()
   //plotContours(plt, f, g, z, xMin, xMax, yMin, yMax);
 
   // has interesting features for testing contour-plots
-  f = [] (double x, double y) { return y*sin(x+1) + x*cos(y-1) + 0.1*x*y; }; 
+  f = [] (double x, double y) { return y*sin(x+1) + x*cos(y+1) + 0.1*x*y; }; 
   xMin = yMin = -8; xMax = yMax = 8; z = rangeLinear(9, -10, 10);
   //plotContours(f, z, xMin, xMax, yMin, yMax);
 
@@ -712,7 +712,8 @@ void contours()
 
   // New, experimental:
   using CP = GNUPlotter::ColorPalette;
-  plt.setColorPalette(CP::viridis);
+  //plt.setColorPalette(CP::magma);
+  plt.setColorPalette(CP::viridisBrt);
   z = rangeLinear(21, -20, 20);
   //z = rangeLinear(41, -20, 20);  // very dense - needs finer lines or bigger size
 
@@ -726,6 +727,11 @@ void contours()
   plotContourMap(plt, f, z, xMin, xMax, yMin, yMax, 301, 301);
   // -Clicking on "apply autoscale" changes the colors. Maybe we need to fix the z-range or 
   //  something.
+
+  // Try the functions:
+  // f(x,y) = x^2 * y^2 * exp(-(x^2 + y^2))
+  // f(x,y) = x   * y   * exp(-(x^2 + y^2))
+  // f(x,y) = x   * y^2 * exp(-(x^2 + y^2))
 }
 
 

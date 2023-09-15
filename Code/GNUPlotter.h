@@ -635,7 +635,7 @@ public:
     printable,          // black-blue-pink-orange-yellow-white. Translates well to grayscale.
     plasma,
     viridis,            // From dark blue via green to yellow.
-    viridisBrt,         // Similar to viridis but a bit brighter.
+    viridisBrt,         // Similar to viridis but brighter and with some orange near the top.
 
     // Bipolar maps:
     prpGrnRed,
