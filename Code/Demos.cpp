@@ -1370,8 +1370,8 @@ void demoDipole()
 
 
 
-
-
+// Various demos:
+// https://gnuplot.sourceforge.net/demo_6.1/
 
 // here is a good tutorial:
 // http://lowrank.net/gnuplot/index-e.html
@@ -1429,7 +1429,7 @@ void demoDipole()
     // should create dashed lines but doesn't work
 
 
-
-
+// Explains how to use GNUPlot with LaTeX:
+// https://lwn.net/Articles/628537/
 
 
