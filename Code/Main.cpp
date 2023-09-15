@@ -7,6 +7,7 @@ int main(int argc, char** argv)
   //testMatrixWrite();
   //testLowLevelCalls();
 
+  /*
   // Here are a couple of functions that demonstrate the use of the plotter. Whenever you close the
   // GNUPlot window, the currently running demo function will return and the next demo is launched:
   demoArrayPlot();
@@ -36,6 +37,7 @@ int main(int argc, char** argv)
   demoVectorField();
   demoPendulumPhasePortrait();
   demoDipole();
+  */
   
   // If you want to see, how they were done, jump into the implementations of these functions - 
   // there you will find commented code that should make it clear how the plotter class is supposed
@@ -45,7 +47,7 @@ int main(int argc, char** argv)
   // experimental plots - not yet finished:
 
   //testInitialValueSolver();
-  //contours();
+  contours();
 
   // these are just some tests for debugging:
   //testDataSetup();

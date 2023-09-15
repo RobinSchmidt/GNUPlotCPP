@@ -208,6 +208,7 @@ void setContourLevels(GNUPlotter& plt, const vector<T>& levels)
   plt.addCommand(str);
 }
 
+// Rename to plotContourLines:
 template<class T>
 void plotContours(GNUPlotter& plt, const function<T(T, T)>& f, const vector<T>& levels,
   T xMin, T xMax, T yMin, T yMax, int Nx = 65, int Ny = 65)
@@ -219,20 +220,19 @@ void plotContours(GNUPlotter& plt, const function<T(T, T)>& f, const vector<T>& 
   setContourLevels(plt, levels);
   plt.plot3D();
 }
-
 // problem: we can't use a high number of samples in the data because then gnuplot also wants to 
 // use that data for plotting the surface - actually we would like to use oversampled data for 
 // letting gnuplot figure out the contours and normally sampled data for plotting the surface
 // ..using the normally sampled data for finding the contours leads to artifacts int the contours
 // ..unset surface - doesn't help against the slowdown when using higher Nx,Ny
 // maybe have options to fill the contours as in a topographic map, maybe allow colormaps
-
+//
 // see:
 // https://www.albertopassalacqua.com/?p=40
 // https://askubuntu.com/questions/1046878/gnuplot-plot-data-points-on-2d-contour-plot
 // http://www.phyast.pitt.edu/~zov1/gnuplot/html/contour.html
 // http://gnuplot.sourceforge.net/demo/contours.html
-
+//
 // additional commands from source above that seem to have no effect:
 //plt.addCommand("set pm3d map");
 //plt.addCommand("set pm3d explicit");  // makes no difference
@@ -250,8 +250,7 @@ void plotContours(const function<T(T, T)>& f, const vector<T>& levels,
   plotContours(plt, f, levels, xMin, xMax, yMin, yMax, Nx, Ny);
 }
 
-
-
+/** A function to plot contour lines of two functions superimposed. */
 template<class T>
 inline void plotContours(GNUPlotter& plt, 
   const function<T(T, T)>& f1, const function<T(T, T)>& f2, 
@@ -281,7 +280,6 @@ inline void plotComplexContours(const function<complex<T>(complex<T>)>& f,
   GNUPlotter plt;
   plotComplexContours(plt, f, levels, xMin, xMax, yMin, yMax, Nx, Ny);
 }
-
 // make a function to plot the complex mapping - maybe of different curves in the input plane - in 
 // the simplest case, the "curves" are just horizontal and vertical lines - also use lines through 
 // the origin at different angles and circles - but also allow for arbitrary curves and/or 
@@ -289,6 +287,37 @@ inline void plotComplexContours(const function<complex<T>(complex<T>)>& f,
 // but maybe implement it more generally as a function R^2 -> R^2 and make a wrapper for C -> C as
 // was done with the contour plots
 
+
+template<class T>
+void plotContourMap(GNUPlotter& plt, const function<T(T, T)>& f, const vector<T>& levels,
+  T xMin, T xMax, T yMin, T yMax, int Nx = 65, int Ny = 65)
+{
+  plt.addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
+  setContourLevels(plt, levels);
+
+  // Use constant color fills between the contour lines if desired:
+  bool useConstColors = true;  // make user parameter
+  if(useConstColors)
+  {
+    std::string cmd = "set palette maxcolors " + std::to_string(levels.size() - 1);
+    plt.addCommand(cmd);
+    size_t L = levels.size() - 1;            // last valid index
+    std::string range = "[" + std::to_string(levels[0]) + ":" + std::to_string(levels[L]) + "]";
+    plt.addCommand("set zrange " + range);   // range for z values
+    plt.addCommand("set cbrange " + range);  // color bar range
+  }
+
+  // Plot:
+  plt.addCommand("set pm3d map impl");
+  plt.addCommand("set contour");
+  plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
+  //plt.addCommand("set autoscale fix");
+  plt.invokeGNUPlot();
+
+  // ToDo:
+  // -When clicking on "Apply autoscale" on teh GUI, the colors get messed up. I'm trying to fix
+  //  this problem via "set autoscale fix" but that doesn't seem to help.
+}
 
 
 //-------------------------------------------------------------------------------------------------
@@ -662,7 +691,7 @@ void generateImplicitCurveData(const function<T(T, T)>& f, T z, vector<T>& x, ve
 void contours()
 {
   double xMin, xMax, yMin, yMax;
-  vector<double> z;
+  vector<double> z;                         // Contour levels
   function<double(double, double)> f, g;
 
   GNUPlotter plt;
@@ -672,12 +701,19 @@ void contours()
   f = [] (double x, double y) { return x*x - y*y; };
   g = [] (double x, double y) { return 2*x*y;     };
   xMin = yMin = -4; xMax = yMax = 4; z = rangeLinear(11, -10, 10);
-  plotContours(plt, f, g, z, xMin, xMax, yMin, yMax);
+  //plotContours(plt, f, g, z, xMin, xMax, yMin, yMax);
 
   // has interesting features for testing contour-plots
-  f = [] (double x, double y) { return y*sin(x) + x*cos(y) + 0.1*x*y; }; 
+  f = [] (double x, double y) { return y*sin(x+1) + x*cos(y-1) + 0.1*x*y; }; 
   xMin = yMin = -8; xMax = yMax = 8; z = rangeLinear(9, -10, 10);
-  plotContours(f, z, xMin, xMax, yMin, yMax);
+  //plotContours(f, z, xMin, xMax, yMin, yMax);
+
+  // New, experimental:
+  plotContourMap(plt, f, z, xMin, xMax, yMin, yMax, 301, 301);
+  // -We need clipping and/or specify a z-range
+  // -We need more colors.
+  // -Clicking on "apply autoscale" changes the colors. Maybe we need to fix the z-range or 
+  //  something.
 }
 // there are artifacts at the center in both plots
 
