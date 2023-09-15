@@ -167,6 +167,10 @@ public:
    // let these functions take multiple functions, use internally a function
    // addBivariateFunctionData
 
+  template <class T>
+  void plotBivariateFunction(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax, 
+    const std::function<T(T, T)>& f);
+
   // ToDo: 
   // -for those functions which receive a function pointer, use std::function instead - this 
   //   will allow use with lambda-functions, functors *and* function-pointers -> more flexible
@@ -672,7 +676,9 @@ protected:
   /** Calls the operating system to execute the command given by callString. */
   void systemCall(const std::string &callString);
 
-  void assert(bool condition, const char* errorMessage = nullptr);
+  void assume(bool condition, const char* errorMessage = nullptr);
+  // it's like assert, but we can't all it assert because this breaks compilation on mac, i guess 
+  // because of a name clash with the C-macro
 
   /** Adds the command for actually plotting the data to the commandfile. */
   void addPlotCommand(bool splot = false);

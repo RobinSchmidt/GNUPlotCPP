@@ -1331,11 +1331,24 @@ void demoDipole()
   plt.addCommand("set object 4 circle at -1,0 size 0.12 fc rgb \"black\" front");
 
   // draw plus and minus onto the charges:
-  plt.addCommand("set arrow 1 from -0.95,0 to -1.05,0 nohead lw 2 fc rgb \"black\" front");
-  plt.addCommand("set arrow 2 from 0.95,0 to 1.05,0 nohead lw 2 fc rgb \"black\" front");
-  plt.addCommand("set arrow 3 from 1,-0.05 to 1,0.05 nohead lw 2 fc rgb \"black\" front");
+  plt.addCommand("set arrow 1 from -0.95,0 to -1.05,0 nohead lw 2 front");
+  plt.addCommand("set arrow 2 from 0.95,0 to 1.05,0 nohead lw 2 front");
+  plt.addCommand("set arrow 3 from 1,-0.05 to 1,0.05 nohead lw 2 front");
   // ...the plus looks a bit asymmetric - why?
 
+  // This is the old code and fails now:
+  //plt.addCommand("set arrow 1 from -0.95,0 to -1.05,0 nohead lw 2 fc rgb \"black\" front");
+  //plt.addCommand("set arrow 2 from 0.95,0 to 1.05,0 nohead lw 2 fc rgb \"black\" front");
+  //plt.addCommand("set arrow 3 from 1,-0.05 to 1,0.05 nohead lw 2 fc rgb \"black\" front");
+  // GNUPlot barks:
+  //
+  // "set arrow 1 from -0.95,0 to -1.05,0 nohead lw 2 fc rgb "black" front"
+  //                                                  ^
+  // line 22: wrong argument in set arrow
+  //
+  // Apparently, they changed the syntax of the "set arrow" command or something? It doesn't allow 
+  // to specify the fillcolor anymore? fc is short for fillcolor:
+  // https://gnuplot.sourceforge.net/docs_4.2/node226.html
 
   plt.plot();
 
