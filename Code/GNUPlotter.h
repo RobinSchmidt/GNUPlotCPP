@@ -194,6 +194,12 @@ public:
   of plots in cases, when the user doesn't add their own commands. */
   void addDefaultCommands();
 
+  /** Sets the plotter into dark mode, i.e. using a black background, white text and axes etc. This 
+  is suitable for showing plots on a computer screen. For inclusion in pdf documents for printing, 
+  light mode (the default) is probably better */
+  void setToDarkMode();
+  // ToDo: add function setToLightMode.
+
   /** Sets the labels for the x-, y- and z-axis. */
   void setAxisLabels(std::string x, std::string y, std::string z = "");
 

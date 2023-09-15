@@ -722,6 +722,7 @@ void contours()
   // https://stackoverflow.com/questions/18878163/gnuplot-contour-line-color-set-style-line-and-set-linetype-not-working
 
   plt.setPixelSize(600, 600);
+  plt.setToDarkMode();
   plotContourMap(plt, f, z, xMin, xMax, yMin, yMax, 301, 301);
   // -Clicking on "apply autoscale" changes the colors. Maybe we need to fix the z-range or 
   //  something.

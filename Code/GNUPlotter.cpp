@@ -260,6 +260,17 @@ void GNUPlotter::addDefaultCommands()
   addCommand("\n# Custom Settings:"); // subsequent commands appear in "Custom Settings" section
 }
 
+void GNUPlotter::setToDarkMode()
+{
+  addCommand("set term wxt background rgb \"black\"");
+  addCommand("set border lw 1 lc rgb \"white\"");
+  addCommand("set grid lw 1 lc rgb \"white\"");
+  addCommand("set xtics textcolor rgb \"white\"");
+  addCommand("set ytics textcolor rgb \"white\"");
+  addCommand("set xlabel \"X\" textcolor rgb \"white\"");
+  addCommand("set ylabel \"Y\" textcolor rgb \"white\"");
+}
+
 void GNUPlotter::setAxisLabels(std::string x, std::string y, std::string z)
 {
   if( !x.empty() ) addCommand("set xlabel \"" + x + "\"\n");
