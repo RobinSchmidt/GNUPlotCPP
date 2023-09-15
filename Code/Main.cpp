@@ -33,11 +33,10 @@ int main(int argc, char** argv)
   //demoPow(); // boring - remove
   demoSincRadial();
   demoSincRadialHeatMap();
+  demoVectorField();
   demoPendulumPhasePortrait();
   demoDipole();
   
-
- 
   // If you want to see, how they were done, jump into the implementations of these functions - 
   // there you will find commented code that should make it clear how the plotter class is supposed
   // to be used, so you can take these as examples and reference for using it for creating your 
@@ -46,10 +45,7 @@ int main(int argc, char** argv)
   // experimental plots - not yet finished:
 
   //testInitialValueSolver();
-
   //contours();
-  //demoVectorField();
-  //demoDipole();  // not so interesting - we should draw field lines, not the vector field
 
   // these are just some tests for debugging:
   //testDataSetup();
