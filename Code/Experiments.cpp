@@ -732,6 +732,10 @@ void contours()
   // f(x,y) = x^2 * y^2 * exp(-(x^2 + y^2))
   // f(x,y) = x   * y   * exp(-(x^2 + y^2))
   // f(x,y) = x   * y^2 * exp(-(x^2 + y^2))
+
+  // Try cyclic color maps. Use a function like z = sin(p(x)) * sin(q(y)) where p,q are polynomials
+  // or z = sin(p(x,y)) for a bivariate polynomial. Thne, from z, retrieve the angle via asin:
+  // a = asin(z). Plot the a-map using a cyclic colormap.
 }
 
 

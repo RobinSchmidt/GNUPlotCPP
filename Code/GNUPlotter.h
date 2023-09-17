@@ -629,7 +629,12 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** Enumerations */
 
-  /** Named color palettes. ...TBC... */
+  /** Named color palettes. They are meant to be used mainly as color maps in heatmap and filled 
+  contour plots.
+  
+  The 2-letter prefix indicates the author or source of the 
+  
+  ...TBC... */
   enum class ColorPalette  
   {
     // Linear:

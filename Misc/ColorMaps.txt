@@ -7,8 +7,12 @@ https://colorcet.com/userguide/index.html
 
 https://www.fabiocrameri.ch/colourmaps/
 https://bids.github.io/colormap/
+
 http://www.gnuplotting.org/tag/palette/
-https://github.com/Gnuplotting/gnuplot-palettes 
+http://www.gnuplotting.org/tag/colormap/
+
+https://github.com/Gnuplotting/gnuplot-palettes  magma, plasma, viridis, etc.
+
 
 About jet and turbo:
 https://blog.research.google/2019/08/turbo-improved-rainbow-colormap-for.html
@@ -40,5 +44,15 @@ https://www.vis4.net/blog/2013/09/mastering-multi-hued-color-scales/  explanatio
 https://gka.github.io/chroma.js/
 
 
+viridisBrt: https://stackoverflow.com/questions/35818875/gnuplot-pm3d-with-contour-lines
+prpGrnRed:  https://stackoverflow.com/questions/20977368/filled-contour-plot-with-constant-color-between-contour-lines
 
+Here are yet more colormaps:
+http://gnuplot.info/demo/pm3dcolors.html
+I like:  traditional pm3d, AFM hot, black-blue-violet-yellow-white (printable in grayscale), 
+rainbow
+set palette rgbformulae 7,5,15
+About the rgbformulae:  https://gnuplot.sourceforge.net/docs_4.2/node216.html
+
+-Make a bipolar map from dark-red via light-green to dark-blue
 

@@ -1277,33 +1277,6 @@ void GNUPlotter::setStringVector(std::vector<std::string>& v, CSR s0, CSR s1, CS
 
 ToDo:
 
--Find more beautiful colormaps - unipolar and bipolar
- See:
- http://www.gnuplotting.org/tag/palette/
- http://www.gnuplotting.org/tag/colormap/
-
- Sources of some of the color maps:
- viridisBrt: https://stackoverflow.com/questions/35818875/gnuplot-pm3d-with-contour-lines
- prpGrnRed:  https://stackoverflow.com/questions/20977368/filled-contour-plot-with-constant-color-between-contour-lines
-
- magma, plasma, viridis:
- https://github.com/Gnuplotting/gnuplot-palettes
-
- This git repo has many more. Of these, I also like:
-   unipolar: bupu, greys, inferno, parula. pubu, purples, sand,
-   bipolar:  bentcoolwarm, brbg, gnbu, gnpu, jet, moreland, piyg, prgn, puor, rdbu, rdylbu, rdylgn,
-             spectral, turbo, ylgn, ylorbr
-   alternating: paired
- Those which I like but are also integrated here (magma, viridis, etc.) are not listed anymore. 
- Here are yet more colormaps:
- http://gnuplot.info/demo/pm3dcolors.html
- I like:  traditional pm3d, AFM hot, black-blue-violet-yellow-white (printable in grayscale), 
- rainbow
- set palette rgbformulae 7,5,15
- About the rgbformulae:  https://gnuplot.sourceforge.net/docs_4.2/node216.html
-
--Make a bipolar map from dark-red via light-green to dark-blue
-
 -maybe move the explicit template instantiations to another file...that would reduce clutter in 
  this implementation file - but would make the library harder to use - the user would have to deal
  with more files...so it's probably not such a good idea...simple use is more important than
