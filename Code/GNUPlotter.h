@@ -633,7 +633,7 @@ public:
   contour plots. The 2-letter prefix indicates the author or source of the palette. They mean
   AS: Anna Schneider, AM: Anton Mikhailov, GP: Gretchen N. Peterson, KM: Kenneth Moreland, 
   ML: MatLab, SW: Nathaniel J. Smith and Stefan van der Walt, EF: Eric Firing, UA: Unknown Author
-  F:  Gnuplot RGB formula. We also use suffixes Brt for Bright, Drk for dark. */
+  F:  Gnuplot RGB formula. */
   enum class ColorPalette  
   {
     // Linear:
@@ -661,13 +661,12 @@ public:
     F_Printable,        // black-blue-pink-orange-yellow-white. Translates well to grayscale.
     F_TradPm3d,         // traditional pm3d, black-blue-red-yellow
     GP_Sand,            // sand colors
-    ML_Parula,          // similar to viridis, new MatLab default
+    ML_Parula,          // like viridis, brighter, more orange, new MatLab default
     SW_Inferno,
     SW_Magma,
     SW_Plasma,
     UA_YlRd,            // yellow-red
     UA_ChromaJS,        //
-    UA_ViridisBrt,      // Similar to viridis but brighter and with some orange near the top.
 
     // Diverging:
     AM_Turbo,           // similar to ML_Jet but with less saturation
