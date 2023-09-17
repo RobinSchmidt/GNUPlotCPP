@@ -322,6 +322,7 @@ void GNUPlotter::setColorPalette(ColorPalette palette, bool inverted)
   case CP::CB_YlOrRd:       c = "set palette defined (0 '#ffffcc', 1 '#ffeda0', 2 '#fed976', 3 '#feb24c', 4 '#fd8d3c', 5 '#fc4e2a', 6 '#e31a1c', 7 '#bd0026', 8 '#800026')"; break;
   case CP::EF_Viridis:      c = "set palette defined (0 '#440154', 1 '#472c7a', 2 '#3b518b', 3 '#2c718e', 4 '#21908d', 5 '#27ad81', 6 '#5cc863', 7 '#aadc32', 8 '#fde725')"; break;
   case CP::F_AfmHot:        c = "set palette rgbformulae 34,35,36"; break;
+  case CP::F_BkPuWt:        c = "set palette rgbformulae 3,23,21"; break;
   case CP::F_Hot:           c = "set palette rgbformulae 21,22,23"; break;
   case CP::F_Printable:     c = "set palette rgbformulae 30,31,32"; break;
   case CP::F_TradPm3d:      c = "set palette rgbformulae  7, 5,15"; break;
@@ -353,6 +354,8 @@ void GNUPlotter::setColorPalette(ColorPalette palette, bool inverted)
     // Alternating:
   case CP::AS_Paired:    c = "set palette defined (0 '#A6CEE3', 1 '#1F78B4', 2 '#B2DF8A', 3 '#33A02C', 4 '#FB9A99', 5 '#E31A1C', 6 '#FDBF6F', 7 '#FF7F00')"; break;    
   
+    // Cyclic:
+
     // Misc:
   case CP::_test:   c = "set palette rgbformulae 3,23,21"; break;
 

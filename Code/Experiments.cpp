@@ -712,7 +712,7 @@ void contours()
 
   // New, experimental:
   using CP = GNUPlotter::ColorPalette;
-  plt.setColorPalette(CP::F_AfmHot);
+  plt.setColorPalette(CP::F_BkPuWt);
   //plt.setColorPalette(CP::CB_YlGnBu);
   z = rangeLinear(21, -20, 20);
   //z = rangeLinear(41, -20, 20);  // very dense - needs finer lines or bigger size
