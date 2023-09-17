@@ -655,6 +655,8 @@ public:
     CB_YlOrBr,          // https://colorbrewer2.org/#type=sequential&scheme=YlOrBr&n=9
     CB_YlOrRd,          // https://colorbrewer2.org/#type=sequential&scheme=YlOrRd&n=9
     EF_Viridis,         // From dark blue via green to yellow. MatPlotLib default.
+    F_AfmHot,           // like F_Hot but more brownish, less reddish
+    F_Hot,              // black-red-yellow-white
     F_Printable,        // black-blue-pink-orange-yellow-white. Translates well to grayscale.
     F_TradPm3d,         // traditional pm3d, black-blue-red-yellow
     GP_Sand,            // sand colors

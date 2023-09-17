@@ -54,11 +54,24 @@ rainbow
 set palette rgbformulae 7,5,15
 About the rgbformulae:  https://gnuplot.sourceforge.net/docs_4.2/node216.html
 
+7,5,15:     traditional pm3d (black-blue-red-yellow) - done
+33,13,10    rainbow (purple-blue-green-yellow-red) - done
+21,22,23    hot (black-red-yellow-white) - done
+
+3,11,6      green-red-violet   not so good
+23,28,3     ocean (green-blue-white); try also all other permutations - not good
+21,23,3     nope!
+
+34,35,36    AFM hot (black-red-yellow-white) - good!
+3,23,21     (good, unipolar)
+8,9,7:      burgund-white
+
 -Make a bipolar map from dark-red via light-green to dark-blue
 
 My favorites:
 
-Linear: AS_BuPu, AS_GnBu, AS_PuBu, AS_YlGnBu, CB_YlGnBu, EF_Viridis, F_Printable, F_TradPm3d, 
-  GP_Sand, ML_Parula, SW_Magma, UA_ChromaJS, UA_ViridisBrt
+Linear: AS_BuPu, AS_GnBu, AS_PuBu, AS_YlGnBu, CB_YlGnBu, EF_Viridis, F_AfmHot, F_Printable, 
+  F_TradPm3d, GP_Sand, ML_Parula, SW_Magma, UA_ChromaJS, UA_ViridisBrt
 
-Diverging: 
+Diverging: AM_Turbo (highly saturated), AS_BrBG, AS_PRGn, AS_PuOr, AS_RdBu*, AS_RdYlGn (map), 
+  AS_Spectral, F_PuGnRd*, KM_Moreland, UA_GnPu*

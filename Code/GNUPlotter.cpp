@@ -321,6 +321,8 @@ void GNUPlotter::setColorPalette(ColorPalette palette, bool inverted)
   case CP::CB_YlOrBr:       c = "set palette defined (0 '#ffffe5', 1 '#fff7bc', 2 '#fee391', 3 '#fec44f', 4 '#fe9929', 5 '#ec7014', 6 '#cc4c02', 7 '#993404', 8 '#662506')"; break;
   case CP::CB_YlOrRd:       c = "set palette defined (0 '#ffffcc', 1 '#ffeda0', 2 '#fed976', 3 '#feb24c', 4 '#fd8d3c', 5 '#fc4e2a', 6 '#e31a1c', 7 '#bd0026', 8 '#800026')"; break;
   case CP::EF_Viridis:      c = "set palette defined (0 '#440154', 1 '#472c7a', 2 '#3b518b', 3 '#2c718e', 4 '#21908d', 5 '#27ad81', 6 '#5cc863', 7 '#aadc32', 8 '#fde725')"; break;
+  case CP::F_AfmHot:        c = "set palette rgbformulae 34,35,36"; break;
+  case CP::F_Hot:           c = "set palette rgbformulae 21,22,23"; break;
   case CP::F_Printable:     c = "set palette rgbformulae 30,31,32"; break;
   case CP::F_TradPm3d:      c = "set palette rgbformulae  7, 5,15"; break;
   case CP::GP_Sand:         c = "set palette defined (0 '#604860', 1 '#784860', 2 '#a86060', 3 '#c07860', 4 '#f0a848', 5 '#f8ca8c', 6 '#feecae', 7 '#fff4c2', 8 '#fff7db', 9 '#fffcf6')"; break;
@@ -354,19 +356,7 @@ void GNUPlotter::setColorPalette(ColorPalette palette, bool inverted)
     // Misc:
   case CP::_test:   c = "set palette rgbformulae 3,23,21"; break;
 
-    // 7,5,15:  traditional pm3d (black-blue-red-yellow) - done
-    // 33,13,10 ... rainbow (purple-blue-green-yellow-red) - done
 
-    // 3,11,6   ... green-red-violet   not so good
-    // 23,28,3  ... ocean (green-blue-white); try also all other permutations - not good
-    // 21,23,3 (no!) or 
-
-
-    // 21,22,23 ... hot (black-red-yellow-white) -  good!
-    // 34,35,36 ... AFM hot (black-red-yellow-white) - good!
-    // 3,23,21 (good, unipolar)
-
-    // 8,9,7: burgund-white
 
 
   // ...more to come
