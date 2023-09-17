@@ -56,3 +56,9 @@ About the rgbformulae:  https://gnuplot.sourceforge.net/docs_4.2/node216.html
 
 -Make a bipolar map from dark-red via light-green to dark-blue
 
+My favorites:
+
+Linear: AS_BuPu, AS_GnBu, AS_PuBu, AS_YlGnBu, CB_YlGnBu, EF_Viridis, F_Printable, F_TradPm3d, 
+  GP_Sand, ML_Parula, SW_Magma, UA_ChromaJS, UA_ViridisBrt
+
+Diverging: 

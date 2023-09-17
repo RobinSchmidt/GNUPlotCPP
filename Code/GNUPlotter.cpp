@@ -320,17 +320,17 @@ void GNUPlotter::setColorPalette(ColorPalette palette, bool inverted)
   case CP::CB_YlGnBu:       c = "set palette defined (0 '#ffffd9', 1 '#edf8b1', 2 '#c7e9b4', 3 '#7fcdbb', 4 '#41b6c4', 5 '#1d91c0', 6 '#225ea8', 7 '#253494', 8 '#081d58')"; break;
   case CP::CB_YlOrBr:       c = "set palette defined (0 '#ffffe5', 1 '#fff7bc', 2 '#fee391', 3 '#fec44f', 4 '#fe9929', 5 '#ec7014', 6 '#cc4c02', 7 '#993404', 8 '#662506')"; break;
   case CP::CB_YlOrRd:       c = "set palette defined (0 '#ffffcc', 1 '#ffeda0', 2 '#fed976', 3 '#feb24c', 4 '#fd8d3c', 5 '#fc4e2a', 6 '#e31a1c', 7 '#bd0026', 8 '#800026')"; break;
-  case CP::EF_viridis:      c = "set palette defined (0 '#440154', 1 '#472c7a', 2 '#3b518b', 3 '#2c718e', 4 '#21908d', 5 '#27ad81', 6 '#5cc863', 7 '#aadc32', 8 '#fde725')"; break;
-  case CP::F_printable:     c = "set palette rgbformulae 30,31,32"; break;
-  case CP::F_tradPm3d:      c = "set palette rgbformulae  7, 5,15"; break;
+  case CP::EF_Viridis:      c = "set palette defined (0 '#440154', 1 '#472c7a', 2 '#3b518b', 3 '#2c718e', 4 '#21908d', 5 '#27ad81', 6 '#5cc863', 7 '#aadc32', 8 '#fde725')"; break;
+  case CP::F_Printable:     c = "set palette rgbformulae 30,31,32"; break;
+  case CP::F_TradPm3d:      c = "set palette rgbformulae  7, 5,15"; break;
   case CP::GP_Sand:         c = "set palette defined (0 '#604860', 1 '#784860', 2 '#a86060', 3 '#c07860', 4 '#f0a848', 5 '#f8ca8c', 6 '#feecae', 7 '#fff4c2', 8 '#fff7db', 9 '#fffcf6')"; break;
   case CP::ML_Parula:       c = "set palette defined (0 '#352a87', 1 '#0363e1', 2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')"; break;
   case CP::SW_Inferno:      c = "set palette defined (0 '#000004', 1 '#1f0c48', 2 '#550f6d', 3 '#88226a', 4 '#a83655', 5 '#e35933', 6 '#f9950a', 7 '#f8c932', 8 '#fcffa4')"; break;  
-  case CP::SW_magma:        c = "set palette defined (0 '#000004', 1 '#1c1044', 2 '#4f127b', 3 '#812581', 4 '#b5367a', 5 '#e55964', 6 '#fb8761', 7 '#fec287', 8 '#fbfdbf')"; break;
-  case CP::SW_plasma:       c = "set palette defined (0 '#0c0887', 1 '#4b03a1', 2 '#7d03a8', 3 '#a82296', 4 '#cb4679', 5 '#e56b5d', 6 '#f89441', 7 '#fdc328', 8 '#f0f921')"; break;
+  case CP::SW_Magma:        c = "set palette defined (0 '#000004', 1 '#1c1044', 2 '#4f127b', 3 '#812581', 4 '#b5367a', 5 '#e55964', 6 '#fb8761', 7 '#fec287', 8 '#fbfdbf')"; break;
+  case CP::SW_Plasma:       c = "set palette defined (0 '#0c0887', 1 '#4b03a1', 2 '#7d03a8', 3 '#a82296', 4 '#cb4679', 5 '#e56b5d', 6 '#f89441', 7 '#fdc328', 8 '#f0f921')"; break;
   case CP::UA_YlRd:         c = "set palette defined (0 '#ffee00', 1 '#ff7000', 2 '#ee0000', 3 '#7f0000')"; break;
   case CP::UA_ChromaJS:     c = "set palette defined (0 '#ffffe0', 1 '#ffdfb8', 2 '#ffbc94', 3 '#ff9777', 4 '#ff6962', 5 '#ee4256', 6 '#d21f47', 7 '#b0062c', 8 '#8b0000')"; break;  
-  case CP::UA_viridisBrt:   c = "set palette defined (0 '#352a87', 1 '#0363e1', 2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')"; break;
+  case CP::UA_ViridisBrt:   c = "set palette defined (0 '#352a87', 1 '#0363e1', 2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')"; break;
 
     // Diverging:
   case CP::AM_Turbo:        c = "set palette defined (0 '#30123b', 1 '#466be3', 2 '#28bceb', 3 '#32f298', 4 '#a4fc3c', 5 '#eecf3a', 6 '#fb7e21', 7 '#d02f05', 8 '#7a0403')"; break;
@@ -342,7 +342,7 @@ void GNUPlotter::setColorPalette(ColorPalette palette, bool inverted)
   case CP::AS_RdYlBu:       c = "set palette defined (0 '#D73027', 1 '#F46D43', 2 '#FDAE61', 3 '#FEE090', 4 '#E0F3F8', 5 '#ABD9E9', 6 '#74ADD1', 7 '#4575B4')"; break;
   case CP::AS_RdYlGn:       c = "set palette defined (0 '#D73027', 1 '#F46D43', 2 '#FDAE61', 3 '#FEE08B', 4 '#D9EF8B', 5 '#A6D96A', 6 '#66BD63', 7 '#1A9850')"; break;
   case CP::AS_Spectral:     c = "set palette defined (0 '#D53E4F', 1 '#F46D43', 2 '#FDAE61', 3 '#FEE08B', 4 '#E6F598', 5 '#ABDDA4', 6 '#66C2A5', 7 '#3288BD')"; break;
-  case CP::F_prpGrnRed:     c = "set palette rgbformulae 33,13,10"; break;
+  case CP::F_PuGnRd:        c = "set palette rgbformulae 33,13,10"; break;
   case CP::KM_Moreland:     c = "set palette defined (0 '#3b4cc0', 1 '#688aef', 2 '#99baff', 3 '#c9d8ef', 4 '#edd1c2', 5 '#f7a789', 6 '#e36a53', 7 '#b40426')"; break;
   case CP::KM_BentCoolWarm: c = "set palette defined (0 '#5548c1', 1 '#7982d7', 2 '#abb8e7', 3 '#dde3ef', 4 '#ead3c6', 5 '#dba188', 6 '#ca6b55', 7 '#b10027')"; break;
   case CP::ML_Jet:          c = "set palette defined (0 '#000080', 1 '#0000ff', 2 '#0080ff', 3 '#00ffff', 4 '#80ff80', 5 '#ffff00', 6 '#ff8000', 7 '#ff0000', 8 '#800000')"; break;

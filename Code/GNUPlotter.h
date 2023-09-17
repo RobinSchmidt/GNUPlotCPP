@@ -654,17 +654,17 @@ public:
     CB_YlGnBu,          // https://colorbrewer2.org/#type=sequential&scheme=YlGnBu&n=9
     CB_YlOrBr,          // https://colorbrewer2.org/#type=sequential&scheme=YlOrBr&n=9
     CB_YlOrRd,          // https://colorbrewer2.org/#type=sequential&scheme=YlOrRd&n=9
-    EF_viridis,         // From dark blue via green to yellow. MatPlotLib default.
-    F_printable,        // black-blue-pink-orange-yellow-white. Translates well to grayscale.
-    F_tradPm3d,         // traditional pm3d, black-blue-red-yellow
+    EF_Viridis,         // From dark blue via green to yellow. MatPlotLib default.
+    F_Printable,        // black-blue-pink-orange-yellow-white. Translates well to grayscale.
+    F_TradPm3d,         // traditional pm3d, black-blue-red-yellow
     GP_Sand,            // sand colors
     ML_Parula,          // similar to viridis, new MatLab default
     SW_Inferno,
-    SW_magma,
-    SW_plasma,
+    SW_Magma,
+    SW_Plasma,
     UA_YlRd,            // yellow-red
     UA_ChromaJS,        //
-    UA_viridisBrt,      // Similar to viridis but brighter and with some orange near the top.
+    UA_ViridisBrt,      // Similar to viridis but brighter and with some orange near the top.
 
     // Diverging:
     AM_Turbo,           // similar to ML_Jet but with less saturation
@@ -676,20 +676,17 @@ public:
     AS_RdYlBu,          // red-paleyellow-blue
     AS_RdYlGn,          // red-paleyellow-green
     AS_Spectral,        // rainbow with red-paleyellow-blue
-    F_prpGrnRed,        // rainbow (purple-blue-green-yellow-red), middle is bright
+    F_PuGnRd,           // rainbow (purple-blue-green-yellow-red), middle is bright
     KM_BentCoolWarm,    // blue-lightgray-red
     KM_Moreland,        // blue-lightgray-red
     ML_Jet,             // darkblue-lightgreenishyellow-darkred, old MatLab default
     UA_GnPu,            // green-purple
-
-    //
 
     // Alternating:
     AS_Paired,          // 8 colors in 4 light/dark pairs: blue, green, red, orange
                         // should be used with "set palette maxcolors 8"
 
     // Categorical:
-
 
     _test, 
 
