@@ -630,11 +630,10 @@ public:
   /** Enumerations */
 
   /** Named color palettes. They are meant to be used mainly as color maps in heatmap and filled 
-  contour plots.
-  
-  The 2-letter prefix indicates the author or source of the 
-  
-  ...TBC... */
+  contour plots. The 2-letter prefix indicates the author or source of the palette. They mean
+  AS: Anna Schneider, AM: Anton Mikhailov, GP: Gretchen N. Peterson, KM: Kenneth Moreland, 
+  ML: MatLab, SW: Nathaniel J. Smith and Stefan van der Walt, EF: Eric Firing, UA: Unknown Author
+  F:  Gnuplot RGB formula. We also use suffixes Brt for Bright, Drk for dark. */
   enum class ColorPalette  
   {
     // Linear:
@@ -652,18 +651,14 @@ public:
     AS_YlGnBu,          // 8 yellow-green-blue colors of increasing saturation
     AS_YlOrBr,          // 8 yellow-orange-brown colors of increasing saturation
     AS_YlOrRd,          // 8 yellow-orange-red colors of increasing saturation
-
-
     CB_YlGnBu,          // https://colorbrewer2.org/#type=sequential&scheme=YlGnBu&n=9
     CB_YlOrBr,          // https://colorbrewer2.org/#type=sequential&scheme=YlOrBr&n=9
     CB_YlOrRd,          // https://colorbrewer2.org/#type=sequential&scheme=YlOrRd&n=9
-
     EF_viridis,         // From dark blue via green to yellow. MatPlotLib default.
     F_printable,        // black-blue-pink-orange-yellow-white. Translates well to grayscale.
     F_tradPm3d,         // traditional pm3d, black-blue-red-yellow
     GP_Sand,            // sand colors
     ML_Parula,          // similar to viridis, new MatLab default
-
     SW_Inferno,
     SW_magma,
     SW_plasma,
@@ -691,6 +686,7 @@ public:
 
     // Alternating:
     AS_Paired,          // 8 colors in 4 light/dark pairs: blue, green, red, orange
+                        // should be used with "set palette maxcolors 8"
 
     // Categorical:
 
@@ -699,23 +695,10 @@ public:
 
     numColorPalettes
   };
-  // We use suffixes Brt for Bright, Drk for dark
-  // ToDo: 
-  // -Document sources, see comments at the bottom of GNUPlotter.cpp 
-  // -Maybe prefix the maps by initials of author like AS_BrBG (Anna Schneider), KM_ (Kenneth 
-  //  Moreland), ML_ (MatLab), etc.
-  // -AS: Anna Schneider
-  // -AM: Anton Mikhailov
-  // -GP: Gretchen N. Peterson
-  // -KM: Kenneth Moreland
-  // -ML: MatLab
-  // -SW: Nathaniel J. Smith and Stefan van der Walt
-  // -EF: Eric Firing
-  // -UA: Unknown Author
-  // -DP: Default Palette
-  // -F:  Gnuplot RGB formula
-  //  AS_Paired should be used with "set palette maxcolors 8"
-  // -CB: Color Brewer
+
+  // 
+
+
 
 
   //-----------------------------------------------------------------------------------------------
