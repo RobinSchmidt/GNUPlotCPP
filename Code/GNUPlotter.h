@@ -448,7 +448,9 @@ public:
 
 
 
-
+  /** Given a bivariate function f = f(x,y), ranges for x and y and numbers of samples along x 
+  and y, this function generates the data matrix of the heights produced by f and adds the data as 
+  matrix data to the plotter object. */
   template <class T>
   void addDataBivariateFunction(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax, 
     const std::function<T(T, T)>& f);
@@ -630,20 +632,85 @@ public:
   /** Named color palettes. ...TBC... */
   enum class ColorPalette  
   {
-    // Unipolar maps:
-    magma,
-    printable,          // black-blue-pink-orange-yellow-white. Translates well to grayscale.
-    plasma,
-    viridis,            // From dark blue via green to yellow.
-    viridisBrt,         // Similar to viridis but brighter and with some orange near the top.
+    // Linear:
+    AS_Blues,           // 8 blue colors of increasing saturation, looks like ice
+    AS_BuGn,            // 8 blue-green colors of increasing saturation
+    AS_BuPu,            // 8 blue-purple colors of increasing saturation
+    AS_GnBu,            // 8 green-blue colors of increasing saturation
+    AS_Greens,          // 8 green colors of increasing saturation
+    AS_Oranges,         // 8 orange colors of increasing saturation
+    AS_PuBu,            // 8 purple-blue colors of increasing saturation
+    AS_Purples,         // 8 purple colors of increasing saturation
+    AS_RdPu,            // 8 red-purple colors of increasing saturation
+    AS_Reds,            // 8 red colors of increasing saturation
+    AS_YlGn,            // 8 yellow-green colors of increasing saturation
+    AS_YlGnBu,          // 8 yellow-green-blue colors of increasing saturation
+    AS_YlOrBr,          // 8 yellow-orange-brown colors of increasing saturation
+    AS_YlOrRd,          // 8 yellow-orange-red colors of increasing saturation
 
-    // Bipolar maps:
-    prpGrnRed,
+
+    CB_YlGnBu,          // https://colorbrewer2.org/#type=sequential&scheme=YlGnBu&n=9
+    CB_YlOrBr,          // https://colorbrewer2.org/#type=sequential&scheme=YlOrBr&n=9
+    CB_YlOrRd,          // https://colorbrewer2.org/#type=sequential&scheme=YlOrRd&n=9
+
+    EF_viridis,         // From dark blue via green to yellow. MatPlotLib default.
+    F_printable,        // black-blue-pink-orange-yellow-white. Translates well to grayscale.
+    F_tradPm3d,         // traditional pm3d, black-blue-red-yellow
+    GP_Sand,            // sand colors
+    ML_Parula,          // similar to viridis, new MatLab default
+
+    SW_Inferno,
+    SW_magma,
+    SW_plasma,
+    UA_YlRd,            // yellow-red
+    UA_ChromaJS,        //
+    UA_viridisBrt,      // Similar to viridis but brighter and with some orange near the top.
+
+    // Diverging:
+    AM_Turbo,           // similar to ML_Jet but with less saturation
+    AS_BrBG,            // brown-white-bluegreen
+    AS_PiYG,            // pink-white-yellowgreen
+    AS_PRGn,            // purple-white-green
+    AS_PuOr,            // orange-white-purple
+    AS_RdBu,            // red-white-blue
+    AS_RdYlBu,          // red-paleyellow-blue
+    AS_RdYlGn,          // red-paleyellow-green
+    AS_Spectral,        // rainbow with red-paleyellow-blue
+    F_prpGrnRed,        // rainbow (purple-blue-green-yellow-red), middle is bright
+    KM_BentCoolWarm,    // blue-lightgray-red
+    KM_Moreland,        // blue-lightgray-red
+    ML_Jet,             // darkblue-lightgreenishyellow-darkred, old MatLab default
+    UA_GnPu,            // green-purple
+
+    //
+
+    // Alternating:
+    AS_Paired,          // 8 colors in 4 light/dark pairs: blue, green, red, orange
+
+    // Categorical:
+
+
+    _test, 
 
     numColorPalettes
   };
   // We use suffixes Brt for Bright, Drk for dark
-  // ToDo: document sources, see comments at the bottom of GNUPlotter.cpp 
+  // ToDo: 
+  // -Document sources, see comments at the bottom of GNUPlotter.cpp 
+  // -Maybe prefix the maps by initials of author like AS_BrBG (Anna Schneider), KM_ (Kenneth 
+  //  Moreland), ML_ (MatLab), etc.
+  // -AS: Anna Schneider
+  // -AM: Anton Mikhailov
+  // -GP: Gretchen N. Peterson
+  // -KM: Kenneth Moreland
+  // -ML: MatLab
+  // -SW: Nathaniel J. Smith and Stefan van der Walt
+  // -EF: Eric Firing
+  // -UA: Unknown Author
+  // -DP: Default Palette
+  // -F:  Gnuplot RGB formula
+  //  AS_Paired should be used with "set palette maxcolors 8"
+  // -CB: Color Brewer
 
 
   //-----------------------------------------------------------------------------------------------

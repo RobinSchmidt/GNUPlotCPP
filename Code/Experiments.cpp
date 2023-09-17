@@ -712,8 +712,8 @@ void contours()
 
   // New, experimental:
   using CP = GNUPlotter::ColorPalette;
-  plt.setColorPalette(CP::plasma);
-  //plt.setColorPalette(CP::viridisBrt);
+  //plt.setColorPalette(CP::SW_plasma);
+  plt.setColorPalette(CP::CB_YlGnBu);
   z = rangeLinear(21, -20, 20);
   //z = rangeLinear(41, -20, 20);  // very dense - needs finer lines or bigger size
 

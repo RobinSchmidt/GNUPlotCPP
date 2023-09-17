@@ -1,0 +1,44 @@
+Some resources for color maps:
+
+http://www.kennethmoreland.com/color-advice/
+https://colorcet.com/gallery.html
+https://colorcet.com/userguide/index.html  
+-> use classification for there: linear, diverging, rainbow, cyclic, low contrast, etc.
+
+https://www.fabiocrameri.ch/colourmaps/
+https://bids.github.io/colormap/
+http://www.gnuplotting.org/tag/palette/
+https://github.com/Gnuplotting/gnuplot-palettes 
+
+About jet and turbo:
+https://blog.research.google/2019/08/turbo-improved-rainbow-colormap-for.html
+https://de.mathworks.com/matlabcentral/answers/304765-how-do-you-set-a-new-default-colormap-for-matlab
+
+https://blogs.mathworks.com/steve/2014/10/13/a-new-colormap-for-matlab-part-1-introduction/
+https://blogs.mathworks.com/steve/2014/10/20/a-new-colormap-for-matlab-part-2-troubles-with-rainbows/
+https://blogs.mathworks.com/steve/2014/11/12/a-new-colormap-for-matlab-part-3-some-reactions/
+https://blogs.mathworks.com/steve/2014/12/10/a-new-colormap-for-matlab-part-4-the-name/
+https://blogs.mathworks.com/steve/2017/07/24/colormap-test-image/
+https://blogs.mathworks.com/headlines/2018/10/10/a-dangerous-rainbow-why-colormaps-matter/
+
+https://www.amazon.com/Cartographers-Toolkit-Colors-Typography-Patterns/dp/0615467946
+
+https://static.aminer.org/pdf/PDF/000/240/853/designing_for_users_with_color_vision_deficiency_effective_color_combinations.pdf
+
+
+Colormaps to add:
+https://colorbrewer2.org/#type=qualitative&scheme=Paired&n=10
+https://colorbrewer2.org/#type=diverging&scheme=Spectral&n=11
+https://colorbrewer2.org/#type=diverging&scheme=RdYlGn&n=11
+https://colorbrewer2.org/#type=diverging&scheme=RdYlBu&n=11
+https://colorbrewer2.org/#type=diverging&scheme=RdBu&n=11
+https://colorbrewer2.org/#type=diverging&scheme=PRGn&n=11
+
+Another tool to create colormaps
+https://gka.github.io/palettes/#/11|d|00429d,96ffea,ffffe0|ffffe0,ff005e,93003a|1|1
+https://www.vis4.net/blog/2013/09/mastering-multi-hued-color-scales/  explanation
+https://gka.github.io/chroma.js/
+
+
+
+
