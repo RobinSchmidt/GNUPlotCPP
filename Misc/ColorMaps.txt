@@ -60,8 +60,6 @@ About the rgbformulae:  https://gnuplot.sourceforge.net/docs_4.2/node216.html
 8,9,7:      burgund-white, nah - not good...bottom is too steep
 3,2,2:      red-yellow-green-cyan-blue-magenta-red ...nope - doesn't work - is cyan-white
 
--Make a bipolar map from dark-red via light-green to dark-blue
-
 My favorites:
 
 Linear: AS_BuPu, AS_GnBu, AS_PuBu, AS_YlGnBu, CB_YlGnBu*, EF_Viridis, GF_AfmHot, 
