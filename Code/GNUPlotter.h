@@ -632,8 +632,8 @@ public:
   /** Named color palettes. They are meant to be used mainly as color maps in heatmap and filled 
   contour plots. The 2-letter prefix indicates the author or source of the palette. They mean
   AS: Anna Schneider, AM: Anton Mikhailov, GP: Gretchen N. Peterson, KM: Kenneth Moreland, 
-  ML: MatLab, SW: Nathaniel J. Smith and Stefan van der Walt, EF: Eric Firing, UA: Unknown Author,
-  F:  Gnuplot RGB formula. */
+  ML: MatLab, SW: Nathaniel J. Smith and Stefan van der Walt, EF: Eric Firing, RS: Robin Schmidt, 
+  UA: Unknown Author, GF: Gnuplot RGB formula. */
   enum class ColorPalette  
   {
     // Linear:
@@ -655,13 +655,14 @@ public:
     CB_YlOrBr,          // https://colorbrewer2.org/#type=sequential&scheme=YlOrBr&n=9
     CB_YlOrRd,          // https://colorbrewer2.org/#type=sequential&scheme=YlOrRd&n=9
     EF_Viridis,         // From dark blue via green to yellow. MatPlotLib default.
-    GF_AfmHot,          // like F_Hot but more brownish, less reddish
+    GF_AfmHot,          // like GF_Hot but more brownish, less reddish
     GF_BkPuWt,          // black-purple-white
     GF_Hot,             // black-red-yellow-white
     GF_Printable,       // black-blue-pink-orange-yellow-white. Translates well to grayscale.
     GF_TradPm3d,        // traditional pm3d, black-blue-red-yellow
     GP_Sand,            // sand colors
     ML_Parula,          // like viridis, brighter, more orange, new MatLab default
+    RS_BkWt,            // black-gray-white
     SW_Inferno,         // black-purple-orange-paleyellow
     SW_Magma,           // black-purple-pink-paleyellow
     SW_Plasma,          // darkpurple-red-yellow
@@ -682,6 +683,7 @@ public:
     KM_BentCoolWarm,    // blue-lightgray-red
     KM_Moreland,        // blue-lightgray-red
     ML_Jet,             // darkblue-lightgreenishyellow-darkred, old MatLab default
+    RS_RdGnBu,          // red-palegreen-blue
     UA_GnPu,            // green-purple
 
     // Alternating:
