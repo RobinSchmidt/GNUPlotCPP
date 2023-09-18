@@ -353,7 +353,9 @@ void GNUPlotter::setColorPalette(ColorPalette palette, bool inverted)
   case CP::UA_GnPu:         c = "set palette defined (1 '#396353', 2 '#0db14b', 3 '#6dc067', 4 '#abd69b', 5 '#daeac1', 6 '#dfcce4', 7 '#c7b2d6', 8 '#9474b4', 9 '#754098', 10 '#504971')"; break;
   
     // Alternating:
-  case CP::AS_Paired:    c = "set palette defined (0 '#A6CEE3', 1 '#1F78B4', 2 '#B2DF8A', 3 '#33A02C', 4 '#FB9A99', 5 '#E31A1C', 6 '#FDBF6F', 7 '#FF7F00')"; break;    
+  case CP::AS_Paired8:    c = "set palette defined (0 '#A6CEE3', 1 '#1F78B4', 2 '#B2DF8A', 3 '#33A02C', 4 '#FB9A99', 5 '#E31A1C', 6 '#FDBF6F', 7 '#FF7F00')"; break;
+  case CP::CB_Paired10:   c = "set palette defined (0 '#a6cee3', 1 '#1f78b4', 2 '#b2df8a', 3 '#33a02c', 4 '#fb9a99', 5 '#e31a1c', 6 '#fdbf6f', 7 '#ff7f00', 8 '#cab2d6', 9 '#6a3d9a')"; break;
+  // The ones with smaller count can actually be obtained by truncating the longer ones  
   
     // Cyclic:
 

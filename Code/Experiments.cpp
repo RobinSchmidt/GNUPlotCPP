@@ -713,10 +713,16 @@ void contours()
   // New, experimental:
   using CP = GNUPlotter::ColorPalette;
   //plt.setColorPalette(CP::ML_Parula);
-  plt.setColorPalette(CP::CB_YlGnBu);
-  //plt.setColorPalette(CP::RS_RdGnBu);
+  //plt.setColorPalette(CP::CB_YlGnBu);
+
+  //plt.addCommand("set palette maxcolors 10"); // ah damn - gets overriden by plotContouMap
+
   z = rangeLinear(21, -20, 20);
   //z = rangeLinear(41, -20, 20);  // very dense - needs finer lines or bigger size
+
+
+  //plt.setColorPalette(CP::CB_Paired10); z = rangeLinear(11, -20, 20);
+
 
   //plt.addCommand("set style increment user");
   //plt.addCommand("do for [i=1:20] { set style line i lw 2 }" );

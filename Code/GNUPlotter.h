@@ -687,8 +687,9 @@ public:
     UA_GnPu,            // green-purple
 
     // Alternating:
-    AS_Paired,          // 8 colors in 4 light/dark pairs: blue, green, red, orange
-                        // should be used with "set palette maxcolors 8"
+    AS_Paired8,         // 8 colors in 4 light/dark pairs: blue, green, red, orange
+    CB_Paired10,         
+    // should be used with "set palette maxcolors N" where N is the number of colors
     
     // Cyclic:
 
