@@ -679,17 +679,16 @@ public:
     CB_PiYG8,           // pink-white-yellowgreen,  PiYG&n=8
     CB_PRGn8,           // purple-white-green,      PRGn&n=8
     CB_PuOr8,           // orange-white-purple,     PuOr&n=8
-
-    AS_RdBu,            // red-white-blue
-    AS_RdYlBu,          // red-paleyellow-blue
-    AS_RdYlGn,          // red-paleyellow-green
-    AS_Spectral,        // rainbow with red-paleyellow-blue
+    CB_RdBu8,           // red-white-blue,          RdBu&n=8
+    CB_RdYlBu8,         // red-paleyellow-blue,     RdYlBu&n=8
+    CB_RdYlGn8,         // red-paleyellow-green,    RdYlGn&n=8
+    CB_Spectral8,       // red-paleyellow-blue,     Spectral&n=8
 
     CB_RdBu11,          // 11 colors, red-white-blue
     CB_RdYlBu11,        // 11 colors, red-paleyellow-blue
     CB_RdYlGn11,        // 11 colors, red-paleyellow-green
     CB_PRGn11,          // 11 colors, purple-white-green
-    CB_Spectral11,      // 11 colors, purple-green-yellow-orange-red
+    CB_Spectral11,      // 11 colors, purple-green-yellow-orange-red,
 
     CJ_BuYlRd11,        // 11 colors, blue-paleyellow-red
 
@@ -727,6 +726,11 @@ public:
   // found here:
   //   https://github.com/Gnuplotting/gnuplot-palettes
   // These are the ones by Anna Schneider
+
+  // ToDo: add CB_Spectral9. It has this middle paleyellow (like 11, unlike 8) but doesn't go all 
+  // the way to purple (like 11), so it should look different than these two. Spectral10 might also
+  // look different. Spectral is one of the most beautiful maps, so it may make sense to have all
+  // variations 8,9,10,11 available
 
 
   // ToDo: remove some of the ugiler colormaps. Move the code for them into a textfile, so we can

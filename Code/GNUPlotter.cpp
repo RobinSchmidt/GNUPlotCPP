@@ -342,12 +342,11 @@ void GNUPlotter::setColorPalette(ColorPalette palette, bool inverted)
   case CP::CB_PiYG8:        c = "set palette defined (0 '#C51B7D', 1 '#DE77AE', 2 '#F1B6DA', 3 '#FDE0EF', 4 '#E6F5D0', 5 '#B8E186', 6 '#7FBC41', 7 '#4D9221')"; break;
   case CP::CB_PRGn8:        c = "set palette defined (0 '#762A83', 1 '#9970AB', 2 '#C2A5CF', 3 '#E7D4E8', 4 '#D9F0D3', 5 '#A6DBA0', 6 '#5AAE61', 7 '#1B7837')"; break;
   case CP::CB_PuOr8:        c = "set palette defined (0 '#B35806', 1 '#E08214', 2 '#FDB863', 3 '#FEE0B6', 4 '#D8DAEB', 5 '#B2ABD2', 6 '#8073AC', 7 '#542788')"; break;
-  
-  case CP::AS_RdBu:         c = "set palette defined (0 '#B2182B', 1 '#D6604D', 2 '#F4A582', 3 '#FDDBC7', 4 '#D1E5F0', 5 '#92C5DE', 6 '#4393C3', 7 '#2166AC')"; break;
-  case CP::AS_RdYlBu:       c = "set palette defined (0 '#D73027', 1 '#F46D43', 2 '#FDAE61', 3 '#FEE090', 4 '#E0F3F8', 5 '#ABD9E9', 6 '#74ADD1', 7 '#4575B4')"; break;
-  case CP::AS_RdYlGn:       c = "set palette defined (0 '#D73027', 1 '#F46D43', 2 '#FDAE61', 3 '#FEE08B', 4 '#D9EF8B', 5 '#A6D96A', 6 '#66BD63', 7 '#1A9850')"; break;
-  case CP::AS_Spectral:     c = "set palette defined (0 '#D53E4F', 1 '#F46D43', 2 '#FDAE61', 3 '#FEE08B', 4 '#E6F598', 5 '#ABDDA4', 6 '#66C2A5', 7 '#3288BD')"; break;
-  
+  case CP::CB_RdBu8:        c = "set palette defined (0 '#B2182B', 1 '#D6604D', 2 '#F4A582', 3 '#FDDBC7', 4 '#D1E5F0', 5 '#92C5DE', 6 '#4393C3', 7 '#2166AC')"; break;
+  case CP::CB_RdYlBu8:      c = "set palette defined (0 '#D73027', 1 '#F46D43', 2 '#FDAE61', 3 '#FEE090', 4 '#E0F3F8', 5 '#ABD9E9', 6 '#74ADD1', 7 '#4575B4')"; break;
+  case CP::CB_RdYlGn8:      c = "set palette defined (0 '#D73027', 1 '#F46D43', 2 '#FDAE61', 3 '#FEE08B', 4 '#D9EF8B', 5 '#A6D96A', 6 '#66BD63', 7 '#1A9850')"; break;
+  case CP::CB_Spectral8:    c = "set palette defined (0 '#D53E4F', 1 '#F46D43', 2 '#FDAE61', 3 '#FEE08B', 4 '#E6F598', 5 '#ABDDA4', 6 '#66C2A5', 7 '#3288BD')"; break;
+
   case CP::CB_RdBu11:       c = "set palette defined (0 '#67001f', 1 '#b2182b', 2 '#d6604d', 3 '#f4a582', 4 '#fddbc7', 5 '#f7f7f7', 6 '#d1e5f0', 7 '#92c5de', 8 '#4393c3', 9 '#2166ac', 10 '#053061')"; break;  
   case CP::CB_RdYlBu11:     c = "set palette defined (0 '#a50026', 1 '#d73027', 2 '#f46d43', 3 '#fdae61', 4 '#fee090', 5 '#ffffbf', 6 '#e0f3f8', 7 '#abd9e9', 8 '#74add1', 9 '#4575b4', 10 '#313695')"; break;
   case CP::CB_RdYlGn11:     c = "set palette defined (0 '#a50026', 1 '#d73027', 2 '#f46d43', 3 '#fdae61', 4 '#fee08b', 5 '#ffffbf', 6 '#d9ef8b', 7 '#a6d96a', 8 '#66bd63', 9 '#1a9850', 10 '#006837')"; break;

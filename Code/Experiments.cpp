@@ -712,8 +712,9 @@ void contours()
 
   // New, experimental:
   using CP = GNUPlotter::ColorPalette;
-  //plt.setColorPalette(CP::AS_Spectral);
-  plt.setColorPalette(CP::CB_RdYlBu11, true);
+  //plt.setColorPalette(CP::CB_Spectral8);
+  plt.setColorPalette(CP::CB_Spectral11);
+  //plt.setColorPalette(CP::CB_RdYlBu11, true);
   //plt.setColorPalette(CP::CJ_BuYlRd11);
   //plt.setColorPalette(CP::RS_RdGnBu);
 
