@@ -681,6 +681,8 @@ public:
     AS_Spectral,        // rainbow with red-paleyellow-blue
 
     CB_RdBu11,          // 11 colors, red-white-blue
+    CB_RdYlBu11,        // 11 colors, red-paleyellow-blue
+    CB_RdYlGn11,        // 11 colors, red-paleyellow-green
 
     GF_PuGnRd,          // rainbow (purple-blue-green-yellow-red), middle is bright
     KM_BentCoolWarm,    // blue-lightgray-red

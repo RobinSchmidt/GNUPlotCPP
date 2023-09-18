@@ -33,7 +33,7 @@ https://static.aminer.org/pdf/PDF/000/240/853/designing_for_users_with_color_vis
 Colormaps to add:
 https://colorbrewer2.org/#type=diverging&scheme=Spectral&n=11
 https://colorbrewer2.org/#type=diverging&scheme=RdYlGn&n=11     like AS_RdYlGn but w 11 colors
-https://colorbrewer2.org/#type=diverging&scheme=RdYlBu&n=11     like AS_RdYlBu but w 11 colors
+https://colorbrewer2.org/#type=diverging&scheme=RdYlBu&n=11     done. like AS_RdYlBu but w 11 colors
 https://colorbrewer2.org/#type=diverging&scheme=RdBu&n=11       done
 https://colorbrewer2.org/#type=diverging&scheme=PRGn&n=11
 ToDo: Check, if using 11 instead of 9 colors makes a visual difference. If so, use the 11 color 
