@@ -686,7 +686,7 @@ public:
     CB_PRGn11,          // 11 colors, purple-white-green
     CB_Spectral11,      // 11 colors, purple-green-yellow-orange-red
 
-    CJ_BuYlRd11,        // 
+    CJ_BuYlRd11,        // 11 colors, blue-paleyellow-red
 
     GF_PuGnRd,          // rainbow (purple-blue-green-yellow-red), middle is bright
     KM_BentCoolWarm,    // blue-lightgray-red
