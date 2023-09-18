@@ -648,12 +648,12 @@ public:
     CB_RdPu8,           // RdPu&n=8
     CB_Reds8,           // Reds&n=8
     CB_YlGn8,           // YlGn&n=8
-    CB_YlGnBu8,         // YlGnBu&n=8
-    CB_YlOrBr8,         // YlOrBr&n=8
-    CB_YlOrRd8,         // YlOrRd&n=8
-    CB_YlGnBu9,         // YlGnBu&n=9
-    CB_YlOrBr9,         // YlOrBr&n=9
-    CB_YlOrRd9,         // YlOrRd&n=9
+    CB_YlGnBu8,         // yellow-green-blue,    YlGnBu&n=8
+    CB_YlOrBr8,         // yellow-orange-brown,  YlOrBr&n=8
+    CB_YlOrRd8,         // yellow-orange-red,    YlOrRd&n=8
+    CB_YlGnBu9,         // yellow-green-blue,    YlGnBu&n=9
+    CB_YlOrBr9,         // yellow-orange-brown,  YlOrBr&n=9
+    CB_YlOrRd9,         // yellow-green-blue,    YlOrRd&n=9
     // maybe reorder them such that YlGnBu&n=8 and YlGnBu&n=9 come one after another and remove 
     // some of the ugly ones. Maybe add more variations with 9 colors
 
@@ -674,7 +674,9 @@ public:
 
     // Diverging:
     AM_Turbo,           // similar to ML_Jet but with less saturation
-    AS_BrBG,            // brown-white-bluegreen
+
+    CB_BrBG8,           // brown-white-bluegreen, BrBG&n=8
+
     AS_PiYG,            // pink-white-yellowgreen
     AS_PRGn,            // purple-white-green
     AS_PuOr,            // orange-white-purple
@@ -721,7 +723,10 @@ public:
   // The CB_ colors can be re-created using the colorbrewer. For example, CB_YlGnBu8 via:
   //   https://colorbrewer2.org/#type=sequential&scheme=YlGnBu&n=8  
   // This is what the comment "YlGnBu&n=8" stands for. It's the last part of the URL that has to be
-  // pasted of the "scheme=&" to make the website recreate the colormap
+  // pasted of the "scheme=&" to make the website recreate the colormap. Some of them can also be 
+  // found here:
+  //   https://github.com/Gnuplotting/gnuplot-palettes
+  // These are the ones by Anna Schneider
 
 
   // ToDo: remove some of the ugiler colormaps. Move the code for them into a textfile, so we can
