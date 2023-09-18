@@ -303,10 +303,9 @@ void GNUPlotter::setColorPalette(ColorPalette palette, bool inverted)
   switch(palette)
   {
     // Linear:
-  case CP::AS_Blues8:       c = "set palette defined (0 '#F7FBFF', 1 '#DEEBF7', 2 '#C6DBEF', 3 '#9ECAE1', 4 '#6BAED6', 5 '#4292C6', 6 '#2171B5', 7 '#084594')"; break;
-  case CP::AS_BuGn8:        c = "set palette defined (0 '#F7FCFD', 1 '#E5F5F9', 2 '#CCECE6', 3 '#99D8C9', 4 '#66C2A4', 5 '#41AE76', 6 '#238B45', 7 '#005824')"; break;
-  case CP::AS_BuPu8:        c = "set palette defined (0 '#F7FCFD', 1 '#E0ECF4', 2 '#BFD3E6', 3 '#9EBCDA', 4 '#8C96C6', 5 '#8C6BB1', 6 '#88419D', 7 '#6E016B')"; break;
-  
+  case CP::CB_Blues8:       c = "set palette defined (0 '#F7FBFF', 1 '#DEEBF7', 2 '#C6DBEF', 3 '#9ECAE1', 4 '#6BAED6', 5 '#4292C6', 6 '#2171B5', 7 '#084594')"; break;
+  case CP::CB_BuGn8:        c = "set palette defined (0 '#F7FCFD', 1 '#E5F5F9', 2 '#CCECE6', 3 '#99D8C9', 4 '#66C2A4', 5 '#41AE76', 6 '#238B45', 7 '#005824')"; break;
+  case CP::CB_BuPu8:        c = "set palette defined (0 '#F7FCFD', 1 '#E0ECF4', 2 '#BFD3E6', 3 '#9EBCDA', 4 '#8C96C6', 5 '#8C6BB1', 6 '#88419D', 7 '#6E016B')"; break;
   case CP::CB_GnBu8:        c = "set palette defined (0 '#F7FCF0', 1 '#E0F3DB', 2 '#CCEBC5', 3 '#A8DDB5', 4 '#7BCCC4', 5 '#4EB3D3', 6 '#2B8CBE', 7 '#08589E')"; break;
   case CP::CB_Greens8:      c = "set palette defined (0 '#F7FCF5', 1 '#E5F5E0', 2 '#C7E9C0', 3 '#A1D99B', 4 '#74C476', 5 '#41AB5D', 6 '#238B45', 7 '#005A32')"; break;
   case CP::CB_Oranges8:     c = "set palette defined (0 '#FFF5EB', 1 '#FEE6CE', 2 '#FDD0A2', 3 '#FDAE6B', 4 '#FD8D3C', 5 '#F16913', 6 '#D94801', 7 '#8C2D04')"; break;

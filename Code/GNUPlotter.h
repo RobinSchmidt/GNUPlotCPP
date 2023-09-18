@@ -636,11 +636,10 @@ public:
   Schmidt, UA: Unknown Author, GF: Gnuplot RGB formula. */
   enum class ColorPalette  
   {
-    // Linear:          // https://colorbrewer2.org/#type=sequential&scheme=YlGnBu&n=8
-    AS_Blues8,          // 8 blue colors of increasing saturation, looks like ice
-    AS_BuGn8,           // 8 blue-green colors of increasing saturation
-    AS_BuPu8,           // 8 blue-purple colors of increasing saturation
-
+    // Linear:
+    CB_Blues8,          // Blues&n=8
+    CB_BuGn8,           // BuGn&n=8
+    CB_BuPu8,           // BuPu&n=8
     CB_GnBu8,           // GnBu&n=8
     CB_Greens8,         // Greens&n=8
     CB_Oranges8,        // Oranges&n=8
@@ -655,6 +654,8 @@ public:
     CB_YlGnBu9,         // YlGnBu&n=9
     CB_YlOrBr9,         // YlOrBr&n=9
     CB_YlOrRd9,         // YlOrRd&n=9
+    // maybe reorder them such that YlGnBu&n=8 and YlGnBu&n=9 come one after another and remove 
+    // some of the ugly ones. Maybe add more variations with 9 colors
 
     EF_Viridis,         // From dark blue via green to yellow. MatPlotLib default.
     GF_AfmHot,          // like GF_Hot but more brownish, less reddish
@@ -716,6 +717,15 @@ public:
   // Maybe rename them to names like CB_YlGnBu8 to make them consistent with CB_YlGnBu9. In 
   // these 2 settings (YlGnBu with 8 or 9 colors), the first 7 colors match, but the 8th doesn't 
   // and, obvioulsy one has a 9th while the other doesn't.
+
+  // The CB_ colors can be re-created using the colorbrewer. For example, CB_YlGnBu8 via:
+  //   https://colorbrewer2.org/#type=sequential&scheme=YlGnBu&n=8  
+  // This is what the comment "YlGnBu&n=8" stands for. It's the last part of the URL that has to be
+  // pasted of the "scheme=&" to make the website recreate the colormap
+
+
+  // ToDo: remove some of the ugiler colormaps. Move the code for them into a textfile, so we can
+  // easily re-add them later, if needed
 
   //-----------------------------------------------------------------------------------------------
   /** \name Handling variable argument lists */
