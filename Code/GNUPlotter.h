@@ -675,11 +675,11 @@ public:
     // Diverging:
     AM_Turbo,           // similar to ML_Jet but with less saturation
 
-    CB_BrBG8,           // brown-white-bluegreen, BrBG&n=8
-    CB_PiYG8,           // pink-white-yellowgreen, PiYG&n=8
+    CB_BrBG8,           // brown-white-bluegreen,   BrBG&n=8
+    CB_PiYG8,           // pink-white-yellowgreen,  PiYG&n=8
+    CB_PRGn8,           // purple-white-green,      PRGn&n=8
+    CB_PuOr8,           // orange-white-purple,     PuOr&n=8
 
-    AS_PRGn,            // purple-white-green
-    AS_PuOr,            // orange-white-purple
     AS_RdBu,            // red-white-blue
     AS_RdYlBu,          // red-paleyellow-blue
     AS_RdYlGn,          // red-paleyellow-green
