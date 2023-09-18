@@ -345,6 +345,12 @@ void GNUPlotter::setColorPalette(ColorPalette palette, bool inverted)
   case CP::AS_RdYlBu:       c = "set palette defined (0 '#D73027', 1 '#F46D43', 2 '#FDAE61', 3 '#FEE090', 4 '#E0F3F8', 5 '#ABD9E9', 6 '#74ADD1', 7 '#4575B4')"; break;
   case CP::AS_RdYlGn:       c = "set palette defined (0 '#D73027', 1 '#F46D43', 2 '#FDAE61', 3 '#FEE08B', 4 '#D9EF8B', 5 '#A6D96A', 6 '#66BD63', 7 '#1A9850')"; break;
   case CP::AS_Spectral:     c = "set palette defined (0 '#D53E4F', 1 '#F46D43', 2 '#FDAE61', 3 '#FEE08B', 4 '#E6F598', 5 '#ABDDA4', 6 '#66C2A5', 7 '#3288BD')"; break;
+  
+  case CP::CB_RdBu11:       c = "set palette defined (0 '#67001f', 1 '#b2182b', 2 '#d6604d', 3 '#f4a582', 4 '#fddbc7', 5 '#f7f7f7', 6 '#d1e5f0', 7 '#92c5de', 8 '#4393c3', 9 '#2166ac', 10 '#053061')"; break;  
+  
+  // ['#67001f','#b2182b','#d6604d','#f4a582','#fddbc7','#f7f7f7','#d1e5f0','#92c5de','#4393c3','#2166ac','#053061']
+  
+  
   case CP::GF_PuGnRd:       c = "set palette rgbformulae 33,13,10"; break;
   case CP::KM_Moreland:     c = "set palette defined (0 '#3b4cc0', 1 '#688aef', 2 '#99baff', 3 '#c9d8ef', 4 '#edd1c2', 5 '#f7a789', 6 '#e36a53', 7 '#b40426')"; break;
   case CP::KM_BentCoolWarm: c = "set palette defined (0 '#5548c1', 1 '#7982d7', 2 '#abb8e7', 3 '#dde3ef', 4 '#ead3c6', 5 '#dba188', 6 '#ca6b55', 7 '#b10027')"; break;

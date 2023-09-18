@@ -679,6 +679,9 @@ public:
     AS_RdYlBu,          // red-paleyellow-blue
     AS_RdYlGn,          // red-paleyellow-green
     AS_Spectral,        // rainbow with red-paleyellow-blue
+
+    CB_RdBu11,          // 11 colors, red-white-blue
+
     GF_PuGnRd,          // rainbow (purple-blue-green-yellow-red), middle is bright
     KM_BentCoolWarm,    // blue-lightgray-red
     KM_Moreland,        // blue-lightgray-red
@@ -687,8 +690,8 @@ public:
     UA_GnPu,            // green-purple
 
     // Alternating:
-    AS_Paired8,         // 8 colors in 4 light/dark pairs: blue, green, red, orange
-    CB_Paired10,         
+    AS_Paired8,         //  8 colors in 4 light/dark pairs: blue, green, red, orange
+    CB_Paired10,        // 10 colors in 5 light/dark pairs: blue, green, red, orange, purple
     // should be used with "set palette maxcolors N" where N is the number of colors
     
     // Cyclic:

@@ -713,7 +713,8 @@ void contours()
   // New, experimental:
   using CP = GNUPlotter::ColorPalette;
   //plt.setColorPalette(CP::ML_Parula);
-  //plt.setColorPalette(CP::CB_YlGnBu);
+  //plt.setColorPalette(CP::AS_RdBu);
+  plt.setColorPalette(CP::CB_RdBu11);
 
   //plt.addCommand("set palette maxcolors 10"); // ah damn - gets overriden by plotContouMap
 
