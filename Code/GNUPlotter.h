@@ -683,7 +683,7 @@ public:
     KM_BentCoolWarm,    // blue-lightgray-red
     KM_Moreland,        // blue-lightgray-red
     ML_Jet,             // darkblue-lightgreenishyellow-darkred, old MatLab default
-    RS_RdGnBu,          // red-palegreen-blue
+    RS_RdGnBu,          // darkred-palegreen-darkblue
     UA_GnPu,            // green-purple
 
     // Alternating:
