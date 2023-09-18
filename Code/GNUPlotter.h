@@ -640,12 +640,12 @@ public:
     AS_Blues8,          // 8 blue colors of increasing saturation, looks like ice
     AS_BuGn8,           // 8 blue-green colors of increasing saturation
     AS_BuPu8,           // 8 blue-purple colors of increasing saturation
-    AS_GnBu8,           // 8 green-blue colors of increasing saturation
-    AS_Greens8,         // 8 green colors of increasing saturation
-    AS_Oranges8,        // 8 orange colors of increasing saturation
-    AS_PuBu8,           // 8 purple-blue colors of increasing saturation
-    AS_Purples8,        // 8 purple colors of increasing saturation
 
+    CB_GnBu8,           // GnBu&n=8
+    CB_Greens8,         // Greens&n=8
+    CB_Oranges8,        // Oranges&n=8
+    CB_PuBu8,           // PuBu&n=8
+    CB_Purples8,        // Purples&n=8
     CB_RdPu8,           // RdPu&n=8
     CB_Reds8,           // Reds&n=8
     CB_YlGn8,           // YlGn&n=8
