@@ -1,9 +1,17 @@
 Some resources for color maps:
 
 http://www.kennethmoreland.com/color-advice/
+http://www.kennethmoreland.com/color-maps/
+http://www.kennethmoreland.com/color-advice/BadColorMaps.pdf
+
 https://colorcet.com/gallery.html
 https://colorcet.com/userguide/index.html  
 -> use classification for there: linear, diverging, rainbow, cyclic, low contrast, etc.
+
+https://www.peterkovesi.com/matlabfns/index.html#colour
+-> has .m files for colorspace conversions
+
+https://arxiv.org/pdf/1509.03700.pdf  Good Colour Maps: How to Design Them
 
 https://www.fabiocrameri.ch/colourmaps/
 https://bids.github.io/colormap/

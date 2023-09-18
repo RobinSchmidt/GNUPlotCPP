@@ -714,9 +714,10 @@ void contours()
   using CP = GNUPlotter::ColorPalette;
   //plt.setColorPalette(CP::AS_Spectral);
   //plt.setColorPalette(CP::CB_RdYlBu11, true);
-  plt.setColorPalette(CP::CJ_BuYlRd11);
+  //plt.setColorPalette(CP::CJ_BuYlRd11);
+  plt.setColorPalette(CP::RS_RdGnBu);
 
-  //plt.addCommand("set palette maxcolors 10"); // ah damn - gets overriden by plotContouMap
+  //plt.addCommand("set palette maxcolors 10"); // no effect - gets overriden by plotContourMap
 
   z = rangeLinear(21, -20, 20);
   //z = rangeLinear(41, -20, 20);  // very dense - needs finer lines or bigger size
