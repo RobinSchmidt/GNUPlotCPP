@@ -31,7 +31,7 @@ https://static.aminer.org/pdf/PDF/000/240/853/designing_for_users_with_color_vis
 
 
 Colormaps to add:
-https://colorbrewer2.org/#type=diverging&scheme=Spectral&n=11
+https://colorbrewer2.org/#type=diverging&scheme=Spectral&n=11   done
 https://colorbrewer2.org/#type=diverging&scheme=RdYlGn&n=11     done like AS_RdYlGn but w 11 colors
 https://colorbrewer2.org/#type=diverging&scheme=RdYlBu&n=11     done. like AS_RdYlBu but w 11 colors
 https://colorbrewer2.org/#type=diverging&scheme=RdBu&n=11       done
@@ -69,4 +69,4 @@ Linear: AS_BuPu, AS_GnBu, AS_PuBu, AS_YlGnBu, CB_YlGnBu*, EF_Viridis, GF_AfmHot,
   GF_BkPuWt (dark/goth), GF_Printable, GF_TradPm3d, GP_Sand, ML_Parula, SW_Magma*, UA_ChromaJS
 
 Diverging: AM_Turbo (highly saturated), AS_BrBG, AS_PRGn, AS_PuOr, AS_RdBu*, AS_RdYlGn (map), 
-  AS_Spectral, GF_PuGnRd*, KM_Moreland, UA_GnPu*
+  AS_Spectral, CJ_BuYlRd11*, GF_PuGnRd*, KM_Moreland, UA_GnPu*

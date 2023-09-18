@@ -631,9 +631,9 @@ public:
 
   /** Named color palettes. They are meant to be used mainly as color maps in heatmap and filled 
   contour plots. The 2-letter prefix indicates the author or source of the palette. They mean
-  AS: Anna Schneider, AM: Anton Mikhailov, GP: Gretchen N. Peterson, KM: Kenneth Moreland, 
-  ML: MatLab, SW: Nathaniel J. Smith and Stefan van der Walt, EF: Eric Firing, RS: Robin Schmidt, 
-  UA: Unknown Author, GF: Gnuplot RGB formula. */
+  AS: Anna Schneider, AM: Anton Mikhailov, CJ: Chroma JS, GP: Gretchen N. Peterson, KM: Kenneth 
+  Moreland, ML: MatLab, SW: Nathaniel J. Smith and Stefan van der Walt, EF: Eric Firing, RS: Robin 
+  Schmidt, UA: Unknown Author, GF: Gnuplot RGB formula. */
   enum class ColorPalette  
   {
     // Linear:
@@ -685,6 +685,8 @@ public:
     CB_RdYlGn11,        // 11 colors, red-paleyellow-green
     CB_PRGn11,          // 11 colors, purple-white-green
     CB_Spectral11,      // 11 colors, purple-green-yellow-orange-red
+
+    CJ_BuYlRd11,        // 
 
     GF_PuGnRd,          // rainbow (purple-blue-green-yellow-red), middle is bright
     KM_BentCoolWarm,    // blue-lightgray-red
