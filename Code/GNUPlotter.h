@@ -632,7 +632,7 @@ public:
   /** Named color palettes. They are meant to be used mainly as color maps in heatmap and filled 
   contour plots. The 2-letter prefix indicates the author or source of the palette. They mean
   AS: Anna Schneider, AM: Anton Mikhailov, GP: Gretchen N. Peterson, KM: Kenneth Moreland, 
-  ML: MatLab, SW: Nathaniel J. Smith and Stefan van der Walt, EF: Eric Firing, UA: Unknown Author
+  ML: MatLab, SW: Nathaniel J. Smith and Stefan van der Walt, EF: Eric Firing, UA: Unknown Author,
   F:  Gnuplot RGB formula. */
   enum class ColorPalette  
   {
@@ -655,18 +655,18 @@ public:
     CB_YlOrBr,          // https://colorbrewer2.org/#type=sequential&scheme=YlOrBr&n=9
     CB_YlOrRd,          // https://colorbrewer2.org/#type=sequential&scheme=YlOrRd&n=9
     EF_Viridis,         // From dark blue via green to yellow. MatPlotLib default.
-    F_AfmHot,           // like F_Hot but more brownish, less reddish
-    F_BkPuWt,           // black-purple-white
-    F_Hot,              // black-red-yellow-white
-    F_Printable,        // black-blue-pink-orange-yellow-white. Translates well to grayscale.
-    F_TradPm3d,         // traditional pm3d, black-blue-red-yellow
+    GF_AfmHot,          // like F_Hot but more brownish, less reddish
+    GF_BkPuWt,          // black-purple-white
+    GF_Hot,             // black-red-yellow-white
+    GF_Printable,       // black-blue-pink-orange-yellow-white. Translates well to grayscale.
+    GF_TradPm3d,        // traditional pm3d, black-blue-red-yellow
     GP_Sand,            // sand colors
     ML_Parula,          // like viridis, brighter, more orange, new MatLab default
-    SW_Inferno,
-    SW_Magma,
-    SW_Plasma,
+    SW_Inferno,         // black-purple-orange-paleyellow
+    SW_Magma,           // black-purple-pink-paleyellow
+    SW_Plasma,          // darkpurple-red-yellow
     UA_YlRd,            // yellow-red
-    UA_ChromaJS,        //
+    UA_ChromaJS,        // paleyellow-red
 
     // Diverging:
     AM_Turbo,           // similar to ML_Jet but with less saturation
@@ -678,7 +678,7 @@ public:
     AS_RdYlBu,          // red-paleyellow-blue
     AS_RdYlGn,          // red-paleyellow-green
     AS_Spectral,        // rainbow with red-paleyellow-blue
-    F_PuGnRd,           // rainbow (purple-blue-green-yellow-red), middle is bright
+    GF_PuGnRd,          // rainbow (purple-blue-green-yellow-red), middle is bright
     KM_BentCoolWarm,    // blue-lightgray-red
     KM_Moreland,        // blue-lightgray-red
     ML_Jet,             // darkblue-lightgreenishyellow-darkred, old MatLab default
@@ -692,15 +692,10 @@ public:
 
     // Categorical:
 
-    _test, 
+    //_test, 
 
     numColorPalettes
   };
-
-  // 
-
-
-
 
   //-----------------------------------------------------------------------------------------------
   /** \name Handling variable argument lists */
