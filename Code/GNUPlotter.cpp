@@ -311,10 +311,10 @@ void GNUPlotter::setColorPalette(ColorPalette palette, bool inverted)
   case CP::AS_Oranges8:     c = "set palette defined (0 '#FFF5EB', 1 '#FEE6CE', 2 '#FDD0A2', 3 '#FDAE6B', 4 '#FD8D3C', 5 '#F16913', 6 '#D94801', 7 '#8C2D04')"; break;
   case CP::AS_PuBu8:        c = "set palette defined (0 '#FFF7FB', 1 '#ECE7F2', 2 '#D0D1E6', 3 '#A6BDDB', 4 '#74A9CF', 5 '#3690C0', 6 '#0570B0', 7 '#034E7B')"; break;
   case CP::AS_Purples8:     c = "set palette defined (0 '#FCFBFD', 1 '#EFEDF5', 2 '#DADAEB', 3 '#BCBDDC', 4 '#9E9AC8', 5 '#807DBA', 6 '#6A51A3', 7 '#4A1486')"; break;
-  case CP::AS_RdPu8:        c = "set palette defined (0 '#FFF7F3', 1 '#FDE0DD', 2 '#FCC5C0', 3 '#FA9FB5', 4 '#F768A1', 5 '#DD3497', 6 '#AE017E', 7 '#7A0177')"; break;
-  case CP::AS_Reds8:        c = "set palette defined (0 '#FFF5F0', 1 '#FEE0D2', 2 '#FCBBA1', 3 '#FC9272', 4 '#FB6A4A', 5 '#EF3B2C', 6 '#CB181D', 7 '#99000D')"; break;
-  case CP::AS_YlGn8:        c = "set palette defined (0 '#FFFFE5', 1 '#F7FCB9', 2 '#D9F0A3', 3 '#ADDD8E', 4 '#78C679', 5 '#41AB5D', 6 '#238443', 7 '#005A32')"; break;
   
+  case CP::CB_RdPu8:        c = "set palette defined (0 '#FFF7F3', 1 '#FDE0DD', 2 '#FCC5C0', 3 '#FA9FB5', 4 '#F768A1', 5 '#DD3497', 6 '#AE017E', 7 '#7A0177')"; break;
+  case CP::CB_Reds8:        c = "set palette defined (0 '#FFF5F0', 1 '#FEE0D2', 2 '#FCBBA1', 3 '#FC9272', 4 '#FB6A4A', 5 '#EF3B2C', 6 '#CB181D', 7 '#99000D')"; break;
+  case CP::CB_YlGn8:        c = "set palette defined (0 '#FFFFE5', 1 '#F7FCB9', 2 '#D9F0A3', 3 '#ADDD8E', 4 '#78C679', 5 '#41AB5D', 6 '#238443', 7 '#005A32')"; break;
   case CP::CB_YlGnBu8:      c = "set palette defined (0 '#FFFFD9', 1 '#EDF8B1', 2 '#C7E9B4', 3 '#7FCDBB', 4 '#41B6C4', 5 '#1D91C0', 6 '#225EA8', 7 '#0C2C84')"; break;
   case CP::CB_YlOrBr8:      c = "set palette defined (0 '#FFFFE5', 1 '#FFF7BC', 2 '#FEE391', 3 '#FEC44F', 4 '#FE9929', 5 '#EC7014', 6 '#CC4C02', 7 '#8C2D04')"; break;
   case CP::CB_YlOrRd8:      c = "set palette defined (0 '#FFFFCC', 1 '#FFEDA0', 2 '#FED976', 3 '#FEB24C', 4 '#FD8D3C', 5 '#FC4E2A', 6 '#E31A1C', 7 '#B10026')"; break;

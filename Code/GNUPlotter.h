@@ -645,10 +645,10 @@ public:
     AS_Oranges8,        // 8 orange colors of increasing saturation
     AS_PuBu8,           // 8 purple-blue colors of increasing saturation
     AS_Purples8,        // 8 purple colors of increasing saturation
-    AS_RdPu8,           // 8 red-purple colors of increasing saturation
-    AS_Reds8,           // 8 red colors of increasing saturation
-    AS_YlGn8,           // 8 yellow-green colors of increasing saturation
 
+    CB_RdPu8,           // RdPu&n=8
+    CB_Reds8,           // Reds&n=8
+    CB_YlGn8,           // YlGn&n=8
     CB_YlGnBu8,         // YlGnBu&n=8
     CB_YlOrBr8,         // YlOrBr&n=8
     CB_YlOrRd8,         // YlOrRd&n=8
