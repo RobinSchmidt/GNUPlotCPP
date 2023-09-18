@@ -676,8 +676,8 @@ public:
     AM_Turbo,           // similar to ML_Jet but with less saturation
 
     CB_BrBG8,           // brown-white-bluegreen, BrBG&n=8
+    CB_PiYG8,           // pink-white-yellowgreen, PiYG&n=8
 
-    AS_PiYG,            // pink-white-yellowgreen
     AS_PRGn,            // purple-white-green
     AS_PuOr,            // orange-white-purple
     AS_RdBu,            // red-white-blue
