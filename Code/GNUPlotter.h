@@ -684,6 +684,7 @@ public:
     CB_RdYlBu11,        // 11 colors, red-paleyellow-blue
     CB_RdYlGn11,        // 11 colors, red-paleyellow-green
     CB_PRGn11,          // 11 colors, purple-white-green
+    CB_Spectral11,      // 11 colors, purple-green-yellow-orange-red
 
     GF_PuGnRd,          // rainbow (purple-blue-green-yellow-red), middle is bright
     KM_BentCoolWarm,    // blue-lightgray-red

@@ -35,7 +35,7 @@ https://colorbrewer2.org/#type=diverging&scheme=Spectral&n=11
 https://colorbrewer2.org/#type=diverging&scheme=RdYlGn&n=11     done like AS_RdYlGn but w 11 colors
 https://colorbrewer2.org/#type=diverging&scheme=RdYlBu&n=11     done. like AS_RdYlBu but w 11 colors
 https://colorbrewer2.org/#type=diverging&scheme=RdBu&n=11       done
-https://colorbrewer2.org/#type=diverging&scheme=PRGn&n=11
+https://colorbrewer2.org/#type=diverging&scheme=PRGn&n=11       done 
 ToDo: Check, if using 11 instead of 9 colors makes a visual difference. If so, use the 11 color 
 versions. Oh yes! For AS_RdBu, the colors at the extremes go to more extreme colors when choosing
 11 instead of 9 colors.
