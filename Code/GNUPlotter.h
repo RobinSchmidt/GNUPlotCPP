@@ -644,17 +644,17 @@ public:
     CB_GnBu8,           // paleyellow-palegreen-blue, GnBu&n=8
     //CB_Greens8,         // Greens&n=8
     //CB_Oranges8,        // Oranges&n=8
-    CB_PuBu8,           // icy, similar to CB_Blues8 but more greenish,  PuBu&n=8
+    CB_PuBu8,           // icy, similar to CB_Blues8 but more greenish,    PuBu&n=8
     //CB_Purples8,        // white-purple, Purples&n=8
     CB_RdPu8,           // yellow-pink-darkmagenta RdPu&n=8
     //CB_Reds8,           // Reds&n=8
-    CB_YlGn8,           // grassland, paleyellow-green,                  YlGn&n=8
-    CB_YlGnBu8,         // paleyellow-green-blue,                        YlGnBu&n=8
-    CB_YlGnBu9,         // paleyellow-green-blue, darker at top,         YlGnBu&n=9
-    CB_YlOrBr8,         // paleyellow-orange-brown,                      YlOrBr&n=8
-    CB_YlOrBr9,         // paleyellow-orange-brown, darker at top,       YlOrBr&n=9
-    CB_YlOrRd8,         // paleyellow-orange-red,                        YlOrRd&n=8
-    CB_YlOrRd9,         // yellow-green-blue, darker at top,             YlOrRd&n=9
+    CB_YlGn8,           // grassland, paleyellow-green,                    YlGn&n=8
+    CB_YlGnBu8,         // paleyellow-green-blue,                          YlGnBu&n=8
+    CB_YlGnBu9,         // paleyellow-green-blue, darker at top,           YlGnBu&n=9
+    CB_YlOrBr8,         // paleyellow-orange-brown,                        YlOrBr&n=8
+    CB_YlOrBr9,         // paleyellow-orange-brown, darker at top,         YlOrBr&n=9
+    CB_YlOrRd8,         // paleyellow-orange-red,                          YlOrRd&n=8
+    CB_YlOrRd9,         // yellow-green-blue, darker at top,               YlOrRd&n=9
     // maybe remove some of the ugly ones. Maybe add more variations with 9 colors
 
     EF_Viridis,         // From dark blue via green to yellow. MatPlotLib default.
@@ -674,7 +674,8 @@ public:
 
     // Diverging:
     AM_Turbo,           // similar to ML_Jet but less saturated
-    CB_BrBG8,           // brown-white-bluegreen,   BrBG&n=8
+    CB_BrBG8,           // brown-white-bluegreen,                          BrBG&n=8   
+    CB_BrBG9,           // brown-white-bluegreen, paler around the center, BrBG&n=9
     CB_PiYG8,           // pink-white-yellowgreen,  PiYG&n=8
     CB_PRGn8,           // purple-white-green,      PRGn&n=8
     CB_PRGn11,          // purple-white-green
