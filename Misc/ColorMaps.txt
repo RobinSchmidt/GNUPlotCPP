@@ -8,6 +8,12 @@ https://colorcet.com/gallery.html
 https://colorcet.com/userguide/index.html  
 -> use classification for there: linear, diverging, rainbow, cyclic, low contrast, etc.
 
+
+https://www.vis4.net/blog/2011/12/avoid-equidistant-hsv-colors/
+https://agilescientific.com/blog/2013/8/20/five-more-things-about-colour.html
+
+https://mycartablog.com/2012/05/12/the-rainbow-is-dead-long-live-the-rainbow-part-1/
+
 https://www.peterkovesi.com/matlabfns/index.html#colour
 -> has .m files for colorspace conversions
 
@@ -52,6 +58,8 @@ versions. Oh yes! For AS_RdBu, the colors at the extremes go to more extreme col
 Another tool to create colormaps
 https://gka.github.io/palettes/#/11|d|00429d,96ffea,ffffe0|ffffe0,ff005e,93003a|1|1
 https://www.vis4.net/blog/2013/09/mastering-multi-hued-color-scales/  explanation
+https://github.com/gka/palettes
+https://github.com/gka/chroma.js
 https://gka.github.io/chroma.js/
 
 
@@ -73,8 +81,8 @@ About the rgbformulae:  https://gnuplot.sourceforge.net/docs_4.2/node216.html
 
 My favorites:
 
-Linear: AS_BuPu, AS_GnBu, AS_PuBu, AS_YlGnBu, CB_YlGnBu*, EF_Viridis, GF_AfmHot, 
+Linear: CB_BuPu, CB_GnBu, CB_PuBu, CB_YlGnBu*, EF_Viridis, GF_AfmHot, 
   GF_BkPuWt (dark/goth), GF_Printable, GF_TradPm3d, GP_Sand, ML_Parula, SW_Magma*, UA_ChromaJS
 
-Diverging: AM_Turbo (highly saturated), AS_BrBG, AS_PRGn, AS_PuOr, AS_RdBu*, AS_RdYlGn (map), 
-  AS_Spectral, CJ_BuYlRd11*, GF_PuGnRd*, KM_Moreland, UA_GnPu*
+Diverging: AM_Turbo (highly saturated), CB_BrBG, CB_PRGn, CB_PuOr, CB_RdBu*, AS_RdYlGn (map), 
+  CB_Spectral*, CJ_BuYlRd11**, GF_PuGnRd*, KM_Moreland, UA_GnPu*
