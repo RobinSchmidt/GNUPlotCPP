@@ -86,3 +86,9 @@ Linear: CB_BuPu, CB_GnBu, CB_PuBu, CB_YlGnBu*, EF_Viridis, GF_AfmHot,
 
 Diverging: AM_Turbo (highly saturated), CB_BrBG, CB_PRGn, CB_PuOr, CB_RdBu*, AS_RdYlGn (map), 
   CB_Spectral*, CJ_BuYlRd11**, GF_PuGnRd*, KM_Moreland, UA_GnPu*
+
+----------------------------------------------------------------------------------------------------
+Some removed cases from  GNUPlotter::setColorPalette(...) because the palettes turned out to be not 
+so useful. But just in case, we want to re-add them:
+
+  case CP::UA_YlRd:         c = "set palette defined (0 '#ffee00', 1 '#ff7000', 2 '#ee0000', 3 '#7f0000')"; break;

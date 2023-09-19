@@ -637,29 +637,29 @@ public:
   enum class ColorPalette  
   {
     // Linear:
-    CB_Blues8,          // Blues&n=8
-    CB_BuGn8,           // BuGn&n=8  bad ..maybe try to take out the 2nd white
-    CB_BuGn8m,          // ...modified - better in the whites
-    CB_BuPu8,           // BuPu&n=8
-    CB_GnBu8,           // GnBu&n=8
-    CB_Greens8,         // Greens&n=8
-    CB_Oranges8,        // Oranges&n=8
-    CB_PuBu8,           // ice look, similar to CB_Blues8, PuBu&n=8
-    CB_Purples8,        // Purples&n=8
-    CB_RdPu8,           // RdPu&n=8
-    CB_Reds8,           // Reds&n=8
-    CB_YlGn8,           // YlGn&n=8
-    CB_YlGnBu8,         // yellow-green-blue,    YlGnBu&n=8
-    CB_YlGnBu9,         // yellow-green-blue,    YlGnBu&n=9
-    CB_YlOrBr8,         // yellow-orange-brown,  YlOrBr&n=8
-    CB_YlOrBr9,         // yellow-orange-brown,  YlOrBr&n=9
-    CB_YlOrRd8,         // yellow-orange-red,    YlOrRd&n=8
-    CB_YlOrRd9,         // yellow-green-blue,    YlOrRd&n=9
+    CB_Blues8,          // icy, Blues&n=8
+    //CB_BuGn8,           // BuGn&n=8  bad ..maybe try to take out the 2nd white
+    //CB_BuGn8m,          // ...modified - better in the whites
+    CB_BuPu8,           // white-paleblue-purple, BuPu&n=8
+    CB_GnBu8,           // paleyellow-palegreen-blue, GnBu&n=8
+    //CB_Greens8,         // Greens&n=8
+    //CB_Oranges8,        // Oranges&n=8
+    CB_PuBu8,           // icy, similar to CB_Blues8 but more greenish,  PuBu&n=8
+    //CB_Purples8,        // white-purple, Purples&n=8
+    CB_RdPu8,           // yellow-pink-darkmagenta RdPu&n=8
+    //CB_Reds8,           // Reds&n=8
+    CB_YlGn8,           // grassland, paleyellow-green,                  YlGn&n=8
+    CB_YlGnBu8,         // paleyellow-green-blue,                        YlGnBu&n=8
+    CB_YlGnBu9,         // paleyellow-green-blue, darker at top,         YlGnBu&n=9
+    CB_YlOrBr8,         // paleyellow-orange-brown,                      YlOrBr&n=8
+    CB_YlOrBr9,         // paleyellow-orange-brown, darker at top,       YlOrBr&n=9
+    CB_YlOrRd8,         // paleyellow-orange-red,                        YlOrRd&n=8
+    CB_YlOrRd9,         // yellow-green-blue, darker at top,             YlOrRd&n=9
     // maybe remove some of the ugly ones. Maybe add more variations with 9 colors
 
     EF_Viridis,         // From dark blue via green to yellow. MatPlotLib default.
-    GF_AfmHot,          // like GF_Hot but more brownish, less reddish
-    GF_BkPuWt,          // black-purple-white
+    GF_AfmHot,          // like GF_Hot but more brownish, less reddish, less saturated
+    GF_BkPuWt,          // goth, black-purple-white
     GF_Hot,             // black-red-yellow-white
     GF_Printable,       // black-blue-pink-orange-yellow-white. Translates well to grayscale.
     GF_TradPm3d,        // traditional pm3d, black-blue-red-yellow
@@ -669,8 +669,8 @@ public:
     SW_Inferno,         // black-purple-orange-paleyellow
     SW_Magma,           // black-purple-pink-paleyellow
     SW_Plasma,          // darkpurple-red-yellow
-    UA_YlRd,            // yellow-red...not so good
-    CJ_YlRd9,           // paleyellow-red ...maybe rename to CJ_YlRd9
+    //UA_YlRd,            // yellow-red...not so good
+    CJ_YlRd9,           // paleyellow-red
 
     // Diverging:
     AM_Turbo,           // similar to ML_Jet but less saturated
