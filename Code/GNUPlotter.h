@@ -638,12 +638,13 @@ public:
   {
     // Linear:
     CB_Blues8,          // Blues&n=8
-    CB_BuGn8,           // BuGn&n=8
+    CB_BuGn8,           // BuGn&n=8  bad ..maybe try to take out the 2nd white
+    CB_BuGn8m,          // ...modified - better in the whites
     CB_BuPu8,           // BuPu&n=8
     CB_GnBu8,           // GnBu&n=8
     CB_Greens8,         // Greens&n=8
     CB_Oranges8,        // Oranges&n=8
-    CB_PuBu8,           // PuBu&n=8
+    CB_PuBu8,           // ice look, similar to CB_Blues8, PuBu&n=8
     CB_Purples8,        // Purples&n=8
     CB_RdPu8,           // RdPu&n=8
     CB_Reds8,           // Reds&n=8
@@ -668,8 +669,8 @@ public:
     SW_Inferno,         // black-purple-orange-paleyellow
     SW_Magma,           // black-purple-pink-paleyellow
     SW_Plasma,          // darkpurple-red-yellow
-    UA_YlRd,            // yellow-red
-    UA_ChromaJS,        // paleyellow-red
+    UA_YlRd,            // yellow-red...not so good
+    CJ_YlRd9,           // paleyellow-red ...maybe rename to CJ_YlRd9
 
     // Diverging:
     AM_Turbo,           // similar to ML_Jet but less saturated

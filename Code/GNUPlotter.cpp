@@ -304,7 +304,10 @@ void GNUPlotter::setColorPalette(ColorPalette palette, bool inverted)
   {
     // Linear:
   case CP::CB_Blues8:       c = "set palette defined (0 '#F7FBFF', 1 '#DEEBF7', 2 '#C6DBEF', 3 '#9ECAE1', 4 '#6BAED6', 5 '#4292C6', 6 '#2171B5', 7 '#084594')"; break;
+  
   case CP::CB_BuGn8:        c = "set palette defined (0 '#F7FCFD', 1 '#E5F5F9', 2 '#CCECE6', 3 '#99D8C9', 4 '#66C2A4', 5 '#41AE76', 6 '#238B45', 7 '#005824')"; break;
+  case CP::CB_BuGn8m:       c = "set palette defined (0 '#F7FCFD', 1 '#CCECE6', 2 '#99D8C9', 3 '#66C2A4', 4 '#41AE76', 5 '#238B45', 6 '#005824')"; break;
+  
   case CP::CB_BuPu8:        c = "set palette defined (0 '#F7FCFD', 1 '#E0ECF4', 2 '#BFD3E6', 3 '#9EBCDA', 4 '#8C96C6', 5 '#8C6BB1', 6 '#88419D', 7 '#6E016B')"; break;
   case CP::CB_GnBu8:        c = "set palette defined (0 '#F7FCF0', 1 '#E0F3DB', 2 '#CCEBC5', 3 '#A8DDB5', 4 '#7BCCC4', 5 '#4EB3D3', 6 '#2B8CBE', 7 '#08589E')"; break;
   case CP::CB_Greens8:      c = "set palette defined (0 '#F7FCF5', 1 '#E5F5E0', 2 '#C7E9C0', 3 '#A1D99B', 4 '#74C476', 5 '#41AB5D', 6 '#238B45', 7 '#005A32')"; break;
@@ -333,7 +336,7 @@ void GNUPlotter::setColorPalette(ColorPalette palette, bool inverted)
   case CP::SW_Magma:        c = "set palette defined (0 '#000004', 1 '#1c1044', 2 '#4f127b', 3 '#812581', 4 '#b5367a', 5 '#e55964', 6 '#fb8761', 7 '#fec287', 8 '#fbfdbf')"; break;
   case CP::SW_Plasma:       c = "set palette defined (0 '#0c0887', 1 '#4b03a1', 2 '#7d03a8', 3 '#a82296', 4 '#cb4679', 5 '#e56b5d', 6 '#f89441', 7 '#fdc328', 8 '#f0f921')"; break;
   case CP::UA_YlRd:         c = "set palette defined (0 '#ffee00', 1 '#ff7000', 2 '#ee0000', 3 '#7f0000')"; break;
-  case CP::UA_ChromaJS:     c = "set palette defined (0 '#ffffe0', 1 '#ffdfb8', 2 '#ffbc94', 3 '#ff9777', 4 '#ff6962', 5 '#ee4256', 6 '#d21f47', 7 '#b0062c', 8 '#8b0000')"; break;  
+  case CP::CJ_YlRd9:        c = "set palette defined (0 '#ffffe0', 1 '#ffdfb8', 2 '#ffbc94', 3 '#ff9777', 4 '#ff6962', 5 '#ee4256', 6 '#d21f47', 7 '#b0062c', 8 '#8b0000')"; break;  
 
     // Diverging:
   case CP::AM_Turbo:        c = "set palette defined (0 '#30123b', 1 '#466be3', 2 '#28bceb', 3 '#32f298', 4 '#a4fc3c', 5 '#eecf3a', 6 '#fb7e21', 7 '#d02f05', 8 '#7a0403')"; break;
