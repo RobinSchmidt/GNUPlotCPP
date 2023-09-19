@@ -725,7 +725,7 @@ void contours()
   //plt.setColorPalette(CP::CB_RdYlBu11, true);
   //plt.setColorPalette(CP::CB_PuBu8, true);
   
-  plt.setColorPalette(CP::CB_BrBG9);
+  plt.setColorPalette(CP::CJ_BuYlRd11);
 
   //plt.addCommand("set palette maxcolors 10"); // no effect - gets overriden by plotContourMap
 

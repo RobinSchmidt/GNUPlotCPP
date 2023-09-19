@@ -676,19 +676,19 @@ public:
     AM_Turbo,           // similar to ML_Jet but less saturated
     CB_BrBG8,           // brown-white-bluegreen,                          BrBG&n=8   
     CB_BrBG9,           // brown-white-bluegreen, paler around the center, BrBG&n=9
-    CB_PiYG8,           // pink-white-yellowgreen,  PiYG&n=8
-    CB_PRGn8,           // purple-white-green,      PRGn&n=8
-    CB_PRGn11,          // purple-white-green
-    CB_PuOr8,           // orange-white-purple,     PuOr&n=8
-    CB_RdBu8,           // red-white-blue,          RdBu&n=8
-    CB_RdBu11,          // red-white-blue
-    CB_RdYlBu8,         // red-paleyellow-blue,     RdYlBu&n=8
-    CB_RdYlBu11,        // red-paleyellow-blue
-    CB_RdYlGn8,         // red-paleyellow-green,    RdYlGn&n=8
-    CB_RdYlGn11,        // red-paleyellow-green
-    CB_Spectral8,       // red-paleyellow-blue,     Spectral&n=8
-    CB_Spectral11,      // purple-green-palyyellow-orange-red
-    CJ_BuYlRd11,        // blue-paleyellow-red
+    CB_PiYG8,           // grapefruit, pink-white-yellowgreen,             PiYG&n=8
+    CB_PRGn8,           // purple-white-green,                             PRGn&n=8
+    CB_PRGn11,          // purple-white-green, darker at the ends,         PRGn&n=11
+    CB_PuOr8,           // orangebrown-pale-purple,                        PuOr&n=8
+    CB_RdBu8,           // red-pale-blue,                                  RdBu&n=8
+    CB_RdBu11,          // red-pale-blue, darker at the ends,              RdBu&n=11
+    CB_RdYlBu8,         // red-paleyellow-blue,                            RdYlBu&n=8
+    CB_RdYlBu11,        // red-paleyellow-blue, darker at the ends,        RdYlBu&n=11
+    CB_RdYlGn8,         // red-paleyellow-green,                           RdYlGn&n=8
+    CB_RdYlGn11,        // red-paleyellow-green, darker at the ends,       RdYlGn&n=8
+    CB_Spectral8,       // red-paleyellow-blue,                            Spectral&n=8
+    CB_Spectral11,      // purple-green-palyyellow-orange-burgundy,        Spectral&n=11
+    CJ_BuYlRd11,        // blue-paleyellow-red, very good
     GF_PuGnRd,          // rainbow (purple-blue-green-yellow-red), middle is bright
     KM_BentCoolWarm,    // blue-lightgray-red
     KM_Moreland,        // blue-lightgray-red
@@ -726,8 +726,8 @@ public:
 
   // ToDo: add CB_Spectral9. It has this middle paleyellow (like 11, unlike 8) but doesn't go all 
   // the way to purple (like 11), so it should look different than these two. Spectral10 might also
-  // look different. Spectral is one of the most beautiful maps, so it may make sense to have all
-  // variations 8,9,10,11 available
+  // look different. Spectral is one of the most beautiful diverging maps, so it may make sense to 
+  // have all variations 8,9,10,11 available
 
 
   // ToDo: remove some of the ugiler colormaps. Move the code for them into a textfile, so we can
