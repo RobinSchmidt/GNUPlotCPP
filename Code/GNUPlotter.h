@@ -649,13 +649,12 @@ public:
     CB_Reds8,           // Reds&n=8
     CB_YlGn8,           // YlGn&n=8
     CB_YlGnBu8,         // yellow-green-blue,    YlGnBu&n=8
-    CB_YlOrBr8,         // yellow-orange-brown,  YlOrBr&n=8
-    CB_YlOrRd8,         // yellow-orange-red,    YlOrRd&n=8
     CB_YlGnBu9,         // yellow-green-blue,    YlGnBu&n=9
+    CB_YlOrBr8,         // yellow-orange-brown,  YlOrBr&n=8
     CB_YlOrBr9,         // yellow-orange-brown,  YlOrBr&n=9
+    CB_YlOrRd8,         // yellow-orange-red,    YlOrRd&n=8
     CB_YlOrRd9,         // yellow-green-blue,    YlOrRd&n=9
-    // maybe reorder them such that YlGnBu&n=8 and YlGnBu&n=9 come one after another and remove 
-    // some of the ugly ones. Maybe add more variations with 9 colors
+    // maybe remove some of the ugly ones. Maybe add more variations with 9 colors
 
     EF_Viridis,         // From dark blue via green to yellow. MatPlotLib default.
     GF_AfmHot,          // like GF_Hot but more brownish, less reddish
@@ -673,25 +672,21 @@ public:
     UA_ChromaJS,        // paleyellow-red
 
     // Diverging:
-    AM_Turbo,           // similar to ML_Jet but with less saturation
-
+    AM_Turbo,           // similar to ML_Jet but less saturated
     CB_BrBG8,           // brown-white-bluegreen,   BrBG&n=8
     CB_PiYG8,           // pink-white-yellowgreen,  PiYG&n=8
     CB_PRGn8,           // purple-white-green,      PRGn&n=8
+    CB_PRGn11,          // purple-white-green
     CB_PuOr8,           // orange-white-purple,     PuOr&n=8
     CB_RdBu8,           // red-white-blue,          RdBu&n=8
+    CB_RdBu11,          // red-white-blue
     CB_RdYlBu8,         // red-paleyellow-blue,     RdYlBu&n=8
+    CB_RdYlBu11,        // red-paleyellow-blue
     CB_RdYlGn8,         // red-paleyellow-green,    RdYlGn&n=8
+    CB_RdYlGn11,        // red-paleyellow-green
     CB_Spectral8,       // red-paleyellow-blue,     Spectral&n=8
-
-    CB_RdBu11,          // 11 colors, red-white-blue
-    CB_RdYlBu11,        // 11 colors, red-paleyellow-blue
-    CB_RdYlGn11,        // 11 colors, red-paleyellow-green
-    CB_PRGn11,          // 11 colors, purple-white-green
-    CB_Spectral11,      // 11 colors, purple-green-yellow-orange-red,
-
-    CJ_BuYlRd11,        // 11 colors, blue-paleyellow-red
-
+    CB_Spectral11,      // purple-green-palyyellow-orange-red
+    CJ_BuYlRd11,        // blue-paleyellow-red
     GF_PuGnRd,          // rainbow (purple-blue-green-yellow-red), middle is bright
     KM_BentCoolWarm,    // blue-lightgray-red
     KM_Moreland,        // blue-lightgray-red
@@ -700,7 +695,7 @@ public:
     UA_GnPu,            // green-purple
 
     // Alternating:
-    AS_Paired8,         //  8 colors in 4 light/dark pairs: blue, green, red, orange
+    CB_Paired8,         //  8 colors in 4 light/dark pairs: blue, green, red, orange
     CB_Paired10,        // 10 colors in 5 light/dark pairs: blue, green, red, orange, purple
     // should be used with "set palette maxcolors N" where N is the number of colors
     
