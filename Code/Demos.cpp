@@ -1360,30 +1360,39 @@ void demoDipole()
 
 void demoContourMap()
 {
+  // We create a contour map plot for a function z = f(x,y). There will be contour lines at various
+  // equidistant height levels and between these contour lines, a solid fill color will be used 
+  // that is taken from some predefined color map that user selectable via the plt.setColorPalette
+  // call in the section where the plotter object is being set up.
+
   // Setup:
-  using Real       = float;    // Real number data type. float or double
-  Real xMin        = -8;
-  Real xMax        = +8; 
-  Real yMin        = -8; 
-  Real yMax        = +8;
-  Real zMin        = -20;
-  Real zMax        = +20;
-  int  Nx          = 301;
-  int  Ny          = 301;
-  int  numContours = 21;        // Number of contour lines. 21 looks good, 41 looks dense.
+  using Real       = float;    // Real number data type. Can be float or double.
+  Real xMin        = -8;       // Minimum x coordinate.
+  Real xMax        = +8;       // Maximum x coordinate.
+  Real yMin        = -8;       // Minimum y coordinate.
+  Real yMax        = +8;       // Maximum y coordinate.
+  Real zMin        = -20;      // Minimum z coordinate.
+  Real zMax        = +20;      // Maximum z coordinate.
+  int  numContours = 21;       // Number of contour lines. 21 looks good, 41 looks dense.
+  int  Nx          = 201;      // Sampling resolution. 51 looks jaggy, 101 is good enough. 201
+  int  Ny          = 201;      // ..or 301 is suitable for a high-quality plot.
 
   // Define the function z = f(x,y) for which we want to plot the contour map:
   function<Real(Real, Real)> f;
   f = [] (Real x, Real y) { return y*sin(x+1) + x*cos(y+1) + Real(0.1)*x*y; };
 
-  // Create plotter object, set it up and plot:
+  // Create plotter object, set it up and let it plot the contour map for f:
   using CP = GNUPlotter::ColorPalette;
   GNUPlotter plt;
   plt.addCommand("set size square");
   plt.setPixelSize(600, 600);
   plt.setColorPalette(CP::ML_Parula, false);    // bool parameter optionally reverses the colormap
-  plt.setToDarkMode();
+  plt.setToDarkMode();                          // Dark mode for screen viewing, light for pdf docs
   plt.plotContourMap(Nx, xMin, xMax, Ny, yMin, yMax, f, numContours, zMin, zMax);
+
+  // Notes:
+  // -You may want to play around with the setColorPalette command to select your favourite color 
+  //  map. See GNUPlotter::ColorPalette for the available color maps.
 }
 
 
