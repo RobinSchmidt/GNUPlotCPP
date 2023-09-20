@@ -1358,7 +1358,33 @@ void demoDipole()
   // std::function
 }
 
+void demoContourMap()
+{
+  // Setup:
+  using Real       = double;    // Real number data type. float or double
+  Real xMin        = -8;
+  Real xMax        = +8; 
+  Real yMin        = -8; 
+  Real yMax        = +8;
+  Real zMin        = -20;
+  Real zMax        = +20;
+  int  Nx          = 301;
+  int  Ny          = 301;
+  int  numContours = 21;        // Number of contour lines. 21 looks good, 41 looks dense.
 
+  // Define the function z = f(x,y) for which we want to plot the contour map:
+  function<Real(Real, Real)> f;
+  f = [] (Real x, Real y) { return y*sin(x+1) + x*cos(y+1) + 0.1*x*y; };
+
+  // Create plotter object, set it up and plot:
+  using CP = GNUPlotter::ColorPalette;
+  GNUPlotter plt;
+  plt.addCommand("set size square");
+  plt.setPixelSize(600, 600);
+  plt.setColorPalette(CP::ML_Parula, false);    // bool parameter optionally reverses the colormap
+  plt.setToDarkMode();
+  plt.plotContourMap(Nx, xMin, xMax, Ny, yMin, yMax, f, numContours, zMin, zMax);
+}
 
 
 

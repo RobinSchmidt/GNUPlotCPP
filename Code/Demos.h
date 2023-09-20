@@ -43,7 +43,7 @@ void demoPendulumPhasePortrait();
 
 void demoDipole();
 
-
+void demoContourMap();
 
 
 

@@ -38,6 +38,7 @@ int main(int argc, char** argv)
   demoPendulumPhasePortrait();
   demoDipole();
   */
+  demoContourMap();
   
   // If you want to see, how they were done, jump into the implementations of these functions - 
   // there you will find commented code that should make it clear how the plotter class is supposed
