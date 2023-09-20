@@ -291,46 +291,6 @@ inline void plotComplexContours(const function<complex<T>(complex<T>)>& f,
 // but maybe implement it more generally as a function R^2 -> R^2 and make a wrapper for C -> C as
 // was done with the contour plots
 
-
-template<class T>
-void plotContourMap(GNUPlotter& plt, const function<T(T, T)>& f, const vector<T>& levels,
-  T xMin, T xMax, T yMin, T yMax, int Nx = 65, int Ny = 65)
-{
-  plt.plotContourMap(Nx, xMin, xMax, Ny, yMin, yMax, f,
-    (int)levels.size(), levels[0], levels[levels.size() - 1]);
-  return;
-    
-
-  /*
-  plt.addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
-  setContourLevels(plt, levels);
-
-  // Use constant color fills between the contour lines if desired:
-  bool useConstColors = true;  // make user parameter
-  if(useConstColors)
-  {
-    std::string cmd = "set palette maxcolors " + std::to_string(levels.size() - 1);
-    plt.addCommand(cmd);
-    size_t L = levels.size() - 1;            // last valid index
-    std::string range = "[" + std::to_string(levels[0]) + ":" + std::to_string(levels[L]) + "]";
-    plt.addCommand("set zrange " + range);   // range for z values
-    plt.addCommand("set cbrange " + range);  // color bar range
-  }
-
-  // Plot:
-  plt.addCommand("set pm3d map impl");
-  plt.addCommand("set contour");
-  plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
-  //plt.addCommand("set autoscale fix");
-  plt.invokeGNUPlot();
-  */
-
-  // ToDo:
-  // -When clicking on "Apply autoscale" on the GUI, the colors get messed up. I'm trying to fix
-  //  this problem via "set autoscale fix" but that doesn't seem to help.
-}
-
-
 //-------------------------------------------------------------------------------------------------
 // actual experiments:
 
@@ -702,21 +662,26 @@ void generateImplicitCurveData(const function<T(T, T)>& f, T z, vector<T>& x, ve
 void contours()
 {
   double xMin, xMax, yMin, yMax;
-  vector<double> z;                         // Contour levels
+
   function<double(double, double)> f, g;
 
   GNUPlotter plt;
   plt.addCommand("set size square");
   plt.setPixelSize(600, 600);
 
+  /*
   f = [] (double x, double y) { return x*x - y*y; };
   g = [] (double x, double y) { return 2*x*y;     };
+  vector<double> z;                         // Contour levels - get rid!
   xMin = yMin = -4; xMax = yMax = 4; z = rangeLinear(11, -10, 10);
   //plotContours(plt, f, g, z, xMin, xMax, yMin, yMax);
+  */
 
   // has interesting features for testing contour-plots
   f = [] (double x, double y) { return y*sin(x+1) + x*cos(y+1) + 0.1*x*y; }; 
-  xMin = yMin = -8; xMax = yMax = 8; z = rangeLinear(9, -10, 10);
+  xMin = yMin = -8; xMax = yMax = 8; 
+  
+  //z = rangeLinear(9, -10, 10);
   //plotContours(f, z, xMin, xMax, yMin, yMax);
 
   // There are artifacts at the center in both plots
@@ -742,7 +707,14 @@ void contours()
 
   //plt.addCommand("set palette maxcolors 10"); // no effect - gets overriden by plotContourMap
 
-  z = rangeLinear(21, -20, 20);
+  int Nx = 301;
+  int Ny = 301;
+
+  int numContours = 21;   // 21 looks good, 41 looks dense
+  double zMin = -20;
+  double zMax = +20;
+
+  //z = rangeLinear(21, -20, 20);
   //z = rangeLinear(41, -20, 20);  // very dense - needs finer lines or bigger size
 
 
@@ -756,7 +728,10 @@ void contours()
 
   plt.setPixelSize(600, 600);
   plt.setToDarkMode();
-  plotContourMap(plt, f, z, xMin, xMax, yMin, yMax, 301, 301);
+  plt.plotContourMap(Nx, xMin, xMax, Ny, yMin, yMax, f, numContours, zMin, zMax);
+
+
+  //plotContourMap(plt, f, z, xMin, xMax, yMin, yMax, 301, 301);
   // -Clicking on "apply autoscale" changes the colors. Maybe we need to fix the z-range or 
   //  something.
 
