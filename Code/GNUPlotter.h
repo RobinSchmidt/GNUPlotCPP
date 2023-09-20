@@ -651,6 +651,7 @@ public:
     CB_YlGn8,           // grassland, paleyellow-green,                    YlGn&n=8
     CB_YlGnBu8,         // paleyellow-green-blue,                          YlGnBu&n=8
     CB_YlGnBu9,         // paleyellow-green-blue, darker at top,           YlGnBu&n=9
+    CB_YlGnBu9m,        // modified, taken out the 2nd yellow, looks better in the yellows
     CB_YlOrBr8,         // paleyellow-orange-brown,                        YlOrBr&n=8
     CB_YlOrBr9,         // paleyellow-orange-brown, darker at top,         YlOrBr&n=9
     CB_YlOrRd8,         // paleyellow-orange-red,                          YlOrRd&n=8
@@ -689,7 +690,8 @@ public:
     CB_Spectral8,       // red-paleyellow-blue,                            Spectral&n=8
     CB_Spectral11,      // purple-green-palyyellow-orange-burgundy,        Spectral&n=11
     CJ_BuYlRd11,        // blue-paleyellow-red, very good
-    GF_PuGnRd,          // rainbow (purple-blue-green-yellow-red), middle is bright
+    GF_PuGnRd,          // rainbow (purple-blue-green-yellow-red), middle is bright, more saturated
+                        // than CB_Spectral, middle more green (instead of yellow)
     KM_BentCoolWarm,    // blue-lightgray-red
     KM_Moreland,        // blue-lightgray-red
     ML_Jet,             // darkblue-lightgreenishyellow-darkred, old MatLab default

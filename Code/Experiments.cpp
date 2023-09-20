@@ -715,7 +715,7 @@ void contours()
 
   // These are nice linear maps:
   //plt.setColorPalette(CP::CB_YlGnBu8);
-  //plt.setColorPalette(CP::CB_YlGnBu9);
+  //plt.setColorPalette(CP::CB_YlGnBu9m);
 
   // My favorite diverging maps: CB_Spectral11 (inverted), CJ_BuYlRd11
   //plt.setColorPalette(CP::CB_Spectral11, true);
@@ -724,8 +724,10 @@ void contours()
 
   //plt.setColorPalette(CP::CB_RdYlBu11, true);
   //plt.setColorPalette(CP::CB_PuBu8, true);
+
+  plt.setColorPalette(CP::ML_Parula, true);
   
-  plt.setColorPalette(CP::CJ_BuYlRd11);
+  //plt.setColorPalette(CP::CB_Spectral11);
 
   //plt.addCommand("set palette maxcolors 10"); // no effect - gets overriden by plotContourMap
 
