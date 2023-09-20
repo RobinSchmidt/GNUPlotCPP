@@ -232,6 +232,14 @@ template void GNUPlotter::plotBivariateFunction(int Nx, float xMin, float xMax, 
 template void GNUPlotter::plotBivariateFunction(int Nx, int xMin, int xMax, int Ny,
   int yMin, int yMax, const std::function<int(int, int)>& f);
 
+template<class T>
+void GNUPlotter::plotContourMap(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax,
+  const std::function<T(T, T)>& f, int numContours, T zMin, T zMax)
+{
+  std::vector<T> z = rangeLinear(numContours, zMin, zmax);
+
+}
+
 
 //-------------------------------------------------------------------------------------------------
 // style setup:
@@ -468,6 +476,19 @@ void GNUPlotter::addAnnotation(double x, double y, CSR text, CSR options)
 {
   addCommand("set label at " + s(x) + "," + s(y) + " \"" + text + "\" " + options + "\n");
 }
+
+template<class T>
+void GNUPlotter::setContourLevels(const std::vector<T>& levels)
+{
+  std::string str = "set cntrparam levels discrete ";
+  str += std::to_string(levels[0]);
+  for(size_t i = 1; i < levels.size(); i++)
+    str += "," + std::to_string(levels[i]);
+  addCommand(str);
+}
+template void GNUPlotter::setContourLevels(const std::vector<double>& levels);
+template void GNUPlotter::setContourLevels(const std::vector<float>& levels);
+template void GNUPlotter::setContourLevels(const std::vector<int>& levels);
 
 // data setup:
 

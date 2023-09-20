@@ -173,6 +173,15 @@ public:
   void plotBivariateFunction(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax, 
     const std::function<T(T, T)>& f);
 
+
+  template<class T>
+  void plotContourMap(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax,
+    const std::function<T(T, T)>& f, int numContours, T zMin, T zMax);
+  // ToDo: make zMin, zMax optional, infer appropriate range from data
+    
+
+
+
   // ToDo: 
   // -for those functions which receive a function pointer, use std::function instead - this 
   //   will allow use with lambda-functions, functors *and* function-pointers -> more flexible
@@ -283,6 +292,11 @@ public:
   a string of formatting options, for example "center" for centered text (see the set label 
   documentation in the GNUPlot manual). */
   void addAnnotation(double x, double y, CSR text, CSR options = "");
+
+
+  template<class T>
+  void setContourLevels(const std::vector<T>& levels);
+  // add documentaion
 
 
   //-----------------------------------------------------------------------------------------------

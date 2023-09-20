@@ -201,12 +201,16 @@ void plotComplexArrayReIm(const std::complex<T>* z, int N)
 template<class T>
 void setContourLevels(GNUPlotter& plt, const vector<T>& levels)
 {
+  plt.setContourLevels(levels);
+  /*
   string str = "set cntrparam levels discrete ";
   str += to_string(levels[0]);
   for(size_t i = 1; i < levels.size(); i++)
     str += "," + to_string(levels[i]);
   plt.addCommand(str);
+  */
 }
+// superseded by GNUPlotter::setContourLevels
 
 // Rename to plotContourLines:
 template<class T>
