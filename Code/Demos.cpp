@@ -1386,13 +1386,15 @@ void demoContourMap()
   GNUPlotter plt;
   plt.addCommand("set size square");
   plt.setPixelSize(600, 600);
-  plt.setColorPalette(CP::ML_Parula, false);    // bool parameter optionally reverses the colormap
+  plt.setColorPalette(CP::CJ_YlRd9, false);    // bool parameter optionally reverses the colormap
   plt.setToDarkMode();                          // Dark mode for screen viewing, light for pdf docs
   plt.plotContourMap(Nx, xMin, xMax, Ny, yMin, yMax, f, numContours, zMin, zMax);
 
   // Notes:
   // -You may want to play around with the setColorPalette command to select your favourite color 
-  //  map. See GNUPlotter::ColorPalette for the available color maps.
+  //  map. See GNUPlotter::ColorPalette for the available color maps. Some nice linear maps are:
+  //  CB_YlGnBu9m, EF_Viridis, GF_AfmHot, GF_Printable, GP_Sand, ML_Parula, SW_Plasma. Some nice 
+  //  diverging maps are: CB_Spectral11, CJ_BuYlRd11
 }
 
 

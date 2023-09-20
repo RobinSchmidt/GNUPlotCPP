@@ -40,6 +40,7 @@ int main(int argc, char** argv)
   */
   demoContourMap();
 
+
   // If you want to see, how they were done, jump into the implementations of these functions - 
   // there you will find commented code that should make it clear how the plotter class is supposed
   // to be used, so you can take these as examples and reference for using it for creating your 

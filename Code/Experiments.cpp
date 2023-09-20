@@ -669,25 +669,22 @@ void contours()
   plt.addCommand("set size square");
   plt.setPixelSize(600, 600);
 
-  /*
   f = [] (double x, double y) { return x*x - y*y; };
   g = [] (double x, double y) { return 2*x*y;     };
   vector<double> z;                         // Contour levels - get rid!
   xMin = yMin = -4; xMax = yMax = 4; z = rangeLinear(11, -10, 10);
-  //plotContours(plt, f, g, z, xMin, xMax, yMin, yMax);
-  */
+  plotContours(plt, f, g, z, xMin, xMax, yMin, yMax);
 
   // has interesting features for testing contour-plots
   f = [] (double x, double y) { return y*sin(x+1) + x*cos(y+1) + 0.1*x*y; }; 
   xMin = yMin = -8; xMax = yMax = 8; 
   
-  //z = rangeLinear(9, -10, 10);
-  //plotContours(f, z, xMin, xMax, yMin, yMax);
+  z = rangeLinear(9, -10, 10);
+  plotContours(f, z, xMin, xMax, yMin, yMax);
 
   // There are artifacts at the center in both plots
 
-  // New, experimental:
-  using CP = GNUPlotter::ColorPalette;
+
 
   // These are nice linear maps:
   //plt.setColorPalette(CP::CB_YlGnBu8);
@@ -701,7 +698,7 @@ void contours()
   //plt.setColorPalette(CP::CB_RdYlBu11, true);
   //plt.setColorPalette(CP::CB_PuBu8, true);
 
-  plt.setColorPalette(CP::ML_Parula, true);
+  //plt.setColorPalette(CP::ML_Parula, true);
   
   //plt.setColorPalette(CP::CB_Spectral11);
 
