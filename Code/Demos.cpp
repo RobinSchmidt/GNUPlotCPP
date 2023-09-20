@@ -214,35 +214,30 @@ void demoFrequencyResponse()
   double mag[M][N], phs[M][N];     // magnitudes and phases
   double *pMag[M], *pPhs[M];       // pointers to 1D arrays
 
-  // fill frequency axis with equally spaced values on logarithmic scale:
+  // Fill frequency axis with equally spaced values on logarithmic scale:
   GNUPlotter::rangeLogarithmic(w, N, wMin, wMax);
 
-  // assign pointer arrays:
+  // Assign pointer arrays:
   int n, m;
-  for(m = 0; m < M; m++)
-  {
+  for(m = 0; m < M; m++) {
     pMag[m] = mag[m];
-    pPhs[m] = phs[m];
-  }
+    pPhs[m] = phs[m]; }
 
-  // compute frequency response data:
+  // Compute frequency response data:
   complex<double> s;               // value on s-plane where we evaluate H
   complex<double> H;               // complex frequency response H(s)
   vector<complex<double>> poles;   // Butterworth filter poles
   vector<complex<double>> zeros;   // filter zeros (empty vector)
   complex<double> j(0.0, 1.0);     // imaginary unit
-  for(m = 0; m < M; m++)
-  {
+  for(m = 0; m < M; m++) {
     poles = butterworthPoles(m+1);
-    for(n = 0; n < N; n++)
-    {
+    for(n = 0; n < N; n++) {
       H = transferFunctionZPK(j*w[n], zeros, poles, 1); // evaluate H(s) at s=j*w
       mag[m][n] = 20*log10(abs(H));                     // magnitude in dB
-      phs[m][n] = 180*arg(H)/M_PI;                      // phase in degrees
-      unwrap(phs[m], N, 360);                           // unwrap phase response
-    }
-  }
+      phs[m][n] = 180*arg(H)/M_PI;  }                   // phase in degrees
+    unwrap(phs[m], N, 360); }                           // unwrap phase response
 
+  // Create plotter object, set it up and plot:
   GNUPlotter p;
   p.addDataArrays(N, w, M, pMag);
   p.addDataArrays(N, w, M, pPhs);
@@ -262,14 +257,14 @@ void demoFrequencyResponse()
   p.addCommand("set ytics 10");   // 10 dB steps for magnitude axis
   p.addCommand("set y2tics 45");  // 45° steps for phase axis
 
-  // add magnitude graphs:
+  // Add magnitude graphs:
   p.addGraph("i 0 u 1:2 w lines lw 1.5 axes x1y1 notitle");
   p.addGraph("i 0 u 1:3 w lines lw 1.5 axes x1y1 notitle");
   p.addGraph("i 0 u 1:4 w lines lw 1.5 axes x1y1 notitle");
   p.addGraph("i 0 u 1:5 w lines lw 1.5 axes x1y1 notitle");
   p.addGraph("i 0 u 1:6 w lines lw 1.5 axes x1y1 notitle");
 
-  // add phase graphs:
+  // Add phase graphs:
   p.addGraph("i 1 u 1:2 w lines lw 1.5 axes x1y2 notitle");
   p.addGraph("i 1 u 1:3 w lines lw 1.5 axes x1y2 notitle");
   p.addGraph("i 1 u 1:4 w lines lw 1.5 axes x1y2 notitle");
