@@ -1362,8 +1362,8 @@ void demoContourMap()
 {
   // We create a contour map plot for a function z = f(x,y). There will be contour lines at various
   // equidistant height levels and between these contour lines, a solid fill color will be used 
-  // that is taken from some predefined color map that user selectable via the plt.setColorPalette
-  // call in the section where the plotter object is being set up.
+  // that is taken from some predefined color map that is user selectable via the 
+  // plt.setColorPalette() call in the section where the plotter object is being set up.
 
   // Setup:
   using Real       = float;    // Real number data type. Can be float or double.
@@ -1386,7 +1386,7 @@ void demoContourMap()
   GNUPlotter plt;
   plt.addCommand("set size square");
   plt.setPixelSize(600, 600);
-  plt.setColorPalette(CP::CB_YlGnBu9m, false);  // bool parameter optionally reverses the colormap
+  plt.setColorPalette(CP::CJ_BuYlRd11, false);  // bool parameter optionally reverses the colormap
   plt.setToDarkMode();                          // Dark mode for screen viewing, light for pdf docs
   plt.plotContourMap(Nx, xMin, xMax, Ny, yMin, yMax, f, numContours, zMin, zMax);
 
