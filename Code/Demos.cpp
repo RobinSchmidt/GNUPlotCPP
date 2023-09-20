@@ -1361,7 +1361,7 @@ void demoDipole()
 void demoContourMap()
 {
   // Setup:
-  using Real       = double;    // Real number data type. float or double
+  using Real       = float;    // Real number data type. float or double
   Real xMin        = -8;
   Real xMax        = +8; 
   Real yMin        = -8; 
@@ -1374,7 +1374,7 @@ void demoContourMap()
 
   // Define the function z = f(x,y) for which we want to plot the contour map:
   function<Real(Real, Real)> f;
-  f = [] (Real x, Real y) { return y*sin(x+1) + x*cos(y+1) + 0.1*x*y; };
+  f = [] (Real x, Real y) { return y*sin(x+1) + x*cos(y+1) + Real(0.1)*x*y; };
 
   // Create plotter object, set it up and plot:
   using CP = GNUPlotter::ColorPalette;
