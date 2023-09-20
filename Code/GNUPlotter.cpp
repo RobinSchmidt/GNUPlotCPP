@@ -237,7 +237,6 @@ void GNUPlotter::plotContourMap(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax,
   const std::function<T(T, T)>& f, int numContours, T zMin, T zMax)
 {
   addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
-
   std::vector<T> levels(numContours); 
   rangeLinear(&levels[0], numContours, zMin, zMax);
   setContourLevels(levels);
@@ -523,6 +522,9 @@ void GNUPlotter::setContourLevels(const std::vector<T>& levels)
 template void GNUPlotter::setContourLevels(const std::vector<double>& levels);
 template void GNUPlotter::setContourLevels(const std::vector<float>& levels);
 template void GNUPlotter::setContourLevels(const std::vector<int>& levels);
+// ToDo: 
+// -Check, if we really need these instantiations. They could be generated automatically from
+//  plotContourMap().
 
 // data setup:
 

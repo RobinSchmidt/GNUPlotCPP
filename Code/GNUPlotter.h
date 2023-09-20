@@ -298,7 +298,9 @@ public:
 
   template<class T>
   void setContourLevels(const std::vector<T>& levels);
-  // add documentaion
+  // ToDo:
+  // -Add documentation
+  // -Maybe move to protected
 
 
   //-----------------------------------------------------------------------------------------------
