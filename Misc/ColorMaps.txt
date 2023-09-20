@@ -28,6 +28,11 @@ http://www.gnuplotting.org/tag/colormap/
 https://github.com/Gnuplotting/gnuplot-palettes  magma, plasma, viridis, etc.
 
 
+https://matplotlib.org/stable/users/explain/colors/colormaps.html
+https://matplotlib.org/mpl-third-party/#colormaps-and-styles
+https://matplotlib.org/stable/gallery/color/colormap_reference.html
+
+
 About jet and turbo:
 https://blog.research.google/2019/08/turbo-improved-rainbow-colormap-for.html
 https://de.mathworks.com/matlabcentral/answers/304765-how-do-you-set-a-new-default-colormap-for-matlab
