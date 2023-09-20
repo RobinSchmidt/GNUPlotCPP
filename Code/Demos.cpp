@@ -206,13 +206,13 @@ void demoFrequencyResponse()
   // axes. As an example, we plot magnitude and phase responses for Butterworth filters of various
   // orders 1 to 5.
 
-  static const int N = 501;        // number of datapoints
-  static const int M = 5;          // maximum order
-  double wMin = 0.0625;            // minimum radian frequency
-  double wMax = 16.0;              // maximum radian frequency
-  double w[N];                     // radian frequency axis
-  double mag[M][N], phs[M][N];     // magnitudes and phases
-  double *pMag[M], *pPhs[M];       // pointers to 1D arrays
+  static const int N = 501;        // Number of datapoints
+  static const int M = 5;          // Maximum order
+  double wMin = 0.0625;            // Minimum radian frequency
+  double wMax = 16.0;              // Maximum radian frequency
+  double w[N];                     // Radian frequency axis
+  double mag[M][N], phs[M][N];     // Magnitudes and phases
+  double *pMag[M], *pPhs[M];       // Pointers to 1D arrays
 
   // Fill frequency axis with equally spaced values on logarithmic scale:
   GNUPlotter::rangeLogarithmic(w, N, wMin, wMax);
@@ -224,18 +224,18 @@ void demoFrequencyResponse()
     pPhs[m] = phs[m]; }
 
   // Compute frequency response data:
-  complex<double> s;               // value on s-plane where we evaluate H
-  complex<double> H;               // complex frequency response H(s)
+  complex<double> s;               // Value on s-plane where we evaluate H
+  complex<double> H;               // Complex frequency response H(s)
   vector<complex<double>> poles;   // Butterworth filter poles
-  vector<complex<double>> zeros;   // filter zeros (empty vector)
-  complex<double> j(0.0, 1.0);     // imaginary unit
+  vector<complex<double>> zeros;   // Filter zeros (empty vector)
+  complex<double> j(0.0, 1.0);     // Imaginary unit
   for(m = 0; m < M; m++) {
     poles = butterworthPoles(m+1);
     for(n = 0; n < N; n++) {
-      H = transferFunctionZPK(j*w[n], zeros, poles, 1); // evaluate H(s) at s=j*w
-      mag[m][n] = 20*log10(abs(H));                     // magnitude in dB
-      phs[m][n] = 180*arg(H)/M_PI;  }                   // phase in degrees
-    unwrap(phs[m], N, 360); }                           // unwrap phase response
+      H = transferFunctionZPK(j*w[n], zeros, poles, 1); // Evaluate H(s) at s=j*w
+      mag[m][n] = 20*log10(abs(H));                     // Magnitude in dB
+      phs[m][n] = 180*arg(H)/M_PI;  }                   // Phase in degrees
+    unwrap(phs[m], N, 360); }                           // Unwrap phase response
 
   // Create plotter object, set it up and plot:
   GNUPlotter p;
