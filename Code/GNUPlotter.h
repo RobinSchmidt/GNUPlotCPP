@@ -177,7 +177,9 @@ public:
   template<class T>
   void plotContourMap(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax,
     const std::function<T(T, T)>& f, int numContours, T zMin, T zMax);
-  // ToDo: make zMin, zMax optional, infer appropriate range from data
+  // ToDo: 
+  // -Make zMin, zMax optional, infer appropriate range from data if not given
+  // -add a function plotContourMap similar to plotSurface(int Nx, int Ny, T *x, T *y, T **z);
     
 
 

@@ -296,6 +296,12 @@ template<class T>
 void plotContourMap(GNUPlotter& plt, const function<T(T, T)>& f, const vector<T>& levels,
   T xMin, T xMax, T yMin, T yMax, int Nx = 65, int Ny = 65)
 {
+  plt.plotContourMap(Nx, xMin, xMax, Ny, yMin, yMax, f,
+    (int)levels.size(), levels[0], levels[levels.size() - 1]);
+  return;
+    
+
+  /*
   plt.addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
   setContourLevels(plt, levels);
 
@@ -317,9 +323,10 @@ void plotContourMap(GNUPlotter& plt, const function<T(T, T)>& f, const vector<T>
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
   //plt.addCommand("set autoscale fix");
   plt.invokeGNUPlot();
+  */
 
   // ToDo:
-  // -When clicking on "Apply autoscale" on teh GUI, the colors get messed up. I'm trying to fix
+  // -When clicking on "Apply autoscale" on the GUI, the colors get messed up. I'm trying to fix
   //  this problem via "set autoscale fix" but that doesn't seem to help.
 }
 

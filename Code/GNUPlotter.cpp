@@ -236,10 +236,44 @@ template<class T>
 void GNUPlotter::plotContourMap(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax,
   const std::function<T(T, T)>& f, int numContours, T zMin, T zMax)
 {
-  std::vector<T> z = rangeLinear(numContours, zMin, zmax);
+  addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
 
+  std::vector<T> levels(numContours); 
+  rangeLinear(&levels[0], numContours, zMin, zMax);
+  setContourLevels(levels);
+
+  // Use constant color fills between the contour lines if desired:
+  bool useConstColors = true;  // make user parameter
+  if(useConstColors)
+  {
+    std::string cmd = "set palette maxcolors " + std::to_string(levels.size() - 1);
+    addCommand(cmd);
+    size_t L = levels.size() - 1;        // last valid index
+    std::string range = "[" + std::to_string(levels[0]) + ":" + std::to_string(levels[L]) + "]";
+    addCommand("set zrange " + range);   // range for z values
+    addCommand("set cbrange " + range);  // color bar range
+  }
+
+  // Plot:
+  addCommand("set pm3d map impl");
+  addCommand("set contour");
+  addCommand("splot '" + dataPath + "' i 0 nonuniform matrix w pm3d notitle");
+  //addCommand("set autoscale fix");
+  invokeGNUPlot();
+
+  // ToDo:
+  // -When clicking on "Apply autoscale" on the GUI, the colors get messed up. I'm trying to fix
+  //  this problem via "set autoscale fix" but that doesn't seem to help.
 }
-
+template void GNUPlotter::plotContourMap(
+  int Nx, double xMin, double xMax, int Ny, double yMin, double yMax,
+  const std::function<double(double, double)>& f, int numContours, double zMin, double zMax);
+template void GNUPlotter::plotContourMap(
+  int Nx, float xMin, float xMax, int Ny, float yMin, float yMax,
+  const std::function<float(float, float)>& f, int numContours, float zMin, float zMax);
+template void GNUPlotter::plotContourMap(
+  int Nx, int xMin, int xMax, int Ny, int yMin, int yMax,
+  const std::function<int(int, int)>& f, int numContours, int zMin, int zMax);
 
 //-------------------------------------------------------------------------------------------------
 // style setup:
