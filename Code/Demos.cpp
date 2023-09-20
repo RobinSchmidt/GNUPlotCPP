@@ -1386,7 +1386,7 @@ void demoContourMap()
   GNUPlotter plt;
   plt.addCommand("set size square");
   plt.setPixelSize(600, 600);
-  plt.setColorPalette(CP::CJ_BuYlRd11, false);  // bool parameter optionally reverses the colormap
+  plt.setColorPalette(CP::CB_YlGnBu9m, false);  // bool parameter optionally reverses the colormap
   plt.setToDarkMode();                          // Dark mode for screen viewing, light for pdf docs
   plt.plotContourMap(Nx, xMin, xMax, Ny, yMin, yMax, f, numContours, zMin, zMax);
 
