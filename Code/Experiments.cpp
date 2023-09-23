@@ -631,8 +631,19 @@ std::complex<double> rationalVectorField(std::complex<double> z)
   // Computes the value of a rational function
   complex<double> i(0, 1);  // imaginary unit
   return (z-1.) * (z+1.) * (z-i) * (z+i) / z;
-  // maybe try more interesting patterns of poles and zeros, try visualizing filter transfer 
-  // functions as vector fields
+
+  // Notes:
+  // -It looks like +1,-1 are sources and +i,-i are sinks and 0 is a saddle. That's 
+  //  counterintuitive. I'd expect the pole at 0 to be a source and the zeros at +-1,+-i to be all
+  //  sinks. -> Figure out what's going on. ...but the magnitude of the arrows goes to zero at the
+  //  source/sink like points, so it seems to be the case that only when we compute the flux 
+  //  through a loop enclosing one of these points, we get a value and the value depends on the
+  //  size of the loop. When the size shrinks to zero, so does the flux...soo...the divergence is
+  //  actually zero everywhere but the flux through a non-infinitesimal loop is nonzero?
+  //
+  // ToDo:
+  // -Maybe try more interesting patterns of poles and zeros, try visualizing filter transfer 
+  //  functions as vector fields
 }
 void demoVectorField()
 {
