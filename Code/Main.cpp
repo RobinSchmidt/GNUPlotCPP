@@ -33,7 +33,7 @@ int main(int argc, char** argv)
   //demoPow(); // boring - remove
   demoSincRadial();
   demoSincRadialHeatMap();
-  demoVectorField();
+  demoVectorField();            // is still in Experiments.cpp -> move to Demos.cpp
   demoPendulumPhasePortrait();
   demoDipole();
   demoContourMap();
