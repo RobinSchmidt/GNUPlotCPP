@@ -204,13 +204,26 @@ public:
   /** Adds the default commands to the command file. This function controls the default appearance
   of plots in cases, when the user doesn't add their own commands. */
   void addDefaultCommands();
+  // Maybe move into protected area. This is not supposed to be called by the instantiator.
 
-  /** Sets the plotter into dark mode, i.e. using a black background, white text and axes etc. This 
-  is suitable for showing plots on a computer screen. For inclusion in pdf documents for printing, 
-  light mode (the default) is probably better */
+  /** Sets up the path where the output file should go to, if any. Normally we assume that the user
+  wants to open a window to show the plot on the screen and interact with it. This is the default 
+  behavior and it will happen when the output file path is empty. But in some situations, it may be 
+  convenient to let the GNUPlotter produce a file instead. The currently supported file formats are
+  .png, .svg and .pdf. What kind of file you want is determined by the file extension, i.e. the 
+  last 4 characters in the path string. Being able to produce files instead of opening a window is 
+  especially important if one wants to batch produce a number of plots and write them into files 
+  because the user doesn't need to manually export each and every file via the GUI application 
+  anymore. The folder where the file should be written into must already exist. If it doesn't,
+  Gnuplot will produce an error message on the command line and no file will be created. */
+  void setOutputFilePath(const std::string& newPath) { outputFilePath = newPath; }
+
+  /** Sets the plotter into dark mode, i.e. using a black background, white text and axes etc. This
+  is suitable for showing plots on a computer screen when you like to work in dark mode. */
   void setToDarkMode();
-  // ToDo: add function setToLightMode.
 
+  /** Sets the plotter into light mode, i.e. using a light background, black text and axes etc. 
+  This is suitable for including the produced plots into documents for printing. */
   void setToLightMode();
 
   /** Sets the labels for the x-, y- and z-axis. */
@@ -464,10 +477,6 @@ public:
   template <class T>
   void addDataBivariateFunction(int Nx, int Ny, T *x, T *y, T (*f)(T,T));
 
-
-
-
-
   /** Given a bivariate function f = f(x,y), ranges for x and y and numbers of samples along x 
   and y, this function generates the data matrix of the heights produced by f and adds the data as 
   matrix data to the plotter object. */
@@ -642,6 +651,13 @@ public:
   empty command file, i.e. a file that doesn't contain the default commands. */
   void clearCommandFile();
 
+  /** Adds the "set terminal" command with options according to our members outputFilePath,
+  backgroundColor, pixelWidth, pixelHeight. This command will appear immediately before the
+  actula "plot" or "splot" command in the command file. It controls, whether the produced output
+  will be displayed in a window or directed into a file and it determines the oupt resolution
+  and background color. */
+  void setupOutputTerminal();
+
   /** Executes GNUPlot with the appropriate commandline parameter to read the command file. */
   void invokeGNUPlot();
 
@@ -672,6 +688,8 @@ public:
     CB_YlGnBu8,         // paleyellow-green-blue,                          YlGnBu&n=8
     CB_YlGnBu9,         // paleyellow-green-blue, darker at top,           YlGnBu&n=9
     CB_YlGnBu9m,        // modified, taken out the 2nd yellow, looks better in the yellows
+    CB_YlGnBu9mt,       // truncated, taken out the 1st yellow, too, starts a bit darker
+    CB_YlGnBu9t,        // truncated, taken out the 1st yellow -> starts a bit darker
     CB_YlOrBr8,         // paleyellow-orange-brown,                        YlOrBr&n=8
     CB_YlOrBr9,         // paleyellow-orange-brown, darker at top,         YlOrBr&n=9
     CB_YlOrRd8,         // paleyellow-orange-red,                          YlOrRd&n=8
@@ -781,18 +799,19 @@ public:
   static void setStringVector(std::vector<std::string>& v, CSR s0, CSR s1, CSR s2, CSR s3, CSR s4, 
     CSR s5, CSR s6, CSR s7, CSR s8, CSR s9);
 
-
-
-
-
-  // conversion of numbers to strings:
+  // Conversion of numbers to strings:
   std::string s(unsigned int x);   // conversion of unsigned integers for command file
   std::string s(double x);         // conversion of doubles for command file
   std::string sd(double x);        // conversion of doubles for data file
   std::string sd(int x);           // conversion of integers for data file
-  // todo: add one for floats, rename these...mabye toDataStr, toCmdStr
+  // ToDo: Get rid. If an abbreviation for std::to_string is needed, define it locally.
+
+
 
 protected:
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Internal Functions */
 
   /** Creates an initial empty file with the given path. */
   void initFile(const std::string &path);
@@ -811,7 +830,6 @@ protected:
   //template<class T>
   //void writeDataSet(const vector<vector<vector<T>>>& data, ostream& out);
 
-
   /** Calls the operating system to execute the command given by callString. */
   void systemCall(const std::string &callString);
 
@@ -819,7 +837,9 @@ protected:
   // it's like assert, but we can't all it assert because this breaks compilation on mac, i guess 
   // because of a name clash with the C-macro
 
-  /** Adds the command for actually plotting the data to the commandfile. */
+  /** Adds the command for actually plotting the data to the commandfile. This is either the "plot"
+  or the "splot" command depending on whether we produce a 2D or 3D plot. Before the actual 
+  plotting command, some commands to set up the output terminal are produced. */
   void addPlotCommand(bool splot = false);
 
   /** Automaitcally creates the graph descriptors, in case the user didn't set them up manually. You 
@@ -836,43 +856,45 @@ protected:
   std::string getGraphLegend(unsigned int graphIndex);
 
 
-
-
-
-
-
-
+  //-----------------------------------------------------------------------------------------------
   /** \name Data */
 
-  // location for gnuplot and the directory for the temporary files:  
-  std::string gnuplotPath;  // path, where gnuPlot is installed
-  std::string dataPath;
-  std::string commandPath;
-  // make static
+  // Location for gnuplot executable and the directory for the temporary files:
+  std::string gnuplotPath;  // Path where Gnuplot is (supposed to be) installed.
+  std::string dataPath;     // The data to be plotted will be written into this file.
+  std::string commandPath;  // Path for the batch file with the commands for Gnuplot.
 
-  // string arrays for styles and titles:
+  // Settings for the output terminal:
+  std::string outputFilePath;
+  std::string backgroundColor = "#FFFFFF";
+  int pixelWidth  = 640;
+  int pixelHeight = 384;
+  // When outputFilePath non-empty, the output shall be redirected into a file rather than
+  // opening a window showing the plot. Maybe the pixelWidth/Height should be renamed to
+  // plotWidth/Height and the unit depends on which output teminal we use. For the default wxt 
+  // terminal, it would be interpreted as pixels but there are other terminals that use vector
+  // graphics and expect the size to be gine in points or inches or centimeters or whatever.
+
+  // String arrays for styles and titles:
   std::vector<std::string> graphStyles;
   std::vector<std::string> graphTitles;
 
 
   std::vector<std::string> graphDescriptors;
-    // an array of strings to be used in the plot command, like:
-    // index 0 using 1:2 with lines lc rgb "#000000" title "sin(x)"
-    // index 0 using 1:3 with lines lc rgb "#000000" title "cos(x)"
-    // this vector can be set up from the user or - if left empty - will be created automatically 
-    // by making some reasonable guess about how the user wants to plot the written data based on
-    // out stored dataInfo array
-    // maybe do: index 0 using 1:2, index 0 using 1:3, index 0 using 1:4, ...
-    // then      index 1 using 1:2, index 1 using 1:3, index 1 using 1:4, ...
-    //           index 2 ...
-    // and so on, all with lines using colors and from our graphColors, graphStlyes arrays
-    // hmm - but what if the style is one that uses several columns, have to think about it...
-    //
+  // An array of strings to be used in the plot command, like:
+  // index 0 using 1:2 with lines lc rgb "#000000" title "sin(x)"
+  // index 0 using 1:3 with lines lc rgb "#000000" title "cos(x)"
+  // This vector can be set up from the user or - if left empty - will be created automatically 
+  // by making some reasonable guess about how the user wants to plot the written data based on
+  // out stored dataInfo array.
+
 
   //char *formatString = "% 016.16le";
   char *formatString = nullptr;
+  // Needs documentation! What is this and why is it not a std::string?
 
-  // for keeping track how much datasets we write and how many blocks and columns each dataset has:
+
+  // For keeping track how much datasets we write and how many blocks and columns each dataset has:
   struct DataInfo
   {
     DataInfo(size_t numBlocks, size_t numColumns, std::string type = "")

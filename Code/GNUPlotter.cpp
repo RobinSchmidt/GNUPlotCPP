@@ -2,24 +2,29 @@
 #include <fstream>
 #include <iostream>
 #include <algorithm>
-//using namespace std; // bad idea when including it in rapt.cpp
 
 GNUPlotter::GNUPlotter()
 {
   setDataPrecision(8);
 
   graphStyles.resize(1);
-  graphStyles[0] = std::string("lines");    // standard lines, width 1 - maybe change to 1.5 or 2
+  graphStyles[0] = std::string("lines");    // Standard lines, width 1 - maybe change to 1.5 or 2
 
-  // installation path of the GNUPlot executable:
-  gnuplotPath = "C:/Program Files/gnuplot/bin/gnuplot.exe";
+  // Installation path of the gnuplot executable:
+  gnuplotPath = "C:/Program Files/gnuplot/bin/gnuplot.exe"; 
   //gnuplotPath = "C:/Program Files/gnuplot/bin/wgnuplot.exe";
+  // This is currently set to the default installation path on windows.
 
-  // paths for data file and command batchfile:
+  // Paths for data file and command batchfile:
   dataPath    = "C:/Temp/gnuplotData.dat";
-  commandPath = "C:/Temp/gnuplotCommands.txt";   // this path may not contain whitepaces
+  commandPath = "C:/Temp/gnuplotCommands.txt";   // This path may not contain whitepaces
 
-  initialize();                                  // initializes data- and commandfile
+  initialize();                                  // Initializes data- and commandfile
+
+  // ToDo:
+  // -Provide setters for the paths
+  // -Document what happens when we use wgnuplot.exe instead of gnuplot.exe for the gnuplotPath
+  //  member. Does it work at all? If so, what are the differences?
 }
 
 GNUPlotter::~GNUPlotter()
@@ -261,8 +266,18 @@ void GNUPlotter::plotContourMap(int Nx, T xMin, T xMax, int Ny, T yMin, T yMax,
   invokeGNUPlot();
 
   // ToDo:
-  // -When clicking on "Apply autoscale" on the GUI, the colors get messed up. I'm trying to fix
-  //  this problem via "set autoscale fix" but that doesn't seem to help.
+  // -Have an optional parameter clipOutputRange. It needs to be passed to addDataBivariateFunction
+  //  and that function should the optionally clip the generated matrix data to zMin..zMax. But 
+  //  then, it needs zMin, zMax parameters, too
+  // -Maybe try to allow for non-equidistant levels passed in as std::vector by the caller. 
+  //  But I guess, in this case, the alignment between constant color region boundaries and 
+  //  contour lines will get messed up because it crucially depends on having the levels aligned 
+  //  with the quantization of the colormap. That color map quantization is done by Gnuplot itself
+  //  via "set palette maxcolors". I found that it works when we use levels.size() - 1. Basically
+  //  we would need a way to let Gnuplot quantize the colormap in the same non-equidistant way as
+  //  we do with the levels. I don't know, if that's even possible. 
+  // -When clicking on "Apply autoscale" on the GUI, the colors get messed up. Try to fix that! 
+  //  I have tried tried to use "set autoscale fix" but that doesn't seem to help.
 }
 template void GNUPlotter::plotContourMap(
   int Nx, double xMin, double xMax, int Ny, double yMin, double yMax,
@@ -303,36 +318,50 @@ void GNUPlotter::addDefaultCommands()
 
 void GNUPlotter::setToDarkMode()
 {
-  addCommand("set term wxt background rgb \"black\"");
+  //addCommand("set term wxt background rgb \"black\""); // OLD
+  backgroundColor = "black";                             // NEW
+
   addCommand("set border lw 1 lc rgb \"white\"");
   addCommand("set grid ls 1 lw 1 lc rgb \"#404040\""); // old: "set grid lw 1 lc rgb \"white\""
   addCommand("set xtics textcolor rgb \"white\"");
   addCommand("set ytics textcolor rgb \"white\"");
-  addCommand("set xlabel \"X\" textcolor rgb \"white\"");
-  addCommand("set ylabel \"Y\" textcolor rgb \"white\"");
-  addCommand("set key textcolor \"white\""); 
-  addCommand("set style line 1 lt 1 lw 3 pt 3 linecolor rgb \"#F0F0F0\""); // What does this do?
+
+  //addCommand("set xlabel \"X\" textcolor rgb \"white\"");  // OLD
+  //addCommand("set ylabel \"Y\" textcolor rgb \"white\"");  // OLD
+  addCommand("set xlabel textcolor rgb \"white\"");   // NEW
+  addCommand("set ylabel textcolor rgb \"white\"");   // NEW
+
+  addCommand("set key textcolor \"white\"");
+  addCommand("set title textcolor \"white\"");
+
+  //addCommand("set style line 1 lt 1 lw 3 pt 3 linecolor rgb \"#F0F0F0\""); // What does this do?
 
   // Preliminary - drawing all graphs white may be not so good:
   const char c[7] = "FFFFFF";
   setGraphColors(c, c, c, c, c, c, c, c, c, c);
+  // factor out into a function setAllGraphColors
 
   // ToDo:
   // -Maybe try "set grid ls 1 lw 1 lc rgb \"#DDFFFFFF\"", i.e. a rather transparent white instead
   //  of an opaque gray.
+  // -Do not change the labels of the x-and y-axes here - just their color. Is it possible to do
+  //  just "set xlabel textcolor rgb \"white\""? Would that set the color but leave the text as is?
+  //  Try it!
 }
 
 void GNUPlotter::setToLightMode()
 {
-  addCommand("set term wxt background rgb \"white\"");
+  backgroundColor = "white";
   addCommand("set border lw 1 lc rgb \"black\"");
   addCommand("set grid ls 1 lw 1 lc rgb \"#DD000000\""); // 1st hex-pair is transparency
   addCommand("set xtics textcolor rgb \"black\"");
   addCommand("set ytics textcolor rgb \"black\"");
-  addCommand("set xlabel \"X\" textcolor rgb \"black\"");
-  addCommand("set ylabel \"Y\" textcolor rgb \"black\"");
-  addCommand("set key textcolor \"black\""); 
-  addCommand("set style line 1 lt 1 lw 3 pt 3 linecolor rgb \"#101010\""); // What does this do?
+  addCommand("set xlabel textcolor rgb \"black\"");
+  addCommand("set ylabel textcolor rgb \"black\"");
+  addCommand("set key textcolor \"black\"");
+  addCommand("set title textcolor \"black\"");
+
+  //addCommand("set style line 1 lt 1 lw 3 pt 3 linecolor rgb \"#101010\""); // What does this do?
 
   // Preliminary - drawing all graphs black may be not so good:
   const char c[7] = "000000";
@@ -382,6 +411,8 @@ void GNUPlotter::setColorPalette(ColorPalette palette, bool inverted)
   case CP::CB_YlOrRd8:      c = "set palette defined (0 '#FFFFCC', 1 '#FFEDA0', 2 '#FED976', 3 '#FEB24C', 4 '#FD8D3C', 5 '#FC4E2A', 6 '#E31A1C', 7 '#B10026')"; break;
   case CP::CB_YlGnBu9:      c = "set palette defined (0 '#ffffd9', 1 '#edf8b1', 2 '#c7e9b4', 3 '#7fcdbb', 4 '#41b6c4', 5 '#1d91c0', 6 '#225ea8', 7 '#253494', 8 '#081d58')"; break;
   case CP::CB_YlGnBu9m:     c = "set palette defined (0 '#ffffd9', 1 '#c7e9b4', 2 '#7fcdbb', 3 '#41b6c4', 4 '#1d91c0', 5 '#225ea8', 6 '#253494', 7 '#081d58')"; break;
+  case CP::CB_YlGnBu9t:     c = "set palette defined (0 '#edf8b1', 1 '#c7e9b4', 2 '#7fcdbb', 3 '#41b6c4', 4 '#1d91c0', 5 '#225ea8', 6 '#253494', 7 '#081d58')"; break;
+  case CP::CB_YlGnBu9mt:    c = "set palette defined (0 '#c7e9b4', 1 '#7fcdbb', 2 '#41b6c4', 3 '#1d91c0', 4 '#225ea8', 5 '#253494', 6 '#081d58')"; break;
 
   case CP::CB_YlOrBr9:      c = "set palette defined (0 '#ffffe5', 1 '#fff7bc', 2 '#fee391', 3 '#fec44f', 4 '#fe9929', 5 '#ec7014', 6 '#cc4c02', 7 '#993404', 8 '#662506')"; break;
   case CP::CB_YlOrRd9:      c = "set palette defined (0 '#ffffcc', 1 '#ffeda0', 2 '#fed976', 3 '#feb24c', 4 '#fd8d3c', 5 '#fc4e2a', 6 '#e31a1c', 7 '#bd0026', 8 '#800026')"; break;
@@ -518,7 +549,12 @@ void GNUPlotter::setRange(double xMin, double xMax, double yMin, double yMax, do
 
 void GNUPlotter::setPixelSize(unsigned int width, unsigned int height)
 {
-  addCommand("set terminal wxt size " + s(width) +  "," + s(height) + "\n");
+  // NEW:
+  pixelWidth  = width;
+  pixelHeight = height;
+
+  // OLD:
+  //addCommand("set terminal wxt size " + s(width) +  "," + s(height) + "\n");
 }
 
 void GNUPlotter::setTitle(std::string title)
@@ -857,6 +893,10 @@ void GNUPlotter::addDataBivariateFunction(int Nx, int Ny, T *x, T *y,
   for(i = 0; i < Nx; i++)
     delete[] z[i];
   delete[] z;
+  // ToDo:
+  // -Maybe add optional zMin, zMax parameters (defaulting to an invalid range like 0,0) and if a
+  //  valid range is passed, clip the z data to that range. Add these parameters then also to all 
+  //  the other addDataBivariateFunction functions and pass them on into this function.
 }
 
 template <class T>
@@ -1118,6 +1158,100 @@ void GNUPlotter::clearCommandFile()
   initFile(commandPath);
 }
 
+void GNUPlotter::setupOutputTerminal()
+{
+  // Possibly redirect output into a file. This will happen if the outputFilePath member is 
+  // non-empty and has a valid, known file extension. Otherwise we'll use the default wxt terminal:
+  std::string term = "wxt";
+  size_t len = outputFilePath.size();                   // Length of string
+  if(len >= 4) 
+  {
+    // Figure out what sort of file we should produce based on the file extension part of th path:
+    std::string ext = outputFilePath.substr(len-4, 4);  // File extension
+    if(ext == ".png")
+      term = "pngcairo";               // png and pngcairo work
+    else if(ext == ".svg")
+      term = "svg";
+    else if(ext == ".pdf")
+      term = "pdfcairo";
+
+    // Only if the above code has actually modified the default "wxt" setting for the terminal, we 
+    // redirect the output into a file:
+    if(term != "wxt")
+      addCommand("set output '" + outputFilePath + "'");
+  }
+
+  // Add the actual "set terminal ..." commands to the command file:
+  addCommand("set terminal " + term + " font 'Verdana,10' size " 
+    + std::to_string(pixelWidth) + "," + std::to_string(pixelHeight));
+  addCommand("set terminal " + term + " background rgb \"" + backgroundColor + "\"");
+
+  // Notes:
+  // -For producing .png files we use the "pngcairo" terminal and not the "png" terminal because
+  //  the latter produces ugly outputs with function graphs looking like being drawn by the 
+  //  Bresenham algorithm. We are not living in the 1980s anymore! Unfortunately, pngcairo seems
+  //  to have a bug that causes all contour lines in a (filled) contour to be rendered in gray 
+  //  instead of the specified linecolor setting. So, we have the choice between Bresenham lines 
+  //  in the correct color or nicely antialiased lines in gray. :-/ Hmm.. It's actually weirder:
+  //  Apparently, the color channel settings are ignored by the wxt terminal too, but both seem
+  //  to use the tranparency channel - but pngcairo always seems to use some extra transparency
+  //  on top of the setting. Using "pngcairo notransparent" instead of "pngcairo" doesn't seem to
+  //  help either. The manual says on page 238:
+  //  http://www.gnuplot.info/docs_5.2/Gnuplot_5.2.pdf
+  //  that this is meant for making the background transparent, so it has nothing to do with our 
+  //  issue. I have tried using the normal png terminal with some extra options like "truecolor"
+  //  or "linewidth 1.5". The linewidth definitely has an effect but the lines look always ugly.
+  //  On closer inspection, they doesn't seem to be bona fide Bresenham lines but they have the 
+  //  same pixelated appearance.
+  // -We explicitly set the font because relying on default settings will produce different fonts
+  //  on different terminals. With the wxt terminal, the default font looks very similar to 
+  //  'Verdana,10' but the default font looks actually narrower. Verdana 9 and 8 also don't exactly 
+  //  match the default. On the pngcairo terminal, the default font looks almost like 'Verdana,11'
+  //  but a little bit taller. I don't really know, what exactly the defaults are. However, when 
+  //  specifying the font explicitly with 'Verdana,10', we get an exact match between wxt and 
+  //  pngcairo outputs, so we use that. It actually looks good, too. Maybe we could use also
+  //  fontscale, see:
+  //  http://www.bersch.net/gnuplot-doc/complete-list-of-terminals.html#pngcairo
+  // -Sometimes, there are ugly artifacts in the contour lines that show up as dots of more heavy
+  //  drawing. I guess, it happens when line segments have overlapping line caps. The pngcairo 
+  //  terminal offers options to tweak this behavior, namely "butt", "square", "rounded". 
+  //  Apparently, "butt" is the default. unfortunately, trying to use "square" or "rounded" makes
+  //  the artifacts even worse where square is even worse than rounded. :-(
+  // -The produced .pdf plots via pdfcairo have no margins around the plot at all. That may 
+  //  actually be a good thing for inclusion in LaTeX documents. But they are very big when viewed
+  //  with a pdf viewer. Maybe in pdf mode, the output size is interpreted in points rather than
+  //  pixels and that's what makes the plots so big? The file size is nicely small though - at 
+  //  least for simple plots. Maybe try using cairolatex instead. But no - the doc says: "The 
+  //  cairolatex terminal prints a plot like terminal epscairo or terminal pdfcairo but transfers 
+  //  the texts to LaTeX instead of including them in the graph". I want a self-contained output 
+  //  file. Oh - and the axis tics are also missing in the pdf output.
+  // -I tried using the "dumb" terminal for a .txt extension. I think, it is supposed to produce
+  //  ASCII art but in my test, it just produced an empty .txt file.
+  //
+  // ToDo:
+  // -The pngcairo terminal produces a larger font size than the wxt terminal. Fix this! We want 
+  //  the peroduced files to look *exactly* the same as the results presented on screen because we
+  //  want to able to tweak the plot settings using a wxt terminal until everything looks right and
+  //  then, of course, the rendered files should also look right.
+  // -Add more else-if branches for supporting other terminals and file formats. Maybe we should 
+  //  also support canvas (.js embeddable in html 5), .tex (maybe texdraw, context, epslatex, 
+  //  pslatex, pstricks or tikz are suitable terminals for producing latex output?), .txt (the 
+  //  dumb terminal produces ascii art), .eps (epscairo), .gif (could be useful for animations), 
+  //  .jpeg (maybe not), webp (can also do animations). 
+  // -Test, if the wave-equation animated gif-rendering still works
+  //
+  // Info on Terminals:
+  // http://www.gnuplotting.org/output-terminals/
+  // http://gnuplot.info/docs_5.5/Terminals.html
+  // http://www.gnuplot.info/docs_4.2/node268.html
+  // http://www.gnuplot.info/docs/latex_demo.pdf
+  // 
+  // Info on Fonts:
+  // http://www.bersch.net/gnuplot-doc/fonts.html
+  // https://stackoverflow.com/questions/11618873/how-do-i-find-out-which-font-is-chosen-by-gnuplot-when-only-specifying-family
+}
+
+
 void GNUPlotter::invokeGNUPlot()
 {
   // create the callstring and invoke GNUPlot:
@@ -1244,26 +1378,28 @@ void GNUPlotter::addPlotCommand(bool splot)
   // hmm - maybe in case of an empty dataset, we should just call replot?:
   // http://soc.if.usp.br/manual/gnuplot-doc/htmldocs/set_002dshow.html#set_002dshow
 
-
+  // Set up where the output should go. It may be shwon on the screen or go into a file:
+  addCommand("\n# Plotting:");
+  setupOutputTerminal();
 
   // Auto-generate graph-descriptors, if user has not set them up manually:
   if(graphDescriptors.empty())
     generateGraphDescriptors(splot);
 
   // Initialize the plot command:
-  int i;
-  std::string pc;
-  addCommand("\n# Plotting:");
+  std::string cmd;   // rename to cmd
   if( splot == true )
-    pc = "splot \\\n";  // 3D plots
+    cmd = "splot \\\n";  // 3D plots
   else
-    pc = "plot \\\n";   // 2D plots
+    cmd = "plot \\\n";   // 2D plots
 
   // Add the graph-descriptors to the plot command:
+  int i;
   for(i = 0; i < (int)graphDescriptors.size()-1; i++)
-    pc += "'" + dataPath + "' " + graphDescriptors[i] + ",\\\n";
-  pc += "'" + dataPath + "' " + graphDescriptors[i];
-  addCommand(pc);
+    cmd += "'" + dataPath + "' " + graphDescriptors[i] + ",\\\n";
+  cmd += "'" + dataPath + "' " + graphDescriptors[i];
+
+  addCommand(cmd);
 }
 
 void GNUPlotter::generateGraphDescriptors(bool splot)
@@ -1367,7 +1503,15 @@ void GNUPlotter::setStringVector(std::vector<std::string>& v, CSR s0, CSR s1, CS
 
 ToDo:
 
--maybe move the explicit template instantiations to another file...that would reduce clutter in 
+-For the convenience functions to add specific commands like setRange(), setTitle, etc., add 
+ comments with links to the appropriate documentation of the produced commands, i.e. links to the 
+ appropriate pages here:
+   http://www.gnuplot.info/docs_4.2/gnuplot.html
+   http://www.gnuplot.info/documentation.html
+   http://www.gnuplotting.org/
+ or elsewhere - wherever we found the appropiate command.
+
+-Maybe move the explicit template instantiations to another file...that would reduce clutter in 
  this implementation file - but would make the library harder to use - the user would have to deal
  with more files...so it's probably not such a good idea...simple use is more important than
  nice looking code
