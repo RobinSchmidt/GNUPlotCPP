@@ -12,11 +12,6 @@ int main(int argc, char** argv)
   // different terminals work. Check the generated command file for both versions of the 
   // code
 
-  demoTorus();
-
-  //testMatrixWrite();
-  //testLowLevelCalls();
-
   // Here are a couple of functions that demonstrate the use of the plotter. Whenever you close the
   // GNUPlot window, the currently running demo function will return and the next demo is launched:
   demoArrayPlot();
@@ -29,7 +24,7 @@ int main(int argc, char** argv)
   demoPlottingStyles();
   demoTrigFunctions();
   demoMultiPlot1();
-  demoMultiPlot2();
+  demoMultiPlot2();    // column spacing is too large!
   demoSquare();
   demoMatrixData();
   demoLissajous();
@@ -55,7 +50,7 @@ int main(int argc, char** argv)
   // to be used, so you can take these as examples and reference for using it for creating your 
   // own plots.
   
-  // experimental plots - not yet finished:
+  // Experimental plots - not yet finished:
 
   //testInitialValueSolver();
   //contours();
@@ -81,6 +76,7 @@ int main(int argc, char** argv)
   //testAnimation();        // produces a .gif file in the project directory, doesn't open a window
   
 
+  printf("That's it! All demo plots have been shown.");
   getchar();
   return(EXIT_SUCCESS);
 }

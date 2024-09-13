@@ -872,8 +872,6 @@ void demoLorenz()
   plt2.plot();
 }
 
-
-
 void demoTorus()
 {
   // Demonstrates, how to draw a 2-parametric surface in a 3-dimensional space, using a torus as 
@@ -915,12 +913,6 @@ void demoTorus()
   p.addCommand("set lmargin 0");                 // margin between plot and left border
   p.addCommand("set tmargin 0");                 // margin between plot and top border
   p.addCommand("set ztics 0.5");                 // density of z-axis tics
-
-
-  // Test:
-  //p.addCommand("set palette defined (-3 \"blue\", 0 \"white\", 1 \"red\")");
-  //p.addGraph("i 0 w pm3d notitle");
-
   p.plot3D();                                    // invoke GNUPlot
 
   //p.addCommand("set view equal xyz");  // otherwise, it stretches along z
@@ -933,9 +925,12 @@ void demoTorus()
   // -Try to use a color map for the facets as is done here:
   //  https://lowrank.net/gnuplot/plotpm3d2-e.html
   //  Trying to add:
-  //  p.addCommand("set palette defined (-3 \"blue\", 0 \"white\", 1 \"red\")");
-  //  p.addGraph("i 0 w pm3d notitle");
-  //  creates a mess. There's something wrong with the z-buffer
+  //    p.addCommand("set palette defined (-3 \"blue\", 0 \"white\", 1 \"red\")");
+  //    p.addGraph("i 0 w pm3d notitle");
+  //  creates a mess. There's something wrong with the z-buffer. Removing:
+  //    p.addCommand("set hidden3d");  
+  //  doesn't help. Maybe try the same thing with a bivariate function first. Maybe the problem 
+  //  only occurrs in parametric surfaces.
 }
 
 // see here for a paramtric torus:
