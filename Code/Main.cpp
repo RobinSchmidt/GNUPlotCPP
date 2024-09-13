@@ -5,13 +5,14 @@
 int main(int argc, char** argv)
 {
   // This needs to be fixed:
-  demoContourMap();
+  //demoContourMap();
   // This looks now ugly! Check setToDarkMode and setPixelSize in GNUPlotter. There are
   // versions fo the code marked as "OLD" and "NEW". With the new vesrions, it looks 
   // uglier -> Figure out why and fix it! I think, we need the new versions to make the
   // different terminals work. Check the generated command file for both versions of the 
   // code
 
+  demoTorus();
 
   //testMatrixWrite();
   //testLowLevelCalls();
