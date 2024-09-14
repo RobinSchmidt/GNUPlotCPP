@@ -339,6 +339,61 @@ void surfaceExperiment()
   // -Try to use a colormap for the surface.
 }
 
+void surfaceExperiment2()
+{
+  // Copied from demoTorus() and tweaked
+
+  // user parameters:
+  double R = 2.0;                                // major radius
+  double r = 0.5;                                // minor radius
+  static const int Nu = 41;                      // number of grid lines around the major radius
+  static const int Nv = 21;                      // number of grid lines around the minor radius
+
+  // create parameter arrays u and v:
+  double u[Nu], v[Nv];                           // arrays for parameters u and v
+  GNUPlotter::rangeLinear(u, Nu, 0.0, 2*M_PI);   // fill u-array with equidistant values
+  GNUPlotter::rangeLinear(v, Nv, 0.0, 2*M_PI);   // fill v-array with equidistant values
+
+  // Create the data vector. The outer index runs over the indices for parameter u, the middle 
+  // index runs over v and the innermost vector index runs from 0...2 giving a 3-vector containing 
+  // x, y, z coordinates for each point:
+  vector<vector<vector<double>>> d;              // doubly nested vector of data
+  d.resize(Nu);                                  // we have Nu blocks of data
+  for(int i = 0; i < Nu; i++)                    // loop over the data blocks
+  {
+    d[i].resize(Nv);                             // each block has Nv lines/datapoints
+    for(int j = 0; j < Nv; j++)                  // loop over lines in current block
+    {
+      d[i][j].resize(3);                         // each datapoint has 3 columns/dimensions
+      d[i][j][0] = cos(u[i]) * (R+r*cos(v[j]));  // x = cos(u)*(R+r*cos(v))
+      d[i][j][1] = sin(u[i]) * (R+r*cos(v[j]));  // y = sin(u)*(R+r*cos(v))
+      d[i][j][2] = sin(v[j]) * r;                // z = sin(v)*r
+    }
+  }
+
+  // plot:
+  GNUPlotter p;                                  // create plotter object
+  p.addData(d);                                  // pass the data to the plotter         
+  p.addCommand("set hidden3d");                  // don't draw hidden lines
+  p.addCommand("set view 20,50");                // set up perspective
+  p.addCommand("set lmargin 0");                 // margin between plot and left border
+  p.addCommand("set tmargin 0");                 // margin between plot and top border
+  p.addCommand("set ztics 0.5");                 // density of z-axis tics
+  p.addCommand("set palette defined (-3 \"blue\", 0 \"white\", 1 \"red\")");
+  p.addGraph("i 0 w pm3d notitle");
+  p.plot3D();                                    // invoke GNUPlot
+
+  // -We try to use a color map for the facets as is done here:
+  //  https://lowrank.net/gnuplot/plotpm3d2-e.html
+  //  Trying to add:
+  //    p.addCommand("set palette defined (-3 \"blue\", 0 \"white\", 1 \"red\")");
+  //    p.addGraph("i 0 w pm3d notitle");
+  //  creates a mess. There's something wrong with the z-buffer. Removing:
+  //    p.addCommand("set hidden3d");  
+  //  doesn't help. Maybe try the same thing with a bivariate function first. Maybe the problem 
+  //  only occurrs in parametric surfaces. Maybe try swapping the inner and outer loops
+}
+
 void complexExperiment() // rename
 {
   // Set up range and umber of sampling points for real and imaginary part:

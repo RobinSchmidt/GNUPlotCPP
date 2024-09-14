@@ -922,15 +922,6 @@ void demoTorus()
   // -Maybe plot 2 linked tori with different line colors  - that needs a more general formula 
   //  for the torus where we can specify center and orientation - maybe have function 
   //  createTorusData and a function affineTransform3D
-  // -Try to use a color map for the facets as is done here:
-  //  https://lowrank.net/gnuplot/plotpm3d2-e.html
-  //  Trying to add:
-  //    p.addCommand("set palette defined (-3 \"blue\", 0 \"white\", 1 \"red\")");
-  //    p.addGraph("i 0 w pm3d notitle");
-  //  creates a mess. There's something wrong with the z-buffer. Removing:
-  //    p.addCommand("set hidden3d");  
-  //  doesn't help. Maybe try the same thing with a bivariate function first. Maybe the problem 
-  //  only occurrs in parametric surfaces.
 }
 
 // see here for a paramtric torus:
