@@ -337,7 +337,11 @@ void surfaceExperiment()
 
 void surfaceExperiment2()
 {
-  // Copied from demoTorus() and tweaked
+  // Copied from demoTorus() and tweaked. The goal is to use a color map for filling the facets
+  // according to their z-coordinate. It seems to work.
+  //
+  // ToDo: integrate the code into demoTorus(). Maybe give the function an integer argument for the
+  // plotting style
 
   // user parameters:
   double R = 2.0;                                // major radius
@@ -376,12 +380,14 @@ void surfaceExperiment2()
   p.addCommand("set tmargin 0");                 // margin between plot and top border
   p.addCommand("set ztics 0.5");                 // density of z-axis tics
 
-  p.addCommand("set palette defined (-3 \"blue\", 0 \"white\", 1 \"red\")");
-  // ToDo: try to use viridis or parula!
 
+  // This code is different from demoTorus() - everything above is the same:
+
+  //p.addCommand("set palette defined (-3 \"blue\", 0 \"white\", 1 \"red\")");
+  p.setColorPalette(GNUPlotter::ColorPalette::EF_Viridis, false);
   p.addCommand("set pm3d depthorder");           // Without it, it looks totally wrong
   //p.addCommand("set pm3d implicit");  
-  p.addCommand("set pm3d border lc 'blue' lw 0.2");  // Draws the mesh lines as well
+  p.addCommand("set pm3d border lc 'blue' lw 0.3");  // Draws the mesh lines as well
   p.addGraph("i 0 w pm3d notitle");
   p.plot3D();                                    // invoke GNUPlot
 
