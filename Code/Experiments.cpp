@@ -321,9 +321,9 @@ void surfaceExperiment()
   // Define the 3 bivariate component functions as anonymous (lamda) functions assigned to 
   // std::function objects:
   std::function<double(double, double)> fx, fy, fz;
-  fx = [] (double u, double v) { return u*v; };
-  fy = [] (double u, double v) { return u+v; };
-  fz = [] (double u, double v) { return u-v; };
+  fx = [](double u, double v) { return u*v; };
+  fy = [](double u, double v) { return u+v; };
+  fz = [](double u, double v) { return u-v; };
   // maybe use a more interesting surface (torus, sphere, whatever), move to Demos, maybe let the 
   // user select the surface to be drawn - update the demo that currently creates the torus data
   // itself and uses low-level functions...but maybe, we should keep the demos for how to use the 
@@ -332,24 +332,7 @@ void surfaceExperiment()
   // and demoSurface
 
   // plot the surface:
-  //GNUPlotter::plotSurface(fx, fy, fz, Nu, uMin, uMax, Nv, vMin, vMax);
-
-  // plot it with finer control:
-  GNUPlotter p;
-  p.addDataSurface(fx, fy, fz, Nu, uMin, uMax, Nv, vMin, vMax);
-  p.addCommand("set hidden3d");                  // don't draw hidden lines
-  //p.addCommand("set view 20,50");                // set up perspective
-  //p.addCommand("set lmargin 0");                 // margin between plot and left border
-  //p.addCommand("set tmargin 0");                 // margin between plot and top border
-  //p.addCommand("set ztics 0.5");                 // density of z-axis tics
-  p.addCommand("set palette defined (-3 \"blue\", 0 \"white\", 1 \"red\")");
-  p.addGraph("i 0 w pm3d notitle");
-  p.plot3D();   
-
-
-  // ToDo:
-  //
-  // -Try to use a colormap for the surface.
+  GNUPlotter::plotSurface(fx, fy, fz, Nu, uMin, uMax, Nv, vMin, vMax);
 }
 
 void surfaceExperiment2()
@@ -393,8 +376,11 @@ void surfaceExperiment2()
   p.addCommand("set tmargin 0");                 // margin between plot and top border
   p.addCommand("set ztics 0.5");                 // density of z-axis tics
   p.addCommand("set palette defined (-3 \"blue\", 0 \"white\", 1 \"red\")");
+  p.addCommand("set pm3d depthorder");           // Important!
   p.addGraph("i 0 w pm3d notitle");
   p.plot3D();                                    // invoke GNUPlot
+
+  // OK - we're getting closer. But I'd like to see the mesh-lines, too!
 
   // -We try to use a color map for the facets as is done here:
   //  https://lowrank.net/gnuplot/plotpm3d2-e.html
@@ -405,6 +391,9 @@ void surfaceExperiment2()
   //    p.addCommand("set hidden3d");  
   //  doesn't help. Maybe try the same thing with a bivariate function first. Maybe the problem 
   //  only occurrs in parametric surfaces. Maybe try swapping the inner and outer loops
+
+  // See:
+  // https://stackoverflow.com/questions/28627187/gnuplot-plotting-on-the-surface-of-a-sphere
 }
 
 void complexExperiment() // rename

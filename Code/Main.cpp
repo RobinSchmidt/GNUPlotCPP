@@ -12,7 +12,7 @@ int main(int argc, char** argv)
   // different terminals work. Check the generated command file for both versions of the 
   // code
 
-  surfaceExperiment();
+  //surfaceExperiment();
   surfaceExperiment2();
 
   // Here are a couple of functions that demonstrate the use of the plotter. Whenever you close the
