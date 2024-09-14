@@ -375,12 +375,17 @@ void surfaceExperiment2()
   p.addCommand("set lmargin 0");                 // margin between plot and left border
   p.addCommand("set tmargin 0");                 // margin between plot and top border
   p.addCommand("set ztics 0.5");                 // density of z-axis tics
+
   p.addCommand("set palette defined (-3 \"blue\", 0 \"white\", 1 \"red\")");
-  p.addCommand("set pm3d depthorder");           // Important!
+  // ToDo: try to use viridis or parula!
+
+  p.addCommand("set pm3d depthorder");           // Without it, it looks totally wrong
+  //p.addCommand("set pm3d implicit");  
+  p.addCommand("set pm3d border lc 'blue' lw 0.2");  // Draws the mesh lines as well
   p.addGraph("i 0 w pm3d notitle");
   p.plot3D();                                    // invoke GNUPlot
 
-  // OK - we're getting closer. But I'd like to see the mesh-lines, too!
+
 
   // -We try to use a color map for the facets as is done here:
   //  https://lowrank.net/gnuplot/plotpm3d2-e.html
@@ -394,6 +399,7 @@ void surfaceExperiment2()
 
   // See:
   // https://stackoverflow.com/questions/28627187/gnuplot-plotting-on-the-surface-of-a-sphere
+  // http://www.gnuplot.info/docs_6.1/Gnuplot_6.pdf  pg 102 ff
 }
 
 void complexExperiment() // rename
