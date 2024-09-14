@@ -313,7 +313,7 @@ void surfaceExperiment()
 {
   // We plot a surface that is defined by 3 std::function objects for x(u,v), y(u,v), z(u,v)
 
-  // Set up range and umber of sampling points for the two paremeters u and v for our parameteric 
+  // Set up range and number of sampling points for the two paremeters u and v for our parameteric 
   // surface:
   double uMin = -1; double uMax = +1; int Nu = 21;
   double vMin = -1; double vMax = +1; int Nv = 21; 
@@ -333,6 +333,10 @@ void surfaceExperiment()
 
   // plot the surface:
   GNUPlotter::plotSurface(fx, fy, fz, Nu, uMin, uMax, Nv, vMin, vMax);
+
+  // ToDo:
+  //
+  // -Try to use a colormap for the surface.
 }
 
 void complexExperiment() // rename
