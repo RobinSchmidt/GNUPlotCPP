@@ -384,10 +384,16 @@ void surfaceExperiment2()
   // This code is different from demoTorus() - everything above is the same:
 
   //p.addCommand("set palette defined (-3 \"blue\", 0 \"white\", 1 \"red\")");
+  // This code can serve as example fro how to define one's own colormap, i.e. one that is not
+  // among the predefined ones
+
   p.setColorPalette(GNUPlotter::ColorPalette::EF_Viridis, false);
   p.addCommand("set pm3d depthorder");           // Without it, it looks totally wrong
   //p.addCommand("set pm3d implicit");  
+
   p.addCommand("set pm3d border lc 'blue' lw 0.3");  // Draws the mesh lines as well
+  // Without it, no mesh lines are drawn at all
+
   p.addGraph("i 0 w pm3d notitle");
   p.plot3D();                                    // invoke GNUPlot
 
