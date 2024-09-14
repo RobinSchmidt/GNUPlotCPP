@@ -332,7 +332,20 @@ void surfaceExperiment()
   // and demoSurface
 
   // plot the surface:
-  GNUPlotter::plotSurface(fx, fy, fz, Nu, uMin, uMax, Nv, vMin, vMax);
+  //GNUPlotter::plotSurface(fx, fy, fz, Nu, uMin, uMax, Nv, vMin, vMax);
+
+  // plot it with finer control:
+  GNUPlotter p;
+  p.addDataSurface(fx, fy, fz, Nu, uMin, uMax, Nv, vMin, vMax);
+  p.addCommand("set hidden3d");                  // don't draw hidden lines
+  //p.addCommand("set view 20,50");                // set up perspective
+  //p.addCommand("set lmargin 0");                 // margin between plot and left border
+  //p.addCommand("set tmargin 0");                 // margin between plot and top border
+  //p.addCommand("set ztics 0.5");                 // density of z-axis tics
+  p.addCommand("set palette defined (-3 \"blue\", 0 \"white\", 1 \"red\")");
+  p.addGraph("i 0 w pm3d notitle");
+  p.plot3D();   
+
 
   // ToDo:
   //
