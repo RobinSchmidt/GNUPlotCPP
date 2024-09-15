@@ -12,8 +12,10 @@ int main(int argc, char** argv)
   // different terminals work. Check the generated command file for both versions of the 
   // code
 
+  demoTorus(0);
+  demoTorus(1);
   //surfaceExperiment();
-  surfaceExperiment2();
+  //surfaceExperiment2();
 
   // Here are a couple of functions that demonstrate the use of the plotter. Whenever you close the
   // GNUPlot window, the currently running demo function will return and the next demo is launched:

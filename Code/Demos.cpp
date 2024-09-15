@@ -872,10 +872,16 @@ void demoLorenz()
   plt2.plot();
 }
 
-void demoTorus()
+void demoTorus(int style)
 {
   // Demonstrates, how to draw a 2-parametric surface in a 3-dimensional space, using a torus as 
   // example.
+
+  //int style = 0;
+  // Make this a function parameter. Meaning:
+  // 0: wireframe
+  // 1: mesh/grid with hidden3d
+  // 1: colormap
 
   // user parameters:
   double R = 2.0;                                // major radius
@@ -907,12 +913,17 @@ void demoTorus()
 
   // plot:
   GNUPlotter p;                                  // create plotter object
-  p.addData(d);                                  // pass the data to the plotter         
-  p.addCommand("set hidden3d");                  // don't draw hidden lines
+  p.addData(d);                                  // pass the data to the plotter  
   p.addCommand("set view 20,50");                // set up perspective
   p.addCommand("set lmargin 0");                 // margin between plot and left border
   p.addCommand("set tmargin 0");                 // margin between plot and top border
   p.addCommand("set ztics 0.5");                 // density of z-axis tics
+
+
+  if(style > 0)
+    p.addCommand("set hidden3d");                // don't draw hidden lines
+
+
   p.plot3D();                                    // invoke GNUPlot
 
   //p.addCommand("set view equal xyz");  // otherwise, it stretches along z

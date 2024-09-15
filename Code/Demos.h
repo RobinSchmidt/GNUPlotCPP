@@ -32,7 +32,7 @@ void demoHelix();
 void demoPhasor();
 void demoLorenz();
 
-void demoTorus();
+void demoTorus(int style = 1);
 void demoHenneberg();
 void demoGaussianBivariate();
 void demoPow();
