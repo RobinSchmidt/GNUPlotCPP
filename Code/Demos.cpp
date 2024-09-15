@@ -875,13 +875,8 @@ void demoLorenz()
 void demoTorus(int style)
 {
   // Demonstrates, how to draw a 2-parametric surface in a 3-dimensional space, using a torus as 
-  // example.
-
-  //int style = 0;
-  // Make this a function parameter. Meaning:
-  // 0: wireframe
-  // 1: mesh/grid with hidden3d
-  // 1: colormap
+  // example. The style parameter selects between various ways to draw the torus: 0: wireframe,
+  // 1: mesh/grid with hidden3d, 2: with viridis colormap plus blue mesh
 
   // user parameters:
   double R = 2.0;                                // major radius
@@ -918,21 +913,28 @@ void demoTorus(int style)
   p.addCommand("set lmargin 0");                 // margin between plot and left border
   p.addCommand("set tmargin 0");                 // margin between plot and top border
   p.addCommand("set ztics 0.5");                 // density of z-axis tics
-
-
+  //p.addCommand("set view equal xyz");          // otherwise, it stretches along z
   if(style > 0)
     p.addCommand("set hidden3d");                // don't draw hidden lines
-
-
+  if(style == 2)
+  {
+    p.setColorPalette(GNUPlotter::ColorPalette::EF_Viridis, false);
+    p.addCommand("set pm3d depthorder");              // Without it, it looks totally wrong
+    p.addCommand("set pm3d border lc 'blue' lw 0.3"); // Draws the mesh lines as well
+    p.addGraph("i 0 w pm3d notitle");
+  }
   p.plot3D();                                    // invoke GNUPlot
-
-  //p.addCommand("set view equal xyz");  // otherwise, it stretches along z
 
   // ToDo:
   // -Find out, why it is shown so small
   // -Maybe plot 2 linked tori with different line colors  - that needs a more general formula 
   //  for the torus where we can specify center and orientation - maybe have function 
   //  createTorusData and a function affineTransform3D
+  // -Maybe factor out the style setup into a setup3DStyle(GNUPlotter& p, int style) or 
+  //  p.setup3DStyle(style). But if it's going to go into a member function, it probably shouldn't
+  //  do the addGraph thing because this works only if there's only one graph, i.e. one surface. 
+  //  Perhaps it then shouldn't harcode the colormap either. Maybe try drawing two linked tori with
+  //  two different color maps.
 }
 
 // see here for a paramtric torus:
