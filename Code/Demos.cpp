@@ -929,12 +929,14 @@ void demoTorus(int style)
   //
   // -The command "set view equal xyz" has the desirable effect of fixing the z-axis scaling such
   //  that the torus does not appear to become thicker when the perpective changes. But it has some
-  //  usdesirable side effects, too: It makes everything look small (i.e. it zooms out) and sets 
+  //  undesirable side effects, too: It makes everything look small (i.e. it zooms out) and sets 
   //  the perspective to "from above". It doesn't help to put the "set view 20,50" command after 
-  //  it.
+  //  it, i.e. changing the order of "set view equal xyz" and "set view 20,50" doesn't seem to 
+  //  matter. It always ends up with a view from above.
   //
   // ToDo:
   //
+  // -Figure out how we can use "set view equal xyz" without the undesirable side effects.
   // -Maybe plot 2 linked tori with different line colors  - that needs a more general formula 
   //  for the torus where we can specify center and orientation - maybe have function 
   //  createTorusData and a function affineTransform3D

@@ -12,9 +12,9 @@ int main(int argc, char** argv)
   // different terminals work. Check the generated command file for both versions of the 
   // code
 
-  demoTorus(0);
-  demoTorus(1);
-  demoTorus(2);
+  //demoTorus(0);
+  //demoTorus(1);
+  //demoTorus(2);
   //surfaceExperiment();
   //surfaceExperiment2();
 
