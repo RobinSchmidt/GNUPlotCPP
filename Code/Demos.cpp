@@ -913,7 +913,7 @@ void demoTorus(int style)
   p.addCommand("set lmargin 0");                 // margin between plot and left border
   p.addCommand("set tmargin 0");                 // margin between plot and top border
   p.addCommand("set ztics 0.5");                 // density of z-axis tics
-  //p.addCommand("set view equal xyz");          // otherwise, it stretches along z
+  //p.addCommand("set view equal xyz");            // otherwise, it stretches along z
   if(style > 0)
     p.addCommand("set hidden3d");                // don't draw hidden lines
   if(style == 2)
@@ -925,6 +925,13 @@ void demoTorus(int style)
   }
   p.plot3D();                                    // invoke GNUPlot
 
+  // Notes:
+  //
+  // -The command "set view equal xyz" has the desirable effect of fixing the z-axis scaling such
+  //  that the torus does not appear to become thicker when the perpective changes. But it has some
+  //  usdesirable side effects, too: It makes everything look small (i.e. it zooms out) and sets 
+  //  the perspective to "from above".
+  //
   // ToDo:
   // -Find out, why it is shown so small
   // -Maybe plot 2 linked tori with different line colors  - that needs a more general formula 

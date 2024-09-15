@@ -335,6 +335,7 @@ void surfaceExperiment()
   GNUPlotter::plotSurface(fx, fy, fz, Nu, uMin, uMax, Nv, vMin, vMax);
 }
 
+// Obsolete now - can be deleted:
 void surfaceExperiment2()
 {
   // Copied from demoTorus() and tweaked. The goal is to use a color map for filling the facets
