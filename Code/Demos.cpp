@@ -918,6 +918,7 @@ void demoTorus(int style)
     p.addCommand("set hidden3d");                // don't draw hidden lines
   if(style == 2)
   {
+    //p.addCommand("set palette defined (-1 \"blue\", 0 \"white\", 1 \"red\")");
     p.setColorPalette(GNUPlotter::ColorPalette::EF_Viridis, false);
     p.addCommand("set pm3d depthorder");              // Without it, it looks totally wrong
     p.addCommand("set pm3d border lc 'blue' lw 0.3"); // Draws the mesh lines as well
@@ -933,6 +934,8 @@ void demoTorus(int style)
   //  the perspective to "from above". It doesn't help to put the "set view 20,50" command after 
   //  it, i.e. changing the order of "set view equal xyz" and "set view 20,50" doesn't seem to 
   //  matter. It always ends up with a view from above.
+  // -The commented "p.addCommand("set palette defined..." shows how to use a custom colormap that
+  //  is not among the built-in, predefined ones. 
   //
   // ToDo:
   //
@@ -948,13 +951,18 @@ void demoTorus(int style)
 }
 
 // see here for a paramtric torus:
-//https://en.wikipedia.org/wiki/Parametric_equation#3D_examples
+// https://en.wikipedia.org/wiki/Parametric_equation#3D_examples
 
 // here are some more interesting shapes:
-//http://soukoreff.com/gnuplot/
+// http://soukoreff.com/gnuplot/
 
 // here ar some other interesting examples that show contour plots, heatmaps, etc.
-//https://www.packtpub.com/books/content/3d-plot-using-gnuplot
+// https://www.packtpub.com/books/content/3d-plot-using-gnuplot
+
+// here for more info about setting up the 3D plotting style:
+// https://lowrank.net/gnuplot/plotpm3d2-e.html
+// https://stackoverflow.com/questions/28627187/gnuplot-plotting-on-the-surface-of-a-sphere
+// http://www.gnuplot.info/docs_6.1/Gnuplot_6.pdf  pg 102 ff
 
 
 void demoHenneberg()

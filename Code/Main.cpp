@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 
   //demoTorus(0);
   //demoTorus(1);
-  //demoTorus(2);
+  demoTorus(2);
   //surfaceExperiment();
   //surfaceExperiment2();
 
