@@ -38,7 +38,9 @@ int main(int argc, char** argv)
   demoHelix();
   demoPhasor();
   demoLorenz();
-  demoTorus();
+  demoTorus(0);
+  demoTorus(1);
+  demoTorus(2);
   demoHenneberg();
   demoGaussianBivariate();
   //demoPow(); // boring - remove
