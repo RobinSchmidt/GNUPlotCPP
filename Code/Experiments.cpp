@@ -864,29 +864,38 @@ int findBin(T x, int numBinEdges, T* binEdges) // numBinEdges == numBins+1
   if(x > binEdges[numBinEdges-1] )
     return numBinEdges;
 
-  // return the bin index or -1, if x is out of range to the left:
+  // Return the bin index or -1, if x is out of range to the left:
   int i = -1;
   while( i <= numBinEdges-2 && x >= binEdges[i+1] )
     i++;
   return i;
+
+  // ToDo:
+  //
+  // - Document behavior. See unit test below.
+  //
+  // - This function uses the inefficient lienar search algorithm. For production use, we should
+  //   implement binary search but keep the linear version as prototype and reference to check
+  //   the optimized version against in a unit test.
 }
 
-bool testFindBin() // unit test for the findBin function
+bool testFindBin() // Unit test for the findBin function
 {
-  int binEdges[5] = { 2,3,5,6,8 };
+  // Bin index:         0   1   2   3                         0     1     2     3
+  int binEdges[5] = { 2 , 3 , 5 , 6 , 8 };     // Bins are: [2,3),[3,5),[5,6),[6,8)
   int numBins  = 4;
-  int numEdges = numBins+1;
-  bool r = true;
-  r &= findBin(1, numEdges, binEdges) == -1; // x too low
-  r &= findBin(2, numEdges, binEdges) ==  0;
-  r &= findBin(3, numEdges, binEdges) ==  1;
-  r &= findBin(4, numEdges, binEdges) ==  1;
-  r &= findBin(5, numEdges, binEdges) ==  2;
-  r &= findBin(6, numEdges, binEdges) ==  3;
-  r &= findBin(7, numEdges, binEdges) ==  3;
-  r &= findBin(8, numEdges, binEdges) ==  4; 
-  r &= findBin(9, numEdges, binEdges) == numEdges;// x too high
-  return r;
+  int numEdges = numBins+1;                    // 5
+  bool ok = true;
+  ok &= findBin(1, numEdges, binEdges) == -1;  // 1 is too low, out of range to the left
+  ok &= findBin(2, numEdges, binEdges) ==  0;  // 2 is at left boundary of bin 0 (leftmost)
+  ok &= findBin(3, numEdges, binEdges) ==  1;  // 3 is at left boundary of bin 1
+  ok &= findBin(4, numEdges, binEdges) ==  1;  // 4 is inside bin 1
+  ok &= findBin(5, numEdges, binEdges) ==  2;  // 5 is at left boundary of bin 2
+  ok &= findBin(6, numEdges, binEdges) ==  3;  // 6 is at left boundary of bin 3
+  ok &= findBin(7, numEdges, binEdges) ==  3;  // 7 is inside bin 3 (rightmost)
+  ok &= findBin(8, numEdges, binEdges) ==  4;  // 8 is right edge of bin 3 and therfore outside
+  ok &= findBin(9, numEdges, binEdges) ==  5;  // 9 too high, out of range to right
+  return ok;
 }
 
 template<class T>
@@ -895,11 +904,13 @@ void plotHistogram(int numDataPoints, T* data, int numBinEdges, T* binEdges, boo
   int numBins = numBinEdges-1;
   std::vector<T> p(numBins); // "probability"
 
-  for(int i = 0; i < numDataPoints; i++) {
+  for(int i = 0; i < numDataPoints; i++) 
+  {
     int bin = findBin(data[i], numBinEdges, binEdges);
 
     if(bin >= 0 && bin < numBins) 
-      p[bin] += 1; // todo: allow for a weight, i.e. p[bin] += weights[i]
+      p[bin] += 1;            // ToDo: allow for an optional weight, i.e. p[bin] += weights[i]
+                              // Use weight 1 if weights == nullptr
   }
 
   // optionally normalize:
@@ -913,55 +924,73 @@ void plotHistogram(int numDataPoints, T* data, int numBinEdges, T* binEdges, boo
   //plt.addGraph("index 0 using 1:2 with boxes fs solid lc rgb \"#a00000ff\" notitle"); // 1st channel is alpha
   //plt.plot();
 }
-// move to GNUPlotter
-// see here for inspiration for signature and features:
+// Move to GNUPlotter when it's finished. I think, it's not yet. We don't even seem to use it in
+// testHistogram() below. But maybe it's called somewhere else, i.e. in some other experiment?
+
+// See here for inspiration for signature and features:
 // https://matplotlib.org/3.1.0/api/_as_gen/matplotlib.pyplot.hist.html
 // https://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram.html#numpy.histogram
-
-
-
-
-// matplotlib's behavior is:
+// https://numpy.org/doc/stable/reference/generated/numpy.histogram.html#numpy.histogram
+// ...so: matplotlib's behavior is:
 // if bins is: [1, 2, 3, 4], then the first bin is [1, 2) (including 1, but excluding 2) and the 
-// second [2, 3). The last bin, however, is [3, 4], which includes 4.
-// ...it's probably a good idea to mimic this behavior
+// second [2, 3). The last bin, however, is [3, 4], which includes 4. It's probably a good idea to
+// mimic this behavior. But our findBin function above behaves differently. There, the rightmost 
+// interval is also right-open (i.e. not including the right boundary). I'm not sure, which 
+// behavior is more convenient. Before making a decision, figure out how other plotting libraries
+// and softwares handle it. SageMath uses matplotlib so it probably behaves the same (unless it
+// transforms the data before passing it on to matblotlib -> Check that!). Check also Matlab, 
+// Mathematica, Maple, etc.. Check also if GNUPlot itself has a special command for histograms and 
+// if so, figure out how this behaves. See:
+// https://stackoverflow.com/questions/2471884/histogram-with-custom-bin-sizes-using-gnuplot
+
 
 void testHistogram()
 {
-  testFindBin();
+  // Before creating the plot, we make a litte unit test for the helper function findBin:
+  testFindBin();  
 
-  const int N = 10000;  // number of experiments
-  const int numBins = 20;
+  // Setup:
+  const int N       = 10000;         // Number of experiments/datapoints
+  const int numBins =    20;         // Number of bins
+  double    mean    =    10.0;       // Mean of the data distribution
+  double    sigma   =     2.0;       // Standard deviation of the data.
 
+  // Create a generator to create uniform random integer data and a distribution object to convert
+  // that data into a Gaussian distribution of floating point numbers with the desired mean and
+  // standard deviation:
   std::default_random_engine generator;
-  std::normal_distribution<double> distribution(10.0,2.0);
+  std::normal_distribution<double> distribution(mean, sigma); 
 
-
+  // The x-axis form plotting:
   double x[numBins];
   GNUPlotter::rangeLinear(x, numBins, 0.0, (double)(numBins-1));
 
-  double p[numBins] = {};  // this holds the number of elements per bin
+  // This array holds the number of elements per bin which determines the heights of the bars, so 
+  // it's our data for the y-axis
+  double p[numBins] = {};
 
+  // Generate the random data and count the appropriate bins up on the fly:
   for(int i = 0; i < N; i++) 
   {
     double number = distribution(generator);
-    if((number >= 0.0) && (number < numBins)) {
-      // figure out, into which bin this number belongs:
+    if((number >= 0.0) && (number < numBins)) 
+    {
+      // Figure out, into which bin this number belongs:
       int bin = int(number); 
-      // maybe use rounding or more sophisticated ways for defining bins - maybe by min/max values
-      // maybe have a function findBin(T* value, T* binLimits, T* numBins) that implements binary
-      // search
+      // ToDo: Maybe use rounding or more sophisticated ways for defining bins - maybe by min/max 
+      // values. Check out  have a function findBin() function and maybe use that. 
 
-
+      // Increase the count of the bin into which the current number belongs:
       p[bin] += 1.0;
     }
   }
 
-  // normalize p by dividing by N - plot the relative numbers of occurences
+  // Normalize p by dividing by N to plot the relative numbers of occurences, i.e. the relative
+  // frequency of occurrence
   for(int i = 0; i < numBins; i++)
     p[i] /= N;
 
-
+  // Set up the plotter and plot:
   GNUPlotter plt;
   plt.setRange(0.0, 20.0, 0.0, 0.2);
   plt.addDataArrays(numBins, x, p);
@@ -969,31 +998,36 @@ void testHistogram()
   //plt.addGraph("index 0 using 1:2 with boxes fs solid 0.50 notitle");
   plt.addGraph("index 0 using 1:2 with boxes fs solid lc rgb \"#a00000ff\" notitle"); // 1st channel is alpha
   plt.plot();
-  // todo: 
-  // -fill boxes with color (maybe semitransparent?)
-  //  http://gnuplot.sourceforge.net/demo/fillstyle.html
-  // -maybe use non-equidistant bin boundaries to 
-  // make it more interesting (denser toward the center)....but then we may have to normalize the
-  // heights by the widths ...or something - otherwise the narrower bins are too short
-  // the boxes are centered at the given x-values - to plot multiple histograms in one plot, we
-  // need to offset the boxes for each dataset
 
-
-  // todo:
-  // make a histogram with 3 datasets and plot them as red, green and blue bars - ues different
-  // means and variances for each dataset
-  //....maybe, for audio, such histograms can be used for raw sample amplitude values (use colors
-  // for the channels) - useful for analyzing the behavior of noise generators - maybe have a 
-  // function plotHistogram(N, T* data, int numBins, T minX, T maxX) ...and/or
-  // plotMultiHistogram(T minX, T maxX, int numBins, int numDataPoints, T* data1, T* data2, ...)
-  // and maybe have versions that let teh user define the bins-limits explicitly as arrays
- 
-  int dummy = 0;
+  // ToDo: 
+  // 
+  // - Fill boxes with color (maybe semitransparent?)
+  //   http://gnuplot.sourceforge.net/demo/fillstyle.html
+  // 
+  // - Maybe use non-equidistant bin boundaries to make it more interesting (denser toward the 
+  //   center)....but then we may have to normalize the heights by the widths ...or something - 
+  //   otherwise the narrower bins are too shortthe boxes are centered at the given x-values - 
+  //   to plot multiple histograms in one plot, we need to offset the boxes for each dataset. But
+  //   maybe save that more complicated case for another histogram plot. We should also have an 
+  //   example for a simple but common case such as this one here.
+  //
+  // - Make a histogram with 3 datasets and plot them as red, green and blue bars - ues different
+  //   means and variances for each dataset  ...maybe, for audio, such histograms can be used for
+  //   raw sample amplitude values (use colors for the channels) - useful for analyzing the 
+  //   behavior of noise generators - maybe have a function 
+  //   plotHistogram(N, T* data, int numBins, T minX, T maxX) ...and/or
+  //   plotMultiHistogram(T minX, T maxX, int numBins, int numDataPoints, T* data1, T* data2, ...)
+  //   and maybe have versions that let teh user define the bins-limits explicitly as arrays
+  //
+  // 
+  // See also:
+  // 
+  // http://www.cplusplus.com/reference/random/normal_distribution/
+  // https://stackoverflow.com/questions/2471884/histogram-using-gnuplot
+  // http://gnuplot.sourceforge.net/demo/histograms.html
+  // http://gnuplot.sourceforge.net/docs_4.2/node249.html
 }
-// http://www.cplusplus.com/reference/random/normal_distribution/
-// https://stackoverflow.com/questions/2471884/histogram-using-gnuplot
-// http://gnuplot.sourceforge.net/demo/histograms.html
-// http://gnuplot.sourceforge.net/docs_4.2/node249.html
+
 
 
 void testMoebiusStrip()
