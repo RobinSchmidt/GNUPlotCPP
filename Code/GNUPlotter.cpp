@@ -529,15 +529,18 @@ void GNUPlotter::setGrid(bool x, bool y, bool x2, bool y2, bool z)
   addCommand(s);
 }
 
-void GNUPlotter::setLogScale(std::string axes, double /*base*/, bool shouldBeLogarithmic)
+void GNUPlotter::setLogScale(std::string axes, double base, bool shouldBeLogarithmic)
 {
   std::string s;
   if( !shouldBeLogarithmic )
     s += "un";
-  s += "set logscale " + axes + "\n";
+  //s += "set logscale " + axes + "\n";                             // Old
+  s += "set logscale " + axes + " " + std::to_string(base) + "\n";  // New
   addCommand(s);
 }
-// todo: use base or get rid of the parameter
+// todo: use base or get rid of the parameter, see:
+// https://stackoverflow.com/questions/47062230/using-a-log-scale-on-gnuplot
+// ..ok done. But: I think, we should really use an int parameter for the base
 
 void GNUPlotter::setRange(double xMin, double xMax, double yMin, double yMax, double zMin,
   double zMax)
@@ -779,7 +782,7 @@ template void GNUPlotter::addDataGrid(int Nx, int Ny, float *x, float *y, float 
 template void GNUPlotter::addDataGrid(int Nx, int Ny, double *x, double *y, double **z);
 
 template <class T>
-void GNUPlotter::addDataMatrix(int Nx, int Ny, T *x, T *y, T **z)
+void GNUPlotter::addDataMatrix(int Nx, int Ny, const T *x, const T *y, T **z)
 {
   std::ofstream out(dataPath, std::ofstream::app);
   int i, j;
@@ -802,7 +805,7 @@ void GNUPlotter::addDataMatrix(int Nx, int Ny, T *x, T *y, T **z)
 // that is compatible with LaPack (flat, column-major)
 
 template <class T>
-void GNUPlotter::addDataMatrixFlat(int Nx, int Ny, T* x, T* y, T* z)
+void GNUPlotter::addDataMatrixFlat(int Nx, int Ny, const T* x, const T* y, const T* z)
 {
   T** rowPointers = new T*[Nx]; // int **array = new int*[10];
   for(int i = 0; i < Nx; i++)
@@ -813,7 +816,7 @@ void GNUPlotter::addDataMatrixFlat(int Nx, int Ny, T* x, T* y, T* z)
 // not yet tested
 
 template <class T>
-void GNUPlotter::addDataMatrixFlat(int Nx, int Ny, T* z)
+void GNUPlotter::addDataMatrixFlat(int Nx, int Ny, const T* z)
 {
   T* x = new T[Nx]; for(int i = 0; i < Nx; i++) x[i] = T(i);
   T* y = new T[Ny]; for(int i = 0; i < Ny; i++) y[i] = T(i);
@@ -821,9 +824,9 @@ void GNUPlotter::addDataMatrixFlat(int Nx, int Ny, T* z)
   delete[] x;
   delete[] y;
 }
-template void GNUPlotter::addDataMatrixFlat(int Nx, int Ny, int* z);
-template void GNUPlotter::addDataMatrixFlat(int Nx, int Ny, float* z);
-template void GNUPlotter::addDataMatrixFlat(int Nx, int Ny, double* z);
+template void GNUPlotter::addDataMatrixFlat(int Nx, int Ny, const int* z);
+template void GNUPlotter::addDataMatrixFlat(int Nx, int Ny, const float* z);
+template void GNUPlotter::addDataMatrixFlat(int Nx, int Ny, const double* z);
 
 template <class T>
 void GNUPlotter::addDataCurve2D(const std::function<T(T)>& fx, const std::function<T(T)>& fy,
