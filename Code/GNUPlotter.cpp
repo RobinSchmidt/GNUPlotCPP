@@ -128,10 +128,14 @@ void GNUPlotter::plotComplexVectorField(const std::function<std::complex<T>(std:
   fy = [&] (T re, T im) { return sign * imag(f(std::complex<T>(re, im))); };
   plotVectorField2D(fx, fy, Nr, rMin, rMax, Ni, iMin, iMax);
 }
-template void GNUPlotter::plotComplexVectorField(const std::function<std::complex<int>(std::complex<int>)>& f, int Nr, int rMin, int rMax, int Ni, int iMin, int iMax, bool conj);
+//template void GNUPlotter::plotComplexVectorField(const std::function<std::complex<int>(std::complex<int>)>& f, int Nr, int rMin, int rMax, int Ni, int iMin, int iMax, bool conj);
 template void GNUPlotter::plotComplexVectorField(const std::function<std::complex<float>(std::complex<float>)>& f, int Nr, float rMin, float rMax, int Ni, float iMin, float iMax, bool conj);
 template void GNUPlotter::plotComplexVectorField(const std::function<std::complex<double>(std::complex<double>)>& f, int Nr, double rMin, double rMax, int Ni, double iMin, double iMax, bool conj);
-
+// Instantiation for int has been commented out because is produces a compilation error in Visual 
+// Studio 2022. With previous versions of VS, it worked though. Apparentely VS 2022 is more strict 
+// about enforcing that std::complex is only instantiated for float, double or long double. By the
+// standard C++ spec, std::complex is not is not really supposed to work with anything else (which 
+// is the main reason why I still use my own rsComplex class in my main codebase, btw.).
 
 //-------------------------------------------------------------------------------------------------
 

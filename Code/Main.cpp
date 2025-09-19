@@ -2,6 +2,23 @@
 #include "Tests.h"
 #include "Experiments.h"
 
+// Notes/ToDo:
+//
+// - Many of the plots look wrong when using Windows's scaling feature (found in  
+//   Settings -> System -> Display -> Scale in Win 11). When the scale is set to 100%, the plots 
+//   look fine. 100% is appropriate for a normal Full-HD screen with a ressolution of 1920x1080 
+//   pixels. On an UHD screen with with 3840x2160 pixels, I usually use a scaling of 200%. But 
+//   that makes some of the plots look wrong. Legends become too big, ticks too dense, etc. I'm not
+//   sure, how to deal with that. Maybe we can somehow figure out the current screen resolution and
+//   scaling and use setPixelSize() with values that are most appropriate for the current scaling
+//   setting. I think, we just should multiply the base pixel sizes by the scaling factor. Maybe
+//   the function setPixelSize() should take an optional boolean parameter "useSystemScaling"
+//   defaulting to false (old behavior).
+//
+// - Check what's going on with the demoMultiPlot1/2 functions. They behave differently from the
+//   others (see comments). Also demoContourMap() uses this other GUI. And it looks ugly. It used
+//   to look much better on my old PC.
+
 int main(int argc, char** argv)
 {
   // This needs to be fixed:
@@ -23,8 +40,8 @@ int main(int argc, char** argv)
   demoPoleZeroPlotZ();
   demoPlottingStyles();
   demoTrigFunctions();
-  demoMultiPlot1();
-  demoMultiPlot2();    // column spacing is too large!
+  demoMultiPlot1();    // Opens a different GUI then the others. Does not wait for closing.
+  demoMultiPlot2();    // Dito. Also: Column spacing between subplots is too large! 
   demoSquare();
   demoMatrixData();
   demoLissajous();
@@ -40,10 +57,10 @@ int main(int argc, char** argv)
   //demoPow(); // boring - remove
   demoSincRadial();
   demoSincRadialHeatMap();
-  demoVectorField();            // is still in Experiments.cpp -> move to Demos.cpp
+  demoVectorField();            // Is still in Experiments.cpp -> move to Demos.cpp
   demoPendulumPhasePortrait();
   demoDipole();
-  demoContourMap();
+  demoContourMap();             // This looks ugly! Also uses the different GUI
 
 
 

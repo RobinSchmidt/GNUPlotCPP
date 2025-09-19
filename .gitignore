@@ -24,3 +24,5 @@ Build/VisualStudio2015/Debug
 Build/VisualStudio2015/x64
 Build/VisualStudio2015/*.png
 Build/VisualStudio2015/enc_temp_folder
+/Build/VisualStudio2022/.vs
+/Build/VisualStudio2022/GNUPlot/x64
