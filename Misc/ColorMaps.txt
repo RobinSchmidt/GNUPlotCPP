@@ -92,6 +92,22 @@ Linear: CB_BuPu, CB_GnBu, CB_PuBu, CB_YlGnBu*, EF_Viridis, GF_AfmHot,
 Diverging: AM_Turbo (highly saturated), CB_BrBG, CB_PRGn, CB_PuOr, CB_RdBu*, AS_RdYlGn (map), 
   CB_Spectral*, CJ_BuYlRd11**, GF_PuGnRd*, KM_Moreland, UA_GnPu*
 
+
+----------------------------------------------------------------------------------------------------
+Ideas:
+
+- Try to make a nice bipolar color map with black in the middle and cyan and magenta at the ends. 
+  Rationale: We could use two of the RGB channels like R and G to fade in from the center i.e. 
+  -1 = full red, 0 = black, +1 = full green to make a bipolar map. But we could also add in blue in 
+  both directions to make the color even brighter towards the ends without interfering with the red 
+  and green gradients. I think, we could use the same strategy also with cyan/yellow and 
+  magenta/yellow but that may work less well perceptually (in terms of brightness gradient) because 
+  in this case, one of the "gradient channels" would be blue and the eye has less brightness 
+  sensitivity for blue (full red and full green look brighter than full blue). Maybe we could also 
+  keep a little bit of blue (or even full blue) in the center, i.e. at zero, so we would go: 
+  -1: magenta, 0: (dark) blue, +1: cyan. But: I guess anything that relies heavily on the 
+  distinction between red and green might be bad for people with red/green color blindness.
+  
 ----------------------------------------------------------------------------------------------------
 Some removed cases from  GNUPlotter::setColorPalette(...) because the palettes turned out to be not 
 so useful. But just in case, we want to re-add them:

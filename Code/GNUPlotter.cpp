@@ -478,8 +478,9 @@ void GNUPlotter::setColorPalette(ColorPalette palette, bool inverted)
   }
   
   // ToDo:
-  // remove the common "set palette " from the cases and add it to the string like this:
-  // c = "set palette " + c;
+  //
+  // - Remove the common "set palette " from the cases and add it to the string like this:
+  //   c = "set palette " + c;
 
   if(inverted)
     c += " negative";
