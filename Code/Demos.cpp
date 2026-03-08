@@ -976,7 +976,7 @@ void demoHenneberg()
   // std::function objects as (reference) parameters for the two functions x(u,v), y(u,v), z(u,v)
   // and Nu, Nv, uMin, uMax, vMin, vMax for the grid generation such that only have to call
   // plt.addParametricSurface(...) with lambda functions - but before implementing that, we should 
-  // drag over the latest  changes to GNUPlotter.h/cpp from the RS-MET codebase
+  // drag over the latest changes to GNUPlotter.h/cpp from the RS-MET codebase
   // then we may also have addParametricCurve2D, addParametricCurve3D and add some more fun
   // surfaces like Moebius strip, the trefoil knot ...but for that, we need some way to thicken
   // a 3D curve into a solid object - maybe we need to estimate the tangent, normal and binormal
@@ -1010,7 +1010,29 @@ void demoHenneberg()
   p.addCommand("set view 75,145");
   p.addCommand("set lmargin 0");
   p.addCommand("set tmargin 0");
-  p.plot3D();   
+  p.plot3D();
+
+  // Notes:
+  //
+  // - Another interesting self-intersecting surface is the "Whitney-Umbrella":
+  //   https://en.wikipedia.org/wiki/Whitney_umbrella
+  //   Maybe make a plot of that, too.
+  //
+  // - Other surfaces:
+  //   https://en.wikipedia.org/wiki/Conoid
+  //   https://en.wikipedia.org/wiki/Right_conoid
+  //   https://en.wikipedia.org/wiki/Pl%C3%BCcker%27s_conoid
+  //   https://en.wikipedia.org/wiki/Wallis%27s_conical_edge
+  //   https://en.wikipedia.org/wiki/Helicoid
+  //   https://en.wikipedia.org/wiki/Generalized_helicoid
+  //   https://en.wikipedia.org/wiki/Catalan_surface
+  //   https://en.wikipedia.org/wiki/Dini%27s_surface
+  //   https://en.wikipedia.org/wiki/Breather_surface
+  //   https://en.wikipedia.org/wiki/Kuen_surface
+  //
+  // - The Topologiocal Zoo:
+  //   http://www.geom.uiuc.edu/zoo/
+  //   Internet resource for all sorts of surfaces and manifolds
 }
 
 
